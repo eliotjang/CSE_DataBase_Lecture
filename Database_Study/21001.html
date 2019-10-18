@@ -1,0 +1,1550 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>제 10 회 동시성 제어 기법</title>
+<meta name="GENERATOR" content="Namo WebEditor v2.00">
+</head>
+<body bgcolor="#CCFFFF" text="black" link="blue" vlink="purple" alink="red">
+
+<h5>&nbsp;</h5>
+<div align="center"><table border="0" cellpadding="10" width="650" bgcolor="white">
+<tr>
+<td height="142" colspan="2" bgcolor="white"><h1 align="center"><img src="img/그림10-0.jpg" border="0"></h1></td>
+</tr><tr>
+<td width="307" height="555" bgcolor="white"><p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="4"><b>목 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;차</b></font></p>
+<p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="2"><b><a href="#0">시작하기전에.....</a></b></font></p>
+<p align="left">&nbsp;</p>
+<p><font size="2"><a href="#1">&nbsp;</a></font><font size="2"><b><a href="#1">1. 데이터 공유의 문제점</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#1-1">1.1 갱신 분실 문제</a></b></font> 
+<li><font size="2"><b><a href="#1-2">1.2 비완료 의존성 문제</a></b></font> 
+</ul>
+<p><font size="2"><b><a href="#2">2. 트랜잭션 스케쥴</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#2-1">2.1 트랜잭션 스케쥴의 정의</a></b></font> 
+<li><font size="2"><b><a href="#2-2">2.2 직렬 스케쥴과 충돌 직렬 가능 
+스케쥴</a></b></font> 
+</ul>
+<p><font size="2"><b><a href="#3">3. 동시성 제어기법</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#3-1">3.1 로킹 기법</a></b></font> 
+<li><font size="2"><b><a href="#3-2">3.2 2 단계 로킹 규약</a></b></font> 
+<li><font size="2"><b><a href="#3-3">3.3 트리 프로토콜</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#3-3-1">3.3.1 로킹 단위</a></b></font> 
+<li><font size="2"><b><a href="#3-3-2">3.3.2 트리 프로토콜</a></b></font> 
+</ul>
+<li><font size="2"><b><a href="#3-4">3.4 타임스템프 순서 기법</a></b></font> 
+</ul></td>
+<td width="314" height="555" bgcolor="#FFD3D2"><h2><font size="5" color="#400080"><b><a name="0">시작하기전에....</a></b></font></h2>
+<h2>&nbsp;</h2>
+<p><font size="2" color="#400080"><b>&nbsp;벌써 제 10 회가 되어습니다. 제 10 회 
+&quot;동시성 제어 기법&quot; 강의는 멀티 프로그래밍 
+환경에서 다수의 트랜잭션이 데이터를 
+공유하면서 발생되는 문제점을 살펴보고 이 
+문제점을 해결하기 위한 기법(동시성 제어 
+기법)을 다룹니다.</b></font></p>
+<p><font size="2" color="#400080"><b>&nbsp;여러분들은 다음 사항들을 유념하여 강의해 
+임해주길 바랍니다.</b></font> 
+<ul type="disc">
+<li><font size="2" color="#400080"><b>다수의 트랜잭션이 데이터 항목을 
+공유하면서 동시에 수행될 때 어떠한 
+문제들이 발생하는지 알아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>스케쥴과 충돌 직렬 가능 스케쥴이란 
+무엇이며 충돌 직렬 가능 스케쥴이 왜 
+중요한지를 알아 봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>동시성 제어 기법이 왜 중요한지 알아 
+봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>동시성 제어 기법의 종류와 각 
+기법에서 사용하는 방법을 잘 이해 
+합니다.</b></font> 
+</ul>
+<p>&nbsp;</td>
+</tr><tr>
+<td colspan="2" bgcolor="#FFFFC4"><ul><ul><p><font face="굴림" size="2">성능을 향상 시키기 위해 대부분의 컴퓨터 시스템들은 멀티 프로그래밍(multiprogrammimg) 
+환경을 제공한다. </font></p>
+<p><font face="굴림" size="2">한 프로그램을 구성하는 명령어는 CPU 명령과 입출력 명령으로 구분되는데 CPU 명령이란 
+중앙처리장치가 해독하여 처리하는 명령이며 입출력 명령이란 입출력 장치에 의해 처리되는 
+명령을 말한다. 입출력 명령은 입출력장치로부터의 데이터 입력과 출력, 데이터의 검색, 삽입, 
+삭제, 갱신 등에 의한 디스크등의 보조기억 장치 접근 등이 이에 해당한다.</font></p>
+<p><font face="굴림" size="2">멀티 프로그래밍을 지원하지 않는 시스템(일괄 처리 즉, batch-processing 시스템)에서는 
+일반적으로 컴퓨터 시스템이 한 프로그램의 명령어를 수행하는 도중 입출력 명령(read 혹은 
+write)을 만나면 입출력 장치가 이 명령을 수행하게 되는데 이때 중앙처리장치는 입출력 
+장치가 입출력 수행을 완료할 때까지 아무 명령어도 처리하지 못한채 기다리게 된다. 이와 
+같이 중앙처리장치가 아무 명령어도 처리하지 않고 기다리는 시간을 운휴 시간(idle time)이라 
+한다. </font></p>
+<p><font face="굴림" size="2">멀티 프로그래밍 환경은 이러한 운휴시간을 줄이고 시스템의 생산성(throughput)을 높이기 
+위해 한 프로그램 P1에서 입출력 명령을 만나게 되면 중앙처리장치는 그 즉시 다른 프로그램 
+P2의 명령어를 수행하게 된다. 이때 입출력장치에 의해 프로그램 P1에 대한 입출력 작업을 
+행하는 동안 중앙처리장치는 프로그램 P2의 명령어를 수행하게 되어 중앙처리장치의 
+운휴시간을 줄일 수 있게 된다.</font></p>
+<p><font face="굴림" size="2">멀티 프로그래밍 환경은 매우 짧은 시간 동안 여러개의 프로그램을 번갈아 수행하므로 사용자 
+입장에서 볼 때 멀티 프로그래밍 환경은 여러개의 프로그램을 동시에 처리하는 것과 같은 
+환경을 제공한다. </font></p>
+<p><font face="굴림" size="2">멀티 프로그래밍 환경에서 여러 프로그램(트랜잭션)들이 데이터들 공유하여 동시에 수행될 때 
+데이터 불일치성(data inconsistency)에 대한 심각한 문제점이 발생하게 된다.</font></p>
+<p><font face="굴림" size="2">본 강의에서는 이러한 문제점들을 살펴보고 데이터 일치성을 유지하기 위한 기법들을 
+소개하도록 한다.</font></p>
+</ul>
+</ul>
+<h2><font face="굴림"><a name="1">1. 데이터 공유의 문제점</a></font></h2>
+<ul><ul><p><font face="굴림" size="2">두 개 이상의 트랜잭션이 데이터를 공유할 때 다음과 같은 문제점들이 발생하게 된다.</font> 
+<ul type="disc">
+<li><font face="굴림" size="2">갱신 분실(lost update) 문제</font> 
+<li><font face="굴림" size="2">비완료 의존성 문제</font> 
+</ul>
+<p><font face="굴림" size="2">위의 각 문제점들을 예로 설명하기로 하자.</font></p>
+</ul>
+<h4><font face="굴림"><b><a name="1-1">1.1 갱신 분실 문제</a></b></font></h4>
+<ul><p><font face="굴림" size="2">이 문제에 대하여 살펴보기 위해 다음의 실행 순서에 따라 실행되는 두 트랜잭션 T0, T1을 
+살펴보도록 하자. 데이터 항목 A 와 B의 초기값은 각각 400000과 500000 이라 한다.</font></p>
+<p align="center">&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="545"><p align="center"><font face="굴림" size="2"><b>표 10-1. 트랜잭션 T0, T1</b></font></td>
+</tr><tr>
+<td width="545"><ul><ul><ul><ul><table border cellpadding="3" cellspacing="0">
+<tr>
+<td width="96" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="96" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+<td width="6" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>read(B,b)</b></font></td>
+</tr><tr>
+<td width="96" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>a:=a-100000</b></font></td>
+<td width="6" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>b:=b-100000</b></font></td>
+</tr><tr>
+<td width="96" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+<td width="6" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>write(B,b)</b></font></td>
+</tr><tr>
+<td width="96" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>read(B,b)</b></font></td>
+<td width="6" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+</tr><tr>
+<td width="96" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>b:=b+100000</b></font></td>
+<td width="6" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>a:=a+100000</b></font></td>
+</tr><tr>
+<td width="96" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>write(B,b)</b></font></td>
+<td width="6" bgcolor="#A2F9AC"><p align="center"><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+</tr></table></td>
+</tr></table>
+<p align="center">&nbsp;</p>
+<p><font face="굴림" size="2">T0 은 100,000원을 A 구좌에서 B 구좌로 이체시키는 트랜잭션이고 T1은 반대로 B 구좌에서 A 
+구좌로 100,000 을 이체시키는 트랜잭션이라 하자.</font></p>
+<p><font face="굴림" size="2">이 두 트랜잭션이 T0 다음에 T1 혹은 T1 다음에 T2 등 차례대로 수행된 후의 데이터 항목 A와 
+B의 결과 같은 변함없이 각각 400000과 500000 이 되어야 한다. 그러나 두 트랜잭션 T0, T1이 
+다음의 실행 순서대로 수행된다고 하자.</font></p>
+<p><font face="굴림" size="2"><a name="표10-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font> 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>표 10-2. 갱신 분실의 예</b></font></td>
+</tr><tr>
+<td width="748"><ul><ul><ul><table border>
+<tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(A,a0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>a0:=a0-100000</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(A,a0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(B,b0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(B,b1)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>b1:=b1-100000</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(B,b1)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>b0:=b0+100000</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(B,b0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>10</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(A,a1)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>11</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>a1:=a1+100000</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>12</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(A,a1)</b></font></td>
+</tr></table></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">이 때 두 트랜잭션 실행 후의 데이터 항목 A와 B의 결과는 각각 400000과 600000 이 
+된다.</font><font face="굴림" size="2" color="blue"><u>(여러분은 데이터 항목 A와 B의 값이 각각 400000과 600000 이 되는 이유를 디스크와 
+메모리 관계를 설명과 함께 그림으로 표현하여 레포트 작성 규칙에 따라 레포트로 작성하여 
+제출하기 바랍니다).</u></font><font face="굴림" size="2"> 원래 두 트랜잭션 수행 후의 데이터 항목 B의 결과는 500000 이 되어야 
+하는데 600000 이 되어 데이터 불일치성이 발생하게 된다.</font></p>
+<p><font face="굴림" size="2">이 두 트랜잭션 실행에서의 문제점은 트랜잭션 특성 상 T0가 write(B,b) 연산을 수행한 이후에 
+T1의 read(B,b) 연산이 실행되어야 하는데에도 불구하고 T1이 write(B,b) 연산 수행 이전에 
+read(B,b)와 write(B,b)를 실행한 이후 T0이 write(B,b)을 수행하게 되어 T1에 의해 갱신된 
+데이터 항목 B 값이 T0 트랜잭션에 반영되지 않았기 때문이다. 이와 같이 트랜잭션이 변경한 
+데이터 항목 값이 다른 트랜잭션 수행에 반영되지 않음으로해서 발생되는 문제를 </font><font face="굴림" size="2"><b>갱신 
+분실(lost update)</b></font><font face="굴림" size="2">이란 한다. </font></p>
+</ul>
+<h4><font face="굴림"><b><a name="1-2">1.2 비완료 의존성 문제</a></b></font></h4>
+<ul><p><font face="굴림" size="2">이 문제에 대하여 살펴보기 위해 다음의 실행 순서에 따라 실행되는 두 트랜잭션 T0, T1을 
+살펴보도록 하자. 데이터 항목 A 와 B의 초기값은 각각 400000과 500000 이라 한다.</font></p>
+<p><font face="굴림" size="2"><a name="표10-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font> 
+<table border="0" cellpadding="2" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>표 10-3. 두 트랜잭션 예</b></font></td>
+</tr><tr>
+<td width="748"><ul><ul><ul><table border cellpadding="2">
+<tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(A,a0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(A,a1)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>a0:=a0-100000</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>a1:=a1+300000</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(A,a0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(A,a1)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(B,b0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>b0:=b0+100000</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(B,b0)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr></table></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">T0 은 100,000원을 A 구좌에서 B 구좌로 이체시키는 트랜잭션이고 T1은 300,000 원을 
+예금하는 트랜잭션이라 하고 두 트랜잭션 T0, T1이 다음의 실행 순서대로 수행된다고 하자.</font></p>
+<p><font face="굴림" size="2"><a name="표10-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font> 
+<table border="0" cellpadding="2" cellspacing="0">
+<tr>
+<td width="539"><p align="center"><font face="굴림" size="2"><b>표 10-4. 트랜잭션의 실행 순서</b></font></td>
+</tr><tr>
+<td width="539"><ul><ul><ul><table border cellpadding="2">
+<tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="18" bgcolor="#FF8080"><p align="left"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="left"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>a:=a-100000</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>a:=a+300000</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+<td width="6" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>read(B,b)</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="18" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>b:=b+100000</b></font></td>
+<td width="6" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="18" height="12" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="18" height="12" bgcolor="#A6FFA6"><p align="left"><font face="굴림" size="2"><b>write(B,b)</b></font></td>
+<td width="6" height="12" bgcolor="#A6FFA6"><p align="left">&nbsp;</td>
+</tr></table></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">T0의 write(A,a) 연산에서 데이터 항목 A의 값이 300,000 으로 갱신된 상태에서 T1이 
+read(A,a)를 수행함으로써 이 두 트랜잭션이 성공적으로 수행된다면 수행후의 데이터 항목 
+A와 B의 값은 모두 600000 이 되어 두 트랜잭션을 순서적으로 처리한 결과와 동일하게 되어 
+문제가 발생하지 않는다.</font></p>
+<p><font face="굴림" size="2">그러나 실행순서 8에서 T1이 완료(commit) 된 상태에서 T0 트랜잭션이 실패(failure)한다면 
+T0에 의해 이미 갱신된 데이터 항목 A의 값은 수행 이전 값인 400,000 으로 복원되어야 한다. 
+그러나 T1 이 수행한 read(A,a) 문에서 읽은 데이터 항목 A의 값은 T0 가 write(A,a) 연산에서 
+갱신한 300,000 이기 때문에 T0가 복원되어 데이터 항목 A의 값이 400,000 으로 복원된다면 
+데이터 항목 A 값을 300,000 으로 읽은 T1은 복원되어야 하는데 이미 완료된 상태이다.</font></p>
+<p><font face="굴림" size="2">이 문제점의 원인은 T0 가 수행 중에 생성한 데이터 값을 T1이 사용함으로써 </font><font face="굴림" size="2"><a href="20901.html">&quot;제 9 회 
+트랜잭션과 고장복구</a></font><font face="굴림" size="2">&quot;에서 이미 강의된 </font><font face="굴림" size="2" color="teal">트랜잭션 성질</font><font face="굴림" size="2"> 중 </font><font face="굴림" size="2" color="teal">격리성(transaction isolation)</font><font face="굴림" size="2">에 
+위배됨으로써 발생되는 문제이다. 이와 같은 문제점을 </font><font face="굴림" size="2"><b>비완료 종속 문제</b></font><font face="굴림" size="2">라 한다.</font></p>
+</ul>
+</ul>
+<h2><font face="굴림"><a name="2">2. 트랜잭션 스케쥴</a></font></h2>
+<ul><h4><font face="굴림"><a name="2-1">2.1 트랜잭션 스케쥴 정의</a></font></h4>
+<ul><p><font face="굴림" size="2">n개의 트랜잭션 T1, T2, ..., Tn이 주어질 때 각 트랜잭션 내의 명령어 순서 그대로 유지하면서 
+트랜잭션 T1, T2, ..., Tn 의 모든 명령어들을 순서대로 나열한 것을 트랜잭션 T1, T2, ..., Tn의 
+</font><font face="굴림" size="2"><b>트랜잭션 스케쥴(Transaction Schedule)</b></font><font face="굴림" size="2">이라 한다.</font></p>
+<p><font face="굴림" size="2"><a href="#표10-1">표 10-1</a></font><font face="굴림" size="2">의 두 트랜잭션의 스케쥴의 예가 </font><font face="굴림" size="2"><a href="#표10-2">표 10-2</a></font><font face="굴림" size="2">이다. 또한, </font><font face="굴림" size="2"><a href="#표10-3">표 10-3</a></font><font face="굴림" size="2">의 두 트랜잭션 예가 </font><font face="굴림" size="2"><a href="#표10-4">표 
+10-4</a></font><font face="굴림" size="2">이다. 이 두 스케쥴은 각 트랜잭션의 명령어 순서를 그대로 유지하고 있다. 두 
+트랜잭션으로 생성할 수 있는 스케쥴은 여러개 존재한다.</font></p>
+<p><font face="굴림" size="2">트랜잭션 스케쥴에서 나열된 명령어 순서는 명령어 실행 순서를 나타낸다.</font></p>
+</ul>
+<h4><font face="굴림"><a name="2-2">2.2 직렬 스케쥴과 충돌 직렬가능 스케쥴</a></font></h4>
+<ul><h5><font face="굴림" size="2">직렬 스케쥴</font></h5>
+<ul><p><font face="굴림" size="2">트랜잭션 T1, T2, ..., Tn 이 주어질 때 직렬 스케쥴(Serializable Schedule)이란 이 
+트랜잭션들이 순서적으로 실행되도록 한 명령어들의 나열이다.직렬 스케쥴에서 각 
+트랜잭션의 명령어들은 연속적으로 나열된다.</font></p>
+<p><font face="굴림" size="2">다음 표 10-5의 두 스케쥴 S1과 S2는 표 10-2의 두 트랜잭션 T0와 T1에 대한 직렬 
+스케쥴이다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;&nbsp;</font> 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>표 10-5. 표 10-2의 두 트랜잭션에 T0, T1에 대한 직렬 스케쥴</b></font></td>
+</tr><tr>
+<td><p>&nbsp; 
+<ul><table border cellpadding="2">
+<tr>
+<td rowspan="10" bgcolor="#FFCEE7"><p align="center"><font face="굴림" size="2"><b>직렬 스케쥴 S1</b></font></p>
+<p align="center">&nbsp;</td>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="96" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>a:=a-100000</b></font></td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(B,b)</b></font></td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>b:=b+100000</b></font></td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(B,b)</b></font></td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+</tr><tr>
+<td height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="96" height="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" height="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>a:=a+300000</b></font></td>
+</tr><tr>
+<td height="16" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="96" height="16" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" height="16" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+</tr></table>
+
+</ul><p>&nbsp;</td>
+</tr><tr>
+<td><ul><table border cellpadding="2">
+<tr>
+<td rowspan="10" bgcolor="#FFCEE7"><p align="center"><font face="굴림" size="2"><b>직렬 스케쥴 S2</b></font></p>
+<p align="center">&nbsp;</td>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="96" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>a:=a+300000</b></font></td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>read(A,a)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>a:=a-100000</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>write(A,a)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>read(B,b)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>b:=b+100000</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="96" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>write(B,b)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr></table></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">직렬 스케쥴은 트랜잭션을 순서적으로 수행하기 때문에 스케쥴이 성공적으로 
+수행된다면 데이터 불일치 상의 아무런 문제도 발생되지 않는다. 비록 스케쥴의 수행 중 
+시스템 고장으로 인하여 수행이 중단된다 하더라도 </font><font face="굴림" size="2"><a href="20901.html">&quot;제 9 회 트랜잭션과 고장복구&quot;</a></font><font face="굴림" size="2">에서 
+다룬 고장 복구 기법을 이용하여 복구하면 아무런 문제도 발생하지 않는다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">비직렬 스케쥴</font></h5>
+<ul><p><font face="굴림" size="2"><b>비직렬 스케쥴(Nonserializable Schedule)</b></font><font face="굴림" size="2">이란 직력 스케쥴이 아닌 
+스케쥴을 말한다. </font><font face="굴림" size="2"><a href="#표10-2">표 10-2</a></font><font face="굴림" size="2">와 </font><font face="굴림" size="2"><a href="#표10-4">표 10-4</a></font><font face="굴림" size="2">는 모두 비직렬 스케쥴의 예이다. 비직렬 스케쥴은 
+</font><font face="굴림" size="2"><a href="#표10-2">표 10-2</a></font><font face="굴림" size="2">와 같이 데이터 불일치를 야기시킬 수 있다. 그러나, 비직렬 스케쥴이라 해서 
+항상 데이터 불일치를 야기시키는 것은 아니다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">출동(Conflict)</font></h5>
+<ul><p><font face="굴림" size="2">스케쥴 S에서 동일한 데이터 항목 Q를 공유하는 서로 다른 연산(명령어) Ii와 Ij를 각각 
+서로 다른 두 트랜잭션 Ti와 Tj의 연산이라 하자.</font></p>
+<p><font face="굴림" size="2">이 때 다음 세가지 조건 중에 하나가 성립되면 </font><font face="굴림" size="2"><b>두 연산 Ii와 Ij는 충돌(Conflict)이 
+발생</b></font><font face="굴림" size="2">했다고 한다(단순성을 위해 앞으로 read(X,x)와 write(X,x)를 각각 read(X)와 
+write(X)로 펴기하도록 한다).</font></p>
+<ul><p><font face="굴림" size="2"><b>조건 1.</b></font><font face="굴림" size="2"> Ii=read(Q) 이고 Ij=write(Q) 인 경우(이를 read-write conflict라 함)</font></p>
+<p><font face="굴림" size="2"><b>조건 2.</b></font><font face="굴림" size="2"> Ii=write(Q) 이고 Ij=read(Q)인 경우(이를 write-read conflict라 함)</font></p>
+<p><font face="굴림" size="2"><b>조건 3.</b></font><font face="굴림" size="2"> Ii=write(Q) 이고 Ij=write(Q) 인 경우(이를 write-write conflict라 함)</font></p>
+</ul>
+<p><font face="굴림" size="2">두 연산 충돌의 예로 다음 표 10-6의 스케쥴을 고려하자.</font></p>
+</ul>
+</ul>
+</ul>
+<p><font face="굴림" size="2"><a name="표10-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<ul><ul><ul><table border="0" cellspacing="0">
+<tr>
+<td width="748" height="12"><p align="center"><font face="굴림" size="2"><b>표 10-6. 충돌 연산 예</b></font></td>
+</tr><tr>
+<td width="748" height="224"><ul><ul><table border cellpadding="2">
+<tr>
+<td width="18" height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="18" height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" height="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>A:=A-100000</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>read(B)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>read(B)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>B:=B-100000</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>B:=B+100000</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>write(B)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>write(B)</b></font></td>
+<td width="6" bgcolor="#9DFF9D"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>10</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>11</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>A:=A+100000</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>12</b></font></td>
+<td width="18" bgcolor="#9DFF9D"><p>&nbsp;</td>
+<td width="6" bgcolor="#9DFF9D"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+</tr></table></td>
+</tr></table>
+
+</ul>
+</ul>
+</ul><p>&nbsp;</p>
+<ul><ul><ul><p><font face="굴림" size="2">위의 스케쥴에서 실행순서 8인 트랜잭션 T0의 write(B) 연산과 트랜잭션 T1의 write(B) 
+연산은 </font><font face="굴림" size="2"><b>충돌 조건 3</b></font><font face="굴림" size="2">을 만족하므로 충돌이 발생한다. 그러므로 이 스케쥴에서 이 두 
+연산의 교환할 수 없다. 그러나 실행순서 4의 T0의 read(B) 연산과 실행순서 5의 T1의 
+read(B) 연산은 충돌 조건을 만족시키지 않으므로 실행 순서를 교환할 수 있다. 특히 
+실행순서 8의 T0의 B:=B+100000 연산은 주기억 장치에서 이루어지는 연산이므로 
+데이터베이스에 영향을 주지 않기 때문에 인접한 다른 트랜잭션의 모든 연산들과 교환 
+가능하다. 한 예로서 실행순서 7 번 연산은 실행순서 6 번 연산과 교환가능하며 
+실행순서 8 번 연산과도 교환 가능하다.</font><font face="굴림" size="2" color="#8000FF"> </font><font face="굴림" size="2" color="#8000FF"><u>이러한 이유 때문에 단순성을 위해 각 
+트랜잭션과 스케쥴에서 산술 연산은 제외하도록 한다.</u></font><font face="굴림" size="2"> 즉, 표 10-6의 스케쥴을 단순화한 
+스케쥴이 다음 표 10-7에서 제시된다.</font></p>
+</ul>
+</ul>
+</ul>
+<p><font face="굴림" size="2"><a name="표10-2">&nbsp;&nbsp;&nbsp;</a></font><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<ul><ul><ul><table border="0" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>표 10-7. 표 10-6의 스케쥴을 단순화한 스케쥴</b></font></td>
+</tr><tr>
+<td width="748"><ul><ul><ul><table border cellpadding="2">
+<tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(B)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(B)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(B)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(B)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+</tr></table></td>
+</tr></table>
+
+</ul>
+</ul>
+</ul><p>&nbsp;</p>
+<ul><ul><ul><p><font face="굴림" size="2">스케쥴에서 인접한 서로 다른 트랜잭션에 속한 두 연산이 모두 read(Q)이거나 혹은 두 
+연산이 서로 다른 데이터 항목에 대한 연산일 경우 두 연산은 위의 세조건에 해당하지 
+않으므로 충돌을 발생시키지 않는다.</font></p>
+<p><font face="굴림" size="2">스케쥴에서 서로 다른 트랜잭션에 속한 인접한 두 연산이 충돌을 발생시키지 않으면 
+스케쥴 상에서 두 연산 순서를 교환하더라도(두 연산 순서를 교환하여 생성된 스케쥴은 
+새로운 스케쥴이 된다) 스케쥴 수행의 결과에는 아무런 영향을 주지 않는다.</font></p>
+<p><font face="굴림" size="2">스케쥴에서 서로 다른 트랜잭션에 속한 인접한 두 연산에서 충돌이 발생하면 두 연산의 
+순서를 교환 할 수 없다. 그 이유는 두 연산을 교환하면 데이터 불일치를 야기할 
+가능성이 있기 때문이다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">충돌 동등 스케쥴(Conflict Equivalent Schedule)</font></h5>
+<ul><p><font face="굴림" size="2">두 개의 스케쥴 S0, S1이 주어졌다고 가정하자. 이때 스케쥴 S0에서 충돌이 발생하지 
+않는 서로 다른 트랜잭션에 속한 인접한 두 연산의 순서를 교환함으로써 S1을 생성할 
+수 있을 때 두 스케쥴 S0와 S1은 </font><font face="굴림" size="2"><b>충돌 동등(Conflict Equivalent)</b></font><font face="굴림" size="2">하다고 하며 
+스케쥴 S1을 스케쥴 S0의 </font><font face="굴림" size="2"><b>충돌 동등 스케쥴(Conflict Equivalent 
+Schedule)</b></font><font face="굴림" size="2">이라 한다.</font></p>
+<p><font face="굴림" size="2">다음 표 10-8을 고려하자.</font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>표 10-8. 충돌 동등인 두 스케쥴 S0과 S1</b></font></td>
+</tr><tr>
+<td width="748"><p align="center">&nbsp; 
+<ul><ul><ul><table border cellpadding="2">
+<tr>
+<td width="46" rowspan="7" bgcolor="#FFC1E0"><p align="center"><font face="굴림" size="2"><b>스케쥴 
+S0</b></font></p>
+<p align="center">&nbsp;</td>
+<td width="72" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="18" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="72" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="18" height="13" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+<td width="6" height="13" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="72" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="18" height="13" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+<td width="6" height="13" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="72" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="18" height="13" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" height="13" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+</tr><tr>
+<td width="72" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="18" height="13" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" height="13" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+</tr><tr>
+<td width="72" height="13" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="18" height="13" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(B)</b></font></td>
+<td width="6" height="13" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="72" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(B)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr></table></td>
+</tr><tr>
+<td width="748"><p align="center">&nbsp; 
+<ul><ul><ul><table border cellpadding="2">
+<tr>
+<td width="18" rowspan="7" bgcolor="#FFB5DA"><p align="center"><font face="굴림" size="2"><b>스케쥴 
+S1</b></font></p>
+<p align="center">&nbsp;</td>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서&nbsp;&nbsp;</b></font></td>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T0</b></font></td>
+<td width="6" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(B)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>read(A)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p>&nbsp;</td>
+<td width="6" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(A)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="18" bgcolor="#A2FFA2"><p><font face="굴림" size="2"><b>write(B)</b></font></td>
+<td width="6" bgcolor="#A2FFA2"><p>&nbsp;</td>
+</tr></table></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">표 10-8에서 스케쥴 S0 의 실행순서 5 번 연산은 실행순서 4 번 연산과 충돌이 발생하지 
+않으며 또한 실행순서 3 번 연산과도 충돌이 발생하지 않으므로 실행순서 4, 3 번 
+연산과 차례대로 교환가능하며, 따라서 스케쥴 S1이 될 수 있다. 따라서 S0와 S1은 
+충돌 동등이다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">충돌 직렬가능 스케쥴(Conflict Serializable Schedule)</font></h5>
+<ul><p><font face="굴림" size="2">비직렬 스케쥴 S0이 직렬 스케쥴과 충돌 동등일 때 S0를 충돌 직렬가능 스케쥴(Conflict 
+Serializable Schedule)이라 한다. 즉, 비직렬 스케쥴 S0에서 충돌을 발샌시키지 않는 
+서로 다른 트랜잭션에 속한 인접한 두 연산을 교환하여 직렬 스케쥴로 변환할 수 있을 
+때 스케쥴 S0을 충돌 직렬가능 스케뷸이라 한다. </font></p>
+<p><font face="굴림" size="2">표 10-8에서 스케쥴 S1 의 실행순서 6 번 연산은 실행순서 5 번 연산과 충돌이 발생하지 
+않으며 또한 실행순서 4 번 연산과도 충돌이 발생하지 않으므로 실행순서 5 번 연산, 4 
+번 연산과 차례대로 교환가능하며, 이렇게 교환하면 궁극적으로 직렬 스케쥴로 
+변환된다. 따라서 스케쥴 S1은 충돌 직렬가능 &nbsp;스케쥴이다. S0은 S1과 충돌 동등이고 
+S1은 직력 스케쥴과 충돌 동등이므로 결국 S0도 직렬 스케쥴과 충돌 동등이 되어 충돌 
+직렬가능 스케쥴이 된다.</font></p>
+<p><font face="굴림" size="2" color="teal">모든 동시성 제어 기법은 충돌 직렬가능성을 보장해야 한다. 만일 동시성 제어 기법이 
+충돌 직렬가능성을 보장하지 못하면 동시에 수행된 트랜잭션들에 의해 갱신된 
+데이터베이스에 데이터 불일치를 야기할 수 있기 때문이다.</font></p>
+<p><font face="굴림" size="2">본 강의에서 소개할 동시성 제어기법들은 모두 충돌 직렬가능성을 보장해준다.</font></p>
+<p><font face="굴림" size="2" color="blue"><u>지금부터 충돌 직렬가능 스케쥴을 단순히 </u></font><font face="굴림" size="2" color="blue"><b><u>직렬가능 스케쥴</u></b></font><font face="굴림" size="2" color="blue"><u>로 명명하기로 한다. </u></font></p>
+</ul>
+</ul>
+</ul>
+<h2><font face="굴림"><a name="3">3. 동시성 제어 기법</a></font></h2>
+<ul><ul><p><font face="굴림" size="2">지금부터 소개될 동시성 제어 기법들은 멀티 프로그래밍 환경에서 발생되는 충돌 
+직렬가능성을 보장하여 데이터공유의 문제점을 해결하는 기법들이다. 이 기법에 대하여 
+하나씩 학습하도록 하자.</font></p>
+</ul>
+<h4><font face="굴림"><a name="3-1">3.1 로킹 기법</a></font></h4>
+<ul><p><font face="굴림" size="2">직렬성을 보장하는 한 방법은 데이터 항목을 상호배제로 액세스하는 것이다. 즉, 한 
+트랜잭션이 데이터 항목을 액세스하는 동안, 다른 트랜잭션들은 그 데이터 항목을 변경할 수 
+없다. </font></p>
+<p><font face="굴림" size="2">트랜잭션의 병행 제어를 위해 사용되는 기법 중의 하나가 로킹이다. 로킹이 상호배제를 
+제공하므로 lock이 걸린 데이터 아이템은 이 lock을 걸은 트랜잭션만 독점적으로 접근할 수 
+있고 다른 트랜잭션으로부터 간섭이나 방해를 받지 않는 것이 보장된다. 또한 lock이 걸린 
+데이터 아이템은 lock을 걸은 트랜잭션에 의해서만 unlock을 할 수 있다. 이 lock, unlock 
+연산으로 병행 트랜잭션의 접근을 제어하는 것이 로킹 기법의 기본 아이디어이다.</font></p>
+<h5><font face="굴림" size="2">lock의 성질과 유형</font></h5>
+<ul><p><font face="굴림" size="2">로킹 기법은 기본적으로 두 개의 연산 lock과 unlock로 트랜잭션의 데이터 아이템을 
+제어한다. 트랜잭션 T가 데이터 아이템 x에 접근하려 할 때는 먼저 lock(x) 연산을 
+실행한다. 이때 x가 이미 lock이 걸렸으면 트랜잭션은 기다려야만 한다. 트랜잭션 T가 
+데이터 아이템 x의 사용이 모두 끝나면 unlock(x) 연산을 실행한다. 이렇게 되면 다른 
+트랜잭션이 lock(x)를 실행한 뒤 이 x를 다시 접근할 수 있게 된다. 따라서 이 lock은 
+데이터 아이템에 대한 상호배제를 할 수 있다.</font></p>
+<p><font face="굴림" size="2">이 로킹 기법하에서 모든 트랜잭션은 다음과 같은 </font><font face="굴림" size="2"><b>로킹규약(locking 
+protocol)</b></font><font face="굴림" size="2">을 지켜야 한다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<ul type="disc">
+<li><font face="굴림" size="2"><b>트랜잭션 T가 read(x) 나 write(x) 연산을 하려면 반드시 먼저 
+lock(x) 연산을 실행해야 한다.</b></font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>트랜잭션 T가 실행한 lock(x)에 대해서는 T가 모든 실행을 
+종류하기 전에 반드시 unlock(x) 연산을 실행해야 한다.</b></font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>트랜잭션 T는 다른 트랜잭션에 의해 이미 x에 lock이 걸려 있으면 
+다시 lock(x)를 실행시키지 못한다.</b></font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>트랜잭션 T는 x에 lock을 자기가 걸어 놓지 않았다면 unlock(x)를 
+실행시키지 못한다.</b></font> 
+</ul>
+<p><font face="굴림" size="2">트랜잭션 T가 실행하는 lock(x)와 unlock(x) 사이를 T가 x에 대해 lock를 걸고 있다고 
+말한다. 분명히 어느 한 데이터 아이템에 대해서는 기껏해야 하나의 트랜잭션만 lock을 
+걸 수 있다. 만일 모든 트랜잭션들이 이 규약을 지킨다면 어떤 경우에도 두 개의 
+트랜잭션이 같은 아이템을 동시에 접근하느 경우는 없게 된다. 물론 트랜잭션들은 
+데이터베이스에 있는 상이한 데이터 아이템을 접근하면서 병행 실행을 진행할 수 있다.</font></p>
+<p><font face="굴림" size="2" color="teal">이 기본적인 로킹 기법은 일반적으로 너무 제약적일 수 있다. 왜냐하면 어느 때고 각 
+데이터 아이템에 대해 기껏해야 하나의 트랜잭션만 lock을 걸 수 있기 때문이다. </font><font face="굴림" size="2">그러나 
+트랜잭션들이 판독 목적으로만 데이터 아이템 x를 접근하려 한다면 여러 트랜잭션이 이 
+테이터 아이템 x를 병행적으로 접근하더라도 문제가 없을 것이다. 물론 어떤 
+트랜잭션이 아이템 x를 기록하려 한다면 그 트랜잭션은 이 x에 대하여 독점적 접근을 
+가져야 한다. </font><font face="굴림" size="2" color="teal">만일 판독하려는 트랜잭션들에 대해 병행 접근을 허용한다면 </font><font face="굴림" size="2">lock 연산을 
+다음과 같이 S(공용)형과 X(배타)형 lock 연산으로 나눌수 있다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<ul type="disc">
+<li><font face="굴림" size="2"><b>lock-S(shared lock) : 트랜잭션 T가 아이템 x에 대해 lock-S를 
+걸면 T는 이 아이템에 대해 판독할 수 있지만 기록할 수는 없다. 
+이때 이 x에 대해서 다른 트랜잭션은 공용 lock을 동시에 걸 수 
+있다.</b></font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>lock-X(exclusive lock) : 트랜잭션 T가 아이템 x에 대해 
+lock-X를 걸면 T는 이 아이템 x에 대해 판독과 기록을 모두 할 수 
+있다. 이때 다른 트랜잭션은 이 x에 대해 어떤 lock도 걸 수가 없다.</b></font> 
+</ul>
+<p><font face="굴림" size="2">이러한 lock 유형에 대한 양립성(compatibility)은 다음과 같이 정의할 수 있다. x와 y가 
+임의의 lock 유형을 나타낸다고 하자. 가령 트랜잭션 Ti(Ti ≠ Tj)가 데이터 아이템에 
+유형 x의 lock을 요청했다고 하자. 이때 만일 x에 유형 y의 lock이 걸려 있음에도 
+불구하고 트랜잭션 Ti에 유형 x의 lock을 허용할 수 있다면 유형 x와 y는 양립한다고 
+한다. 그림 1은 이 공용 lock과 배타 lock에 대한 양립성을 나타내고 있다. 만일 유형 x와 
+유형 y가 양립할 수 있다면 참이 되고 양립할 수 없으면 거짓이 된다. 여기서 주의할 
+것은 공용형은 공용형과 양립하지만 배타형과는 양립하지 않고 충돌된다. 이 두가지 
+lock 유형이 사용되면 경우에 따라서는 특정 아이템에 대해 여러 개의 공용 lock이 
+상이한 트랜잭션에 의해 걸려 있을 수 있다. 이때 만일 전용 lock이 요청된다면 현재 
+걸려 있는 이 공용 lock이 모두 풀려질 때까지 기다려야만 한다.</font></p>
+<p><font face="굴림" size="2">lock의 양립성을 나타내는 행령은 다음 그림 10-1 과 같다.</font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><img src="img/그림10-1.jpg" border="0"></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-1. lock의 양립성</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">데이터 아이템 x에 대해 공용 lock이 필요한 트랜잭션은 lock-S(x) 연산을 실행해야 
+하고 배타 lock이 필요한 트랜잭션은 lock-X(x) 연산을 실행해야 한다. 데이터 아이템 
+x에 대한 lock을 풀기 위해서는 unlock(x) 연산을 수행하면 된다. 이 세가지 연산을 
+구현하는 한 가지 방법은 각 lock에 대해 세 개의 필드 &lt;데이터 아이템, lock, 트랜잭션 
+수&gt;를 가진 레코드를 만들어 관리하면 된다. lock의 값은 lock-S, lock-X, 또는 
+unlock을 나타내는 코드값이 된다.</font></p>
+<p><font face="굴림" size="2">이 공용 lock이 허용될 때 트랜잭션은 다음과 같은 </font><font face="굴림" size="2"><b>공용 로킹 규약(shared 
+locking protocol)</b></font><font face="굴림" size="2">을 따라야 한다.</font></p>
+<p>&nbsp; 
+<ul type="disc">
+<li><font face="굴림" size="2"><b>트랜잭션 T가 read(x) 연산을 실행하려면 먼저 lock-S(x)나 
+lock-X(x) 연산을 실행해야 한다.</b></font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>트랜잭션 T가 write(x) 연산을 실행하려면 먼저 lock-X(x) 연산을 
+실행해야 한다.</b></font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>트랜잭션 T가 lock-S(x)나 lock-X(x) 연산을 하려 할 때 x가 까지 
+기다려야 한다. </b></font>
+<li><font face="굴림" size="2"><b>트랜잭션 T가 모든 실행을 종료하기 전에는 lock을 걸은 모든 x에 
+대해 반드시 unlock(x)를 실행해야 한다.</b></font> 
+<li><font face="굴림" size="2"><b>트랜잭션 T는 자기가 lock을 걸지 않은 데이터 아이템에 대해 
+unlock을 실행 할 수 없다.</b></font> 
+</ul>
+<p><font face="굴림" size="2">여기서 주의할 것은 트랜잭션이 데이터 아이템에 접근을 하는 동안에는 그 데이터 
+아이템에 대해 lock을 계속 걸어 놓고 있어야 한다. 특히 트랜잭션이 어느 한 데이터 
+아이템의 마지막 접근이 끝나자 마자 unlock을 하는 것은 바람직하지 않다. 왜냐면 직렬 
+가능성이 보장되지 않기 때문이다. 다시 말해서 트랜잭션들이 로킹 규약을 따른다는 
+것만으로 그 스케줄의 직렬 가능성이 보장되는 것이 아니라는 것이다. 다음 그림 10-2는 
+트랜잭션들이 모두 로킹 규약을 따랐음에도 직렬 가능 스케줄이 되지 못하는 예를 보여 
+주고 있다.</font></p>
+<p><font face="굴림" size="2"><a name="그림10-2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font> 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><ul><ul><ul><table border>
+<tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="18" bgcolor="#FF796F"><p align="center"><font face="굴림" size="2"><b>T1:</b></font></td>
+<td width="6" bgcolor="#FF796F"><p align="center"><font face="굴림" size="2"><b>T2:</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>lock-X(x)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>x:=x+100</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>unlock(x)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>lock-X(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>x:=x * 2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>10</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>unlock(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>11</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>lock-X(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>12</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>13</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>y:=y * 2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>14</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>write(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>15</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p>&nbsp;</td>
+<td width="6" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>unlock(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>16</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>lock-X(y)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>17</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>18</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>y:=y+100</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>19</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>write(y)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF7068"><p align="center"><font face="굴림" size="2"><b>20</b></font></td>
+<td width="18" bgcolor="#AAFFAA"><p><font face="굴림" size="2"><b>unlock(y)</b></font></td>
+<td width="6" bgcolor="#AAFFAA"><p>&nbsp;</td>
+</tr></table></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 2. 로킹 규약으로 직렬 가능이 아닌 스케줄</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;</font></p>
+<p><font face="굴림" size="2">가령 x와 y가 각각 100과 200이라고 하자. 그러면 &lt;T1,T2&gt; 또는 &lt;T2,T1&gt; 순서로 
+실행하는 직렬 스케줄의 결과는 x와 y가 각각 x=400, y=600이거나 x=300, y=500이 
+되어야 하는데 x=400, y=500 과 같은 이상한 결과가 나와 맞지 않게 된다. 그 이유는 
+트랜잭션T1 이 데이터 아이템 x에 대해 너무 일찍 unlock(x)를 실행하여 트랜잭션 T2 
+가 일관성이 없는 데이터를 접근했기 때문이다. 따라서 이 직렬 가능성을 보장하기 
+위해서는 트랜잭션이 lock과 unlock 연산을 하는 시점에 대한 규약이 추가로 필요하다.</font></p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="3-2">3.2 &nbsp;2 단계 로킹 규약</a></font></h4>
+<ul><p><font face="굴림" size="2">직렬 가능성을 보장할 수 있는 규약으로 가장 많이 알려진 것은 </font><font face="굴림" size="2"><b>2단계 로킹 규약(2 
+phase locking protocol)</b></font><font face="굴림" size="2">이다. 이 규약은 모든 트랜잭션들이 lock과 unlock 연산을 
+다음과 같이 2단계로 구분하여 수행할 것을 요구한다.</font></p>
+<p>&nbsp; 
+<ul type="disc">
+<li><font face="굴림" size="2"><b>확장 단계(growing phase) :</b></font><font face="굴림" size="2"> 트랜잭션은 lock만 수행할 수 있고 unlock은 
+수행할 수 없는 단계이다.</font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>축소 단계(shrinking phase) :</b></font><font face="굴림" size="2"> 트랜잭션은 unlock만 수행할 수 있고 lock은 
+수행할 수 없는 단계이다.</font> 
+</ul>
+<p><font face="굴림" size="2">트랜잭션은 처음에 lock 연산을 수행하는 확장 단게로 들어간다. 그러다가 일단 unlock을 
+수행하면 그 시점부터는 더 이상 새로운 lock 연산은 수행할 수 없다. 따라서 </font><font face="굴림" size="2" color="teal">한 트랜잭션에서 
+모든 lock (lock-S, lock-X)연산들이 첫 번째 unlock 연산전에 수행 되었다면 이 트랜잭션은 
+2단계 로킹 규약을 준수하였다고 말할 수 있다. </font><font face="굴림" size="2">그림 10-3의 스케줄은 2단계 로킹 규약을 
+준수하고 있지만 그림 2 T1 과 T2는 2단계 로킹 규약을 준수하고 있지 않다. </font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><ul><ul><ul><table border>
+<tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="72" bgcolor="#FF7D77"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+<td width="69" bgcolor="#FF7D77"><p align="center"><font face="굴림" size="2"><b>T2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>lock-X(x)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>x:=x+100</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>lock-X(y)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>unlock(x)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>lock-X(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>x:=x * 2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>10</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>11</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>12</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>y:=y+100</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>13</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(y)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>14</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>unlock(y)</b></font></td>
+<td width="69" bgcolor="#A6FFA6"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>15</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>lock-X(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>16</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>unlock(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>17</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>18</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>y:=y * 2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>19</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>write(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>20</b></font></td>
+<td width="72" bgcolor="#A6FFA6"><p>&nbsp;</td>
+<td width="69" bgcolor="#A6FFA6"><p><font face="굴림" size="2"><b>unlock(y)</b></font></td>
+</tr></table></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-3. 2단계 로킹 규약으로 직렬 가능한 스케줄</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">그렇다면 이 2단계 로킹 규약으로 얻는 이점은 무엇인가? 이에 대한 해답은 다음 정리로 
+대신할 수 있다.</font></p>
+<p><font face="굴림" size="2"><b>【 2단계 로킹 규약 정리 】</b></font></p>
+<p><font face="굴림" size="2"><b>만일 한 스케줄에서 모든 트랜잭션들이 2단계 로킹 규약을 준수한다면 그 
+스케줄은 직렬 가능하다.</b></font></p>
+<p><font face="굴림" size="2">이 정리에 대해 한가지 유의해야 할 것은 스케줄이 직렬 가능하기 위해서 반드시 그 스케줄에 
+있는 모든 트랜잭션들이 2단계 로킹 규약만을 따라야 한다는 것을 의미하는 것은 아니라는 
+것이다. 즉 모든 트랜잭션이 2단계 로킹 규약을 따라야 한다는 것은 직렬 가능성을 보장하는 
+충분 조건이지 필요 조건은 아니다. 그림 3의 스케줄에서 T1 과 T2는 모두 2단계 로킹 규약을 
+따르고 있다. 따라서 이 비 직렬 스케줄은 직렬 가능하다. 그러나 그림 2의 스케줄에서 T1 과 
+T2는 모두 2단계 로킹 규약을 따르고 있지 않기 때문에 이 정리로써는 이 스케줄의 직렬 
+가능성을 보장할 수 없다.</font></p>
+<p><font face="굴림" size="2"><a href="#그림10-2">그림 10-2</a></font><font face="굴림" size="2">의 스케줄에서 T2는 2단계 로킹 규약을 따르고 있으나 T1은 이 2단계 로킹 규약을 
+따르고 있지 않다. 따라서 이 정리로써는 이 스케줄의 직렬 가능성을 보장할 수가 없다. 직렬 
+가능성을 보장할 수 없다는 말은 직렬 가능할 수도 있고 직렬 불가능할 수도 있다는 뜻이다.</font></p>
+<p><font face="굴림" size="2">다음 그림 10-4의 스케줄에서는 T1 과 T2가 모두 2단계 로킹 규약을 따르고 있지 않기 때문에 
+이 정리로써는 직렬 가능성에 대한 보장을 할 수 없다. </font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><ul><ul><ul><table border>
+<tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="72" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+<td width="69" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>T2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>lock-X(x)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>x:=x+100</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>lock-X(y)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>unlock(x)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>lock-X(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>x:=x * 2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>10</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>11</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>unlock(x)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>12</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>13</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>y:=y+100</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>14</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>write(y)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>15</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>unlock(y)</b></font></td>
+<td width="69" bgcolor="#ACFFAC"><p>&nbsp;</td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>16</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>lock-X(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>17</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>18</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>y:=y * 2</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>19</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>write(y)</b></font></td>
+</tr><tr>
+<td width="18" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>20</b></font></td>
+<td width="72" bgcolor="#ACFFAC"><p>&nbsp;</td>
+<td width="69" bgcolor="#ACFFAC"><p><font face="굴림" size="2"><b>unlock(y)</b></font></td>
+</tr></table></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-4. 2단계 로킹 규약은 아니지만 직렬 가능한 스케줄</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">그러나 그림 10-4의 이 스케줄은 실제로 직렬가능하다. 이 예는 바로 2단계 로킹 규약이 충분 
+조건이지 필요 조건은 아니라는 것을 보여주고 있다. 즉 이 스케줄은 2단계 로킹 규약으로는 
+생성되지 않는 직렬 가능 스케줄인 것이다.</font></p>
+<p><font face="굴림" size="2">로킹 기법에 2단계 규약을 첨가함으로써 스케쥴의 직렬 가능성 검사를 수행할 필요가 없어 
+졌다. 프로그래머는 각 트랜잭션들이 2단계 로킹 규약을 따르고 있는가만을 확인하면 된다. </font></p>
+<p><font face="굴림" size="2">2단계 로킹 규약은 병행 수행의 범위를 축소시킬 수도 있다. 그것은 트랜잭션 T가 데이터 
+아아템 x를 다 사용하고 난 뒤 unlock을 하려 해도 나중에 데이터 아이템 y를 lock해야 된다면 
+그때까지 x를 unlock할 수 없기 때문이다. 역으로 x를 unlock시키기 위해서는 y를 필요로 하는 
+시기 이전이라도 lock을 해두어야 한다. 그래서 트랜잭션이 필요로 하는 모든 데이터 
+아이템들이 일단 lock이 될 때까지 x는 트랜잭션 T에 의해 lock이 되어 있어야 한다. 일단 
+필요한 데이터 아이템에 대한 lock이 다 끝난 다음에야 T는 x를 unlock할 수 있게 된다. 반면에 
+데이터 아이템 x를 접근하려는 다른 트랜잭션은 T가 실제로 사용이 끝났지만 기다려야만 된다. 
+역으로 y를 필요로 하는 시기 이전에 T가 lock을 한다면 y를 접근하려는 다른 트랜잭션은 
+실제로 y가 사용되고 있지 않는 데도 기다려야만 하는 것이다. 이것은 스케줄 자체를 검사하지 
+않고 스케줄의 직렬 가능성을 보장받는데 대한 대가가 된다. 이것의 이점은 데이터 베이스에 
+대한 변경된 값의 정확성이 보장되는 것이다.</font><font face="굴림" size="2" color="teal"> 2단계 로킹 규약은 직렬 가능성을 보장하지만 
+반면에 교착 상태 문제를 내포하고 있다. 교착 상태는 사실상 로킹을 사용하는 모든 기법이 
+대응해야 될 문제이다.</font></p>
+</ul>
+<h4><font face="굴림"><a name="3-3">3.3 트리 프로토콜 </a></font></h4>
+<ul><h5><font face="굴림"><a name="3-3-1">3.3.1 로킹 단위</a></font></h5>
+<p><font face="굴림" size="2" color="teal">로킹의 대상이 되는 데이터 객체의 크기를 </font><font face="굴림" size="2">로킹 단위(locking granulity)라 하는데 이것은 
+동시성 제어의 데이터 단위가 된다. 일반적으로 로킹 단위가 크면 병행성 수준이 낮아지는 
+반면에 병행 제어 기법은 간단해진다. 반대로 로킹 단위가 작으면 병행성 수준은 높아지지만 
+로크의 수가 많아지게 되어 관리가 복잡해 진다. 따라서, 로킹의 단위를 어느 정도로 
+결정하느냐 하는 것은 시스템이 지원하는 기법에 달려 있다. 로킹 단위가 극단적으로 데이터 
+베이스 자체가 되면 병행성이 전혀 없게 되어 직렬 스케줄과 같게 되고 반대로 한 레코드의 
+필드가 되면 최대의 병행성을 제공할 수 있다. 그림 10-5는 데이터의 다양한 로킹 단위를 
+보여주고 있다.</font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><img src="img/그림10-5.jpg" border="0"></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-5. 로킹 단위의 다양성</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<h5><font face="굴림"><a name="3-3-2">3.3.2 트리 프로토콜(Tree Protocol)</a></font></h5>
+<p><font face="굴림" size="2">위에서 언급한 바와 같이, 데이터 항목을 액세스하는 방법에 관한 정보가 없을 때, 2단계 로킹 
+규약은 직렬성 보장을 위한 필요 충분 조건이다. 따라서, 2단계가 아닌 규약을 개발하기 
+위해서는, 각 트랜잭션이 데이터 베이스를 액세스하는 방법에 관한 추가 정보를 알아야 한다. 
+제공되는 그러한 정보의 양에 따라 여러 가지 모델이 있다. 가장 간단한 모델은 데이터 베이스 
+항목이 액세스되는 순서에 관한 정보를 미리 알고 있는 것이다. 이러한 정보가 주어지면, 
+2단계는 아니지만 충돌 직렬성을 보장하는 로킹 규약을 구성할 수 있다.</font></p>
+<p><font face="굴림" size="2">이러한 사전 지식을 얻기 위해 모든 데이터 항목의 집합 D={d1,d2 …,dn}에 부분 순서 →를 
+결정한다. di → dj이면, di 와 dj를 모두 액세스하는 어떤 트랜잭션은 dj를 액세스 하기 전에 
+di를 먼저 액세스하여야 한다. 이러한 부분 순서는 데이터의 논리적 혹은 물리적 구성에 따라 
+정해지나, 단지 병행 수행 제어를 목적으로 단독 부과될 수도 있다.</font></p>
+<p><font face="굴림" size="2">부분 손서는 집합 D를 데이터 베이스 그래프라고 하는 비순환 방향성 그래프로 생각함을 
+의미한다. 본 절에서는, 단순화하기 위해 뿌리를 갖는 트리 그래프만으로 한정한다. 배타 
+로크만을 사용하는 '트리규약'이라고 하는 간단한 규약을 제안한다. </font></p>
+<p><font face="굴림" size="2">트리 트리프로토콜에서는 로크 명령으로 lock-X만이 허용된다. 각 트랜잭션 Ti는 한 번만 한 
+데이터 항목을 로크할 수 있으며, 아래 규칙을 따라야 한다.</font></p>
+<h5><font face="굴림" size="2">트리 프로토콜</font></h5>
+<ul type="disc">
+<li><font face="굴림" size="2">Ti의 첫 로크는 어떤 데이터 항목에도 가능하다.</font> 
+<li><font face="굴림" size="2">이후에는, 데이터 항목 Q의 부모가 Ti에 의해 현재 로크되어 있을 때만, Ti는 Q를 로크할 
+수 있다.</font> 
+<li><font face="굴림" size="2">데이터 항목들은 언제라도 해제될 수 있다.</font> 
+<li><font face="굴림" size="2">트랜잭션 Ti가 로크하였다가 해제한 데이터 항목은, 다시는 Ti에 의해 로크될 수 없다. </font>
+</ul>
+<p><font face="굴림" size="2">앞에서 언급한 대로, 트리 규약하에서 적법한 스케줄은 모두 충돌 직렬 가능이다.</font></p>
+<p><font face="굴림" size="2">이 규약의 설명을 위해, 다음 그림 10-6의 데이터 베이스 그래프를 생각하여 보자.</font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><p align="center"><img src="img/그림10-6.jpg" border="0"></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-6. 트리 구조 데이터 베이스 그래프</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">아래의 네 트랜잭션은 이 그래프의 트리 규약을 따른다. 트랜잭션들은 로크 명령과 해제 
+명령만으로 나타내었다.</font></p>
+<p><font face="굴림" size="2"><b>T13 : lock-X(B) ; lock-X(E) ; unlock(E) ; lock-X(D) ; unlock(B) ; 
+lock-X(G) ; unlock(D) ; unlock(G) </b></font></p>
+<p><font face="굴림" size="2"><b>T14 : lock-X(D) ; lock-X(H) ; unlock(D) ; lock-X(J) ; unlock(J) ; 
+unlock(H) </b></font></p>
+<p><font face="굴림" size="2"><b>T15 : lock-X(B) ; lock-X(E) ; unlock(E) ; unlock(B) </b></font></p>
+<p><font face="굴림" size="2"><b>T16 : lock-X(D) ; lock-X(H) ; unlock(D) ; unlock(H)</b></font></p>
+<p><font face="굴림" size="2">참여한 위의 네 개의 트랜잭션에 대한 가능한 스케줄은 다음 그림 10-7에 나타내었다. </font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><ul><ul><table border>
+<tr>
+<td bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="77" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T13</b></font></td>
+<td width="31" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T14</b></font></td>
+<td width="73" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T15</b></font></td>
+<td width="69" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T16</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(B)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(D)</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(H)</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(D)</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(E)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(E)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(D)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(B)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(B)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>10</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(E)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>11</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(H)</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>12</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(G)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>13</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(D)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>14</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(D)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>15</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>lock-X(H)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>16</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(D)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>17</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(H)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>18</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(E)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>19</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(B)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>20</b></font></td>
+<td width="77" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>unlock(G)</b></font></td>
+<td width="31" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr></table></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-7. 직렬 가능 스케줄 </b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">실행하는 도중에 트랜잭션 T13은 두 개의 서로 다른 부트리에 로크를 건다.</font></p>
+<p><font face="굴림" size="2">위의 그림 10-7의 스케줄은 충돌 직렬 가능함에 주목하자. 트리 규약은 충돌 직렬성을 보장할 
+뿐만 아니라 교착상태를 방지할 수 있음을 알 수 있다.</font></p>
+<p><font face="굴림" size="2">트리 규약은 2단계 로킹 규약에 비해서, 로크 해제를 초기에 할 수 있어 대기시간을 줄 일 수 
+있으며, 병행 수행이 향상된다는 장점이 있다. 뿐만 아니라, 교착 상태를 방지하므로 복귀가 
+불필요하다. 그러나 이 규약은 트랜잭션이 액세스하지도 않을 데이터를 로크할 필요가 있다는 
+단점이 있다. 예를 들어 그림 8의 데이터 베이스 그래프에 있는 데이터 항목 A와 J를 액세스할 
+필요가 있는 트랜잭션은 A와 J 뿐만 아니라, B,D 그리고 H까지도 로크해야 한다. 이것은 로킹 
+경비와 부가적인 대기시간 가능성의 증가 및 병행 수행을 저하시키는 결과를 가져온다.</font></p>
+<p><font face="굴림" size="2">트랜잭션의 집합에 대해, 트리 규약을 통해서 얻을 수 없는 충돌 직렬성이 있다. 사실 트리 
+규약에서 가능하지 않은 것이 2단계 로킹 규약에서는 가능한 스케줄도 있고 그 반대도 
+마찬가지다.</font></p>
+</ul>
+<h4><font face="굴림"><a name="3-4">3.4 타임 스템프 순서 기법</a></font></h4>
+<ul><p><font face="굴림" size="2"><b>타임 스템프 순서 기법</b></font><font face="굴림" size="2">이란 </font><font face="굴림" size="2" color="teal">트랜잭션을 인터리브로 실행한 것이 타임 스템프 순서대로 
+트랜잭션을 실행하는 직렬 스케줄의 결과와 항상 같게 되는 것을 보장하는 동기화 기법</font><font face="굴림" size="2">이다. 
+타임 스템프란 시스템이 트랜잭션에 부여하기 위해 생성한 고유값이다. 통상적으로 시간 
+스템프값은 트랜잭션이 시스템에 들어오는 순서대로 부여 되기 때문에 시간 스템프는 
+트랜잭션이 시스템에 들어오는 순서대로 부여되기 때문에 시간 스템프는 트랜잭션의 실행 
+시작 시간으로 생각할 수 있다. 트랜잭션 Ti 의 타임 스템프는 TS(Ti)로 나타낸다. 만일 
+트랜잭션 Ti에 시간 스템프 TS(Ti)가 부여된 뒤에 새로운 트랜잭션 Tj가 시스템에 들어 왔다면 
+TS(Ti) &lt; TS(Tj)가 된다. 이 타임 스템프 순서 기법은 트랜잭션으로 하여금 기다리게 하지 않기 
+때문에 교착 상태가 일어날 수 있다.</font></p>
+<p><font face="굴림" size="2">타임 스템프는 여러 가지 방법으로 생성될 수 있다. 한가지 방법은 논리적 계수를 사용하는 
+것인데 트랜잭션이 들어올 때마다 계수를 하나씩 증가시켜 타임 스템프값으로 부여하는 
+것이다. 또 다른 방법은 시스템 클럭의 값을 그 트랜잭션의 타임 스템프 값으로 부여하는 
+것이다.</font></p>
+<p><font face="굴림" size="2">타임 스템프를 이용하여 병행 제어를 하는 방법은 스케줄을 트랜잭션들이 그들의 시간 스템프 
+순서에 따라 실행된 것과 똑같이 만드는 것이다. 즉, 트랜잭션들의 타임 스템프가 직렬 
+가능성을 결정한다. 이렇게 되면 이 트랜잭션들에 대한 스케줄은 직렬 가능하고 이와 동등한 
+직렬 스케줄은 트랜잭션들의 타임 스템프에 따른 순서가 되는 것이다. 그래서 만일 TS(Ti) &lt; 
+TS(Tj)라면 시스템은 실행된 스케줄이 트랜잭션 Ti가 트랜잭션 Tj보다 반드시 먼저 나오는 
+직렬 스케줄과 동등하다는 것을 보장해 주는 것이다. 이 기법은 타임 스템프 순서라 한다.</font></p>
+<p><font face="굴림" size="2">2단계 로킹 규약에서는 스케줄이 로킹 규약에 의해 허용되는 어떤 임의의 직렬 스케줄과 
+동등함으로써 직렬 가능하지만, 타임 스템프 순서 기법에서는 스케줄이 트랜잭션의 타임 
+스템프 순서에 따른 특정 직렬 스케줄과 동등함으로써 직렬 가능하다.</font></p>
+<p><font face="굴림" size="2">타임 스템프 순서에 맞는 스케줄을 보장하기 위해서는 둘 이상의 트랜잭션이 접근하는 각 
+데이터 아이템들에 대해 접근되는 순서가 타임 스템프 순서에 의한 스케줄의 직렬 가능성을 
+위반하지 않는다는 것을 보장되어야 한다. 이것을 위해서는 각 데이터 아이템 x에 대해 다음과 
+같은 두 개의 타임 스템프값이 연관된다.</font></p>
+<ul><p><font face="굴림" size="2"><b>read_TS(x) : </b></font><font face="굴림" size="2">데이터 아이템 x의 판독 타임 스템프로서 read(x)를 성공적으로 
+수행한 트랜잭션의 타임 스템프 중에서 제일 큰 타임 스템프</font></p>
+<p><font face="굴림" size="2"><b>write_TS(x) : </b></font><font face="굴림" size="2">데이터 아이템 x의 기록 타임 스템프로서 write(x)를 성공적으로 
+수행한 트랜잭션의 타임 스템프 중에서 제일 큰 타임 스템프</font></p>
+</ul>
+<p><font face="굴림" size="2">이 타임 스템프들은 새로운 read(x)나 write(x) 명령문이 실행될 때마다 갱신된다. 어떤 
+트랜잭션 Ti가 read(x) 나 write(x) 연산을 수행하려 할 때마다 Ti의 타임 스템프를 
+read_TS(x)와 write_TS(x)와 비교해서 연산의 실행이 타임 스템프 순서를 위반하지 않는가를 
+검사한다. 만일 타임 스템프 순서를 위반하게 되면 트랜잭션 Ti는 취소되고 데이터 베이스에 
+갱신한 것이 있으면 모두 원상 복귀된다. 그런 뒤에 이 트랜잭션 Ti는 시스템에 다시 제출되고 
+새로운 타임 스템프를 부여 받는다. 여기서 유의할 것은 </font><font face="굴림" size="2" color="teal">Ti가 취소되고 복귀될 때에 Ti가 
+갱신한 데이터 값을 사용한 트랜잭션 Ti가 있다면 이 트랜잭션 Tj도 함께 복귀되어야 한다는 
+것이다. 또한 이 Tj가 갱신한 데이터값을 트랜잭션 Tk가 사용했다면 이 Tk도 물론 복귀되어야 
+한다. 이러한 연산을 연쇄 복귀(cascading rollback)라 하는데 이것은 타임 스템프 순서 
+기법에서의 문제점 중에 하나가 된다.</font></p>
+<h5><font face="굴림" size="2">타임 스템프 순서 규약</font></h5>
+<ul><p><font face="굴림" size="2">타임 스템프 순서 규약은 충돌되는 read나 write 연산을 타임 스템프 순서대로 실행되고 
+보장해야 한다. 이 규약은 다음과 같다.</font></p>
+<p><font face="굴림" size="2"><b>1. 트랜잭션 Ti가 read(x)를 수행하려 할 때 :</b></font></p>
+<p><font face="굴림" size="2"><b>&nbsp;&nbsp;</b></font> 
+<ul type="disc">
+<li><font face="굴림" size="2"><b>만일 TS(Ti) &lt; write_TS(x)이면 </b></font><font face="굴림" size="2">read(x)를 거부하고 Ti를 취소시켜 
+복귀시킨다. 왜냐하면 TS(Ti)보다 타임 스템프가 큰 어떤 트랜잭션이 Ti가 
+잡근하기 전에 이미 x의 값을 먼저 변경시켰기 때문에 그대로 판독을 한다면 
+타임 스템프 순서를 위반하게 된다.</font> 
+<li><font face="굴림" size="2"><b>만일 TS(Ti) &gt; write_TS(x)이면</b></font><font face="굴림" size="2"> read(x)를 허용하고 read_TS(x)를 
+TS(Ti)와 현재의 read_TS(x) 중에서 큰 것으로 고정시킨다.</font> 
+</ul>
+<p><font face="굴림" size="2"><b>2. 트랜잭션 Ti가 write(x)를 수행하려 할 때:</b></font></p>
+<p><font face="굴림" size="2"><b>&nbsp;&nbsp;</b></font> 
+<ul type="disc">
+<li><font face="굴림" size="2"><b>만일 TS(Ti) &lt; read_TS(x) 이면 </b></font><font face="굴림" size="2">write(x)를 거부하고 Ti를 취소시켜 
+복귀시킨다. 왜냐하면 TS(Ti)보다 타임 스템프가 큰 트랜잭션이 x의 값을 먼저 
+판독했기 때문에 그대로 기록을 한다면 타임 스템프 순서를 위반하게 된다.</font> 
+<li><font face="굴림" size="2"><b>만일 TS(Ti) &lt; write_TS(x) 이면 </b></font><font face="굴림" size="2">write(x)를 거부하고 Ti를 취소시켜 
+복귀시킨다. 왜냐하면 TS(Ti)보다 타임 스템프가 큰 트랜잭션이 x의 값을 이미 
+기록하였기 때문에 Ti가 기록하려는 값은 시간에 뒤진 소용없는 값이 되었고 
+그대로 기록 연산을 하면 타임 스템프 순서에 위반되기 때문이다.</font> 
+<li><font face="굴림" size="2"><b>그 외의 경우 (TS(Ti) ≥ read_TS(x) ∧ TS(Ti) ≥ 
+write_TS(x)에는</b></font><font face="굴림" size="2"> write(x)를 허용하고 write_TS(x)의 값을 TS(Ti)로 
+고정한다.</font> 
+</ul>
+<p><font face="굴림" size="2">기록 연산이나 판독 연산을 수행하려다 실패하고 복귀된 트랜잭션은 새로운 타임 
+스템프를 부여받아 다시 시작해야 한다. 타임 스템프 순서 규약은 2단계 로킹 규약과 
+같이 스케줄의 직렬 가능성을 보장한다. 그러나 스케줄에 어떤 방법으로는 직렬 
+가능성이 보장되더라도 다른 방법으로는 보장되지 않는 것이 있다. 따라서 어느 한 
+규약도 모든 가능한 직렬 가능 스케줄을 허용하는 것은 아니다.</font></p>
+<p><font face="굴림" size="2">이 타임 스템프 순서 규약을 이해하기 위해 다음 그림 10-8과 같은 트랜잭션 T1과 T2의 
+스케줄을 생각해 보자. </font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><ul><ul><table border>
+<tr>
+<td bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="73" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+<td width="69" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T2</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>x:=x-2</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>6</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>read(y)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>7</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>display(x+y)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>8</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>y:=y-2</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>9</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>&nbsp;</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>write(y)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>10</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>&nbsp;</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>display(x+y)</b></font></td>
+</tr></table></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-8. 타임 스템프 순서 스케줄</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">그림 10-8의 스케줄에서 트랜잭션들은 각각 그들의 첫 번째 명령어를 실행시키기 
+직전에 타임 스템프를 부여받는다. 따라서 그림 7의 스케줄은 TS(T1) &lt; TS(T2)가 되고 
+모든 연산들은 타임 스템프 규약을 위배하지 않으므로 직렬 가능하다. 이 스케줄은 또한 
+lock과 unlock 연산을 적절히 사용하면 2단계 로킹 규약으로도 직렬 가능하지만 타임 
+스템프 규약으로는 직렬 불가능한 것이 있는 반면에 그 반대도 있다.</font></p>
+<p><font face="굴림" size="2">이 타임 스템프 순서 규약은 충돌 직렬 가능성을 보장한다. 왜냐하면 충돌 연산들은 
+타임 스템프 순서대로 실행되기 때문이다. 앞에서도 언급했지만 이 규약하에서는 
+트랜잭션이 대기하지 않기 때문에 교착 상태가 발생하지 않는다. 그러나 트랜잭션이 
+계속적으로 취소되고 다시 시작되는 경우에는 순환적 재시작 문제가 발생할 수 있다. 
+또한 연쇄적 복귀 문제가 일어날 수 있다. </font></p>
+</ul>
+<h5><font face="굴림" size="2">Thomas의 기록 규칙</font></h5>
+<ul><p><font face="굴림" size="2">앞에서 설명한 타임 스템프 순서 규약 중에서 write 연산에 대한 규약을 약간만 
+수정하면 write 연산의 거부로 인한 트랜잭션의 취소를 감소시킬 수 있다. 다음과 같은 
+write 연산에 대한 수정을 </font><font face="굴림" size="2"><b>Thomas의 기록 규칙(Thomas write 
+protocol)</b></font><font face="굴림" size="2">이라고 한다.</font></p>
+<p><font face="굴림" size="2"><b>트랜잭션 Ti가 write(x)를 수행하려 할 때:</b></font></p>
+<ul><p><font face="굴림" size="2"><b>조건 1. 만일 TS(Ti) &lt; read_TS(x) 이면</b></font><font face="굴림" size="2"> write(x)를 거부하고 Ti를 
+취소시켜 복귀시킨다.</font></p>
+<p><font face="굴림" size="2"><b>조건 2. TS(Ti) &lt; write_TS(x) 이면</b></font><font face="굴림" size="2"> Ti의 write(x)를 단순히 무시한다.</font></p>
+<p><font face="굴림" size="2"><b>조건 3. 그 외의 경우는</b></font><font face="굴림" size="2"> write(x)를 허용하고 write_TS(x)의 값은 TS(Ti)로 
+고정한다.</font></p>
+</ul>
+<p><font face="굴림" size="2">이 Thomas 의 기록 규칙과 타임 스템프 순서 규약과의 차이는 </font><font face="굴림" size="2"><b>조건 2</b></font><font face="굴림" size="2">의 TS(Ti) &lt; 
+write_TS(x)이고 TS(Ti) ≥ read_TS(x)인 경우에 Ti는 무용의 write를 수행하려고하기 
+때문에 취소시키지 않고 단순히 무시한다는 것이다. 즉 Thomas의 기록 규칙은 
+트랜잭션이 무용의 write 연산을 시도할 때 단순히 그 write 연산을 삭제하는 것이다. 
+이런 트랜잭션의 수정은 다른 규약으로 직렬 불가능한 스케줄을 직렬 가능 스케줄로 
+만들 수 있게 해 준다. 예를 들어, 다음 그림 10-9의 스케줄은 충돌 직렬 가능이 아니다. </font></p>
+<p>&nbsp; 
+<table border="0" cellspacing="0">
+<tr>
+<td width="748"><ul><ul><ul><table border>
+<tr>
+<td bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>실행순서</b></font></td>
+<td width="73" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T1</b></font></td>
+<td width="69" bgcolor="#FF6860"><p align="center"><font face="굴림" size="2"><b>T2</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>1</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>read(x)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>2</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p>&nbsp;</td>
+<td width="69" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>3</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>x:=x / 2</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr><tr>
+<td bgcolor="#FF5E55"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="73" bgcolor="#A9EEA4"><p><font face="굴림" size="2"><b>write(x)</b></font></td>
+<td width="69" bgcolor="#A9EEA4"><p>&nbsp;</td>
+</tr></table></td>
+</tr><tr>
+<td width="748"><p align="center"><font face="굴림" size="2"><b>그림 10-9. 충돌 직렬 가능이 아닌 스케줄</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font></p>
+<p><font face="굴림" size="2">따라서 2단계 로킹 규약으로도 직렬 가능이 아니다. 그러나 Thomas의 기록 규칙을 
+적용하면 T3의 write(x) 연산이 무시되고 직렬 가능하게 된다. 이 결과는 직렬 스케줄 
+&lt;T3, T4&gt;와 동등한 스케줄의 실행이 된다. </font>
+</ul>
+</ul>
+</ul></td>
+</tr></table></div>
+</body>
+</html>

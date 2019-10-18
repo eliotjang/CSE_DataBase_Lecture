@@ -1,0 +1,1076 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>제 7 회 데이터베이스 설계 및 구축 실습</title>
+<meta name="GENERATOR" content="Namo WebEditor v2.00">
+</head>
+<body bgcolor="#CCFFFF" text="black" link="blue" vlink="purple" alink="red">
+
+<h5>&nbsp;</h5>
+<div align="center"><table border="0" cellpadding="10" width="650" bgcolor="white">
+<tr>
+<td height="142" colspan="2" bgcolor="white"><h1 align="center"><img src="img/7-0.jpg" border="0"></h1></td>
+</tr><tr>
+<td width="307" height="473" bgcolor="white"><p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="4"><b>목 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;차</b></font></p>
+<p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="2"><b><a href="#0">시작하기전에.....</a></b></font></p>
+<p align="left">&nbsp;</p>
+<p><font size="2"><a href="#1">&nbsp;</a></font><font size="2"><b><a href="#1">1. 실세계 정의</a></b></font></p>
+<p><font size="2"><b><a href="#2">2. 강의시스템의 개념적 설계</a></b></font></p>
+<p><font size="2"><b><a href="#3">3. 강의시스템 데이터베이스의 논리적 설계</a></b></font></p>
+<p><font size="2"><b><a href="#4">4. 강의시스템 데이터베이스 설계의 최종 
+결과</a></b></font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="297" bgcolor="#A3F594"><ul><p><font size="2"><b><a href="#레포트">본 강의 레포트</a></b></font> 
+</ul></td>
+</tr></table>
+<p>&nbsp;</td>
+<td width="314" height="473" bgcolor="#FFD3D2"><h2><font size="5" color="#400080"><b><a name="0">시작하기전에....</a></b></font></h2>
+<h2>&nbsp;</h2>
+<p><font size="2" color="#400080"><b>제 7회 &quot;데이터베이스 설계 실습&quot; 강의는 &quot;제 
+5 회 관계형 데이터베이스 설계&quot;에서 
+이론적으로 학습한 데이터베이스 설계 
+방법이론을 &quot;강의시스템&quot;을 대상으로 
+적용시키는 내용을 다룹니다. 이번 강의 내용 
+결과인 강의시스템 데이터베이스 스키마와 
+제약조건은 다음 회인 강의 &quot;제 8 회 
+</b></font><font face="굴림" size="2" color="blue">ACCESS를 이용한 데이터베이스 구축 및 활용</font><font size="2" color="#400080"><b>&quot;에서 
+이용될 예정입니다.</b></font></p>
+<p><font size="2" color="#400080"><b>여러분들은 &quot;</b></font><font size="2" color="#400080"><b><a href="20501.html">제 5 회 관계형 데이터베이스 
+설계</a></b></font><font size="2" color="#400080"><b>&quot; 내용과 비교해 가면서 다음 사항들을 
+유념하여 강의해 임해주길 바랍니다.</b></font> 
+<ul type="disc">
+<li><font size="2" color="#400080"><b>실세계를 실제로 어떻게 문장으로 
+정의하는지 알아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>실세계 정의로부터 어떻게 ER 
+다이어그램과 제약사항을 유도하는지 
+알아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>ER 다이어그램의 개체 칩합과 관계성 
+집합을 어떻게 릴레이션 스키마로 
+변환하는지 알아보고 이론과의 
+차이점을 찾아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>데이터베이스 설계 결과는 무엇인지 
+알아봅시다.</b></font> 
+<li><font size="2" color="teal"><b>레포트가 있습니다. 이번회 레포트는 
+시간이 소요되는 레포트이므로 
+차근차근 잘 준비하도록 합시다.</b></font> 
+</ul></td>
+</tr><tr>
+<td height="13359" colspan="2" bgcolor="#FFFFC4"><ul><ul><p><font face="굴림" size="2">본 강의에서는 </font><font face="굴림" size="2"><a href="file:///E|/InetPub/wwwroot/lecture/DB/20501.html">제 5 회 관계형 데이터베이스 설계</a></font><font face="굴림" size="2">에서 다룬 관계형 데이터베이스 설계 
+단계들을 하나씩 따라가며 이론적으로 설명된 설계 방법이 실제로 어떻게 진행되는가를 
+보이고자 한다. </font></p>
+<p><font face="굴림" size="2">이미 </font><font face="굴림" size="2"><a href="file:///E|/InetPub/wwwroot/lecture/DB/20501.html">제 5 회 관계형 데이터베이스 설계</a></font><font face="굴림" size="2">에서 소개된 설계 절차는 다음 그림 7-1을 따라 
+행해짐을 상기하자.</font></p>
+<p>&nbsp; 
+<table border="0">
+<tr>
+<td width="545"><p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="img/7-1.jpg" border="0"></td>
+</tr><tr>
+<td width="545"><ul><ul><p align="left"><font face="굴림" size="2"><b>그림 7-1. 관계형 데이터베이스의 설계 절차</b></font> </p>
+<p align="left">&nbsp; 
+</ul>
+</ul></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">존 강의에서는 그림 7-1의 절차에 따라 </font><font face="굴림" size="2"><b>강의 시스템</b></font><font face="굴림" size="2">을 대상으로 실제로 데이터베이스를 
+설계해 보도록 한다.</font><font face="굴림" size="2" color="teal">(여러분들은 설계시의 각 단계들이 대하여 </font><font face="굴림" size="2" color="teal"><a href="file:///E|/InetPub/wwwroot/lecture/DB/20501.html">제 5 회 관계형 데이터베이스 
+설계</a></font><font face="굴림" size="2" color="teal"> 강의 내용을 차례대로 비교해가면서 학습에 임해주길 바란다)</font><font face="굴림" size="2">.</font></p>
+</ul>
+<h4><font face="굴림" size="3"><a name="1">1. 실세계 정의</a></font></h4>
+<ul><h5 align="left"><font face="굴림" size="2">단계 1. 실세계를 문장으로 자연스럽게 정의한다.</font></h5>
+<ul><p align="left"><font face="굴림" size="2">다음의 표 7-1은 </font><font face="굴림" size="2"><b>강의시스템</b></font><font face="굴림" size="2">을 문장으로 표현한 것이다. &nbsp;&nbsp;&nbsp;</font></p>
+<p align="left"><font face="굴림" size="2"><a name="표7-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font> 
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-1 강의시스템 정의 문장</b></font></td>
+</tr></table>
+<table border bgcolor="white">
+<tr>
+<td width="505" bgcolor="#FFA4A2"><p align="center"><font face="굴림"><b>강의시스템 정의</b></font></td>
+</tr><tr>
+<td bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">강의시스템은 학과, 교수, 학생, 강좌, 교과목, 강의실, 교재 등으로 구성된다. 학과는 
+단과대학에 소속되며 교수와 학생은 학과에 소속된다. 단, 교수와 학생은 단지 한 
+학과에만 소속되며 둘 이상의 소속관계는 허용되지 않는다. 교수는 한 강좌 이상을 
+담당하여 강의해야 한다. 한 강좌를 두 명이상의 교수가 강의할 수는 없다. 한 
+교과목에 대해 여러개의 강좌가 개설될 수 있지만 한 강좌에 여러개의 교과목이 
+대응할 수는 없다. 교수가 담당한 강좌에는 강의를 위해 이용되는 교재가 존재한다. 한 
+강좌에 대하여 여러개의 교재가 이용될 수 있다. 또한 한 교재가 여러 강좌에 이용될 
+수도 있다. 각 강좌에는 강의실이 배정된다. 강좌에는 요일과 시간(교시)이 정해져야 
+한다.</font></td>
+</tr></table>
+<p align="left">&nbsp;</p>
+<p align="left"><font face="굴림" size="2">표 7-1은 실세계인 </font><font face="굴림" size="2"><b>강의시스템</b></font><font face="굴림" size="2">의 구성요소들과 이들간의 관계를 자연스럽게 문장으로 
+표현한 것이다. 또한 강의시스템의 구성요소들 사이에 존재하는 규칙(제약조건)들도 
+문장으로 표현되었다. 표 7-1의 강의시스템 정의 문장을</font><font face="굴림" size="2" color="teal"> 강의시스템 구성요소</font><font face="굴림" size="2">, 
+</font><font face="굴림" size="2" color="teal">구성요소 특성</font><font face="굴림" size="2">, </font><font face="굴림" size="2" color="teal">구성요소들간의 관계</font><font face="굴림" size="2">, </font><font face="굴림" size="2" color="teal">관계 특성</font><font face="굴림" size="2">(관계의 속성을 의미함), </font><font face="굴림" size="2" color="teal">제약조건 
+</font><font face="굴림" size="2">등으로 문장들을 분류하면 다음 표 7-2와 같다.</font></p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-2 강의시스템 정의 문장 분류</b></font></td>
+</tr></table>
+<table border bgcolor="white">
+<tr>
+<td width="505" colspan="3" bgcolor="#FFA4A2"><p align="center"><font face="굴림"><b>문장들의 분류</b></font></td>
+</tr><tr>
+<td width="109" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>분류항목</b></font></td>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>구분번호</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>분류된 문장</b></font></td>
+</tr><tr>
+<td width="109" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>구성요소</b></font></td>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">1</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">강의시스템은 학과, 교수, 학생, 강좌, 교과목, 강의실, 
+교재 등으로 구성된다</font></td>
+</tr><tr>
+<td width="109" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>구성요소 특성</b></font></td>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">2</font></td>
+<td width="322" bgcolor="#C1F9C5"><p>&nbsp;<font face="굴림" size="2">강좌에는 요일과 시간(교시)이 정해져야 한다</font></td>
+</tr><tr>
+<td width="109" rowspan="5" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>구성요소들간의 
+관계</b></font></td>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">3</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수와 학생은 학과에 소속된다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2"><b>교수는 한 강좌 이상을 담당하여 강의해야 
+한다</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2"><b>한 교과목에 대해 여러개의 강좌가 개설될 수 
+있다</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">6</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수가 담당한 강좌에는 강의를 위해 이용되는 교재가 
+존재한다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">7</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">각 강좌에는 강의실이 배정된다</font></td>
+</tr><tr>
+<td width="109" rowspan="7" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>제약조건</b></font></td>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">8</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수와 학생은 단지 한 학과에만 소속되며 둘 이상의 
+소속관계는 허용되지 않는다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>4</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2"><b>교수는 한 강좌 이상을 담당하여 강의해야 
+한다</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">9</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌를 두 명이상의 교수가 강의할 수는 없다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>5</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2"><b>한 교과목에 대해 여러개의 강좌가 개설될 수 
+있다</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">10</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌에 여러개의 교과목이 대응할 수는 없다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">11</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌에 대하여 여러개의 교재가 이용될 수 있다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">12</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 교재가 여러 강좌에 이용될 수도 있다.</font></td>
+</tr></table>
+<p align="left">&nbsp;</p>
+<p align="left"><font face="굴림" size="2">표 7-2에서 구분번호 </font><font face="굴림" size="2"><b>4</b></font><font face="굴림" size="2">번과 </font><font face="굴림" size="2"><b>5</b></font><font face="굴림" size="2">번 문장들은 구성요소들간의 관계를 나타냄과 동시에 
+제약조건을 포함하고 있음을 주시하자. </font></p>
+</ul>
+</ul>
+<h4 align="left"><font face="굴림"><a name="2">2. 강의시스템의 개념적 설계</a></font></h4>
+<ul><h5 align="left"><font face="굴림" size="2"><a name="단계2">단계 2. 실세계를 구성하는 개체 집합을 식별하고 표현한다.</a></font></h5>
+<h5 align="left"><font face="굴림" size="2">단계 3. 각 개체집합이 강성 개체인지 약성 개체인지를 구분하고 표현한다.</font></h5>
+<ul><p align="left"><font face="굴림" size="2">강의시스템에서 실세계를 구성하는 개체 집합은 </font><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">에서 분류된 구성요소들이 된다. 
+따라서 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>교과목</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>강의실</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>교재</b></font><font face="굴림" size="2"> 등이 개체 집합으로 식별되며 
+다음 그림 7-2와 같이 각 개체 집합은 사각형 형태로 표현된다.</font></p>
+</ul>
+<p>&nbsp; 
+<table border="0">
+<tr>
+<td width="545"><p align="center"><img src="img/7-2.jpg" border="0"></td>
+</tr><tr>
+<td width="545"><ul><ul><p align="left"><font face="굴림" size="2"><b>그림 7-2. 개체집합들을 나타내는 ER 다이어그램</b></font> 
+</ul>
+</ul></td>
+</tr></table>
+<p>&nbsp;</p>
+<h5 align="left"><font face="굴림" size="2">단계 4. 각 개체 집합의 속성을 식별하고 표현한다.</font></h5>
+<ul><p align="left"><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">에서 구분번호 2 번 문장인 '&nbsp;</font><font face="굴림" size="2"><b>강좌에는 요일과 시간(교시)이 정해져야 
+한다</b></font><font face="굴림" size="2">'에서 요일과 시간은 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 개체 집합이 갖는 속성이 된다. </font></p>
+<p align="left"><font face="굴림" size="2">각 개체 집합의 속성을 식별할 때 </font><font face="굴림" size="2"><a href="#표7-1">표 1-1</a></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><a href="#표7-2">표 1-2</a></font><font face="굴림" size="2">의 </font><font face="굴림" size="2"><b>강의시스템 정의 문장</b></font><font face="굴림" size="2"> 중에 
+구성요소(즉, 개체 집합)의 특성(속성)이 언급되어 있지 않다 하더라도 구성요소(즉, 
+개체 집합)의 속성을 실세계 측면에서 식별하여 그 속성 정보를 참조할 필요성이 
+있는가를 판단하고 불필요한 속성들은 표현하지 않도록 한다. 이 단계에서 식별된 각 
+개체 집합의 속성들이 다음의 그림 7-3에서 표현된다.</font></p>
+</ul>
+</ul>
+<p>&nbsp;&nbsp;&nbsp; 
+<table border="0">
+<tr>
+<td width="545"><p align="center"><img src="img/7-3.jpg" border="0"></td>
+</tr><tr>
+<td width="545"><ul><ul><p align="left"><font face="굴림" size="2"><b>그림 7-3. 개체집합들과 속성을나타내는 ER 다이어그램</b></font> 
+</ul>
+</ul></td>
+</tr></table>
+<ul><p>&nbsp;</p>
+<ul><p><font face="굴림" size="2">그림 7-3에서 </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 개체 집합에서 </font><font face="굴림" size="2"><b>소속학과</b></font><font face="굴림" size="2">에 대한 속성이 표현되지 
+않았음을 주시하자. 사실 상, </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 개체 집합의 </font><font face="굴림" size="2"><b>소속학과</b></font><font face="굴림" size="2">는 학과 개체 
+집합간의 관계에 의해 형성된다. </font><font face="굴림" size="2" color="teal">이 단계에서의 속성 식별은</font><font face="굴림" size="2" color="#8000FF"><u> ER 다이어그램 내에 
+존재하는</u></font><font face="굴림" size="2" color="teal"> 다른 개체 집합들과의 관계성을 고려하지 않고 개체 집합 고유의 속성만 
+고려하도록 한다</font><font face="굴림" size="2">.</font><font face="굴림" size="2" color="#8000FF"> 다시말하면, 한 개체 집합의 속성을 결정할 때 이 속성은 ER 
+다이어그램 내에 존재하는 다른 개체 집합의 고유 속성이 아닌 순수한 자기 자신의 고유 
+속성이어야 한다</font><font face="굴림" size="2">는 것이다.</font></p>
+<p><font face="굴림" size="2">단, </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체 집합의 </font><font face="굴림" size="2"><b>단대번호</b></font><font face="굴림" size="2"> 속성(단과대학 번호를 의미함)의 경우 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체집합 
+고유의 속성이 아님에도 불구하고 </font><font face="굴림" size="2"><b>학과 </b></font><font face="굴림" size="2">개체 집합에 부여한 이유는 ER 다이어그램 
+내에 존재하지 않는 소속 단과대학 번호에 관심이 있기 때문이다. 그러나, 소속 
+단과대학 번호에 관심이 없거나, 혹은 만약 </font><font face="굴림" size="2"><b>단과대학</b></font><font face="굴림" size="2"> 구성요소가 이 ER 다이어그램 
+내에서 개체 집합으로 표현되어있다면 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체 집합의 고유 속성이 아니고 
+</font><font face="굴림" size="2"><b>단과대학</b></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체 집합간의 관계성에 의해 표현되므로 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체 집합의 
+속성으로 표현할 필요가 없다. </font></p>
+</ul>
+<h5 align="left"><font face="굴림" size="2">단계 5. 실세계로부터 개체 집합들 사이에 존재하는 관계성 집합을 식별하고 
+표현한다.</font></h5>
+<ul><p><font face="굴림" size="2">관계성 식별은 </font><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">에서 분류된 문장 중에서 </font><font face="굴림" size="2"><b>구분번호</b></font><font face="굴림" size="2"> 3, 4, 5, 6, 7번에 해당하는 
+구성요소들간의 관계성 문장들을 중심으로 명사(구성요소)와 서술어 또는 동사를 
+파악함으로써 식별할 수 있다. 예를 들어 </font><font face="굴림" size="2"><b>구분번호</b></font><font face="굴림" size="2"> 3번 문장인 '</font><font face="굴림" size="2"><b>교수와 학생은 
+학과에 소속된다</b></font><font face="굴림" size="2">'는 '</font><font face="굴림" size="2"><b>교수는 학과에 소속된다</b></font><font face="굴림" size="2">' 문장과 '</font><font face="굴림" size="2"><b>학생은 학과에 
+소속된다</b></font><font face="굴림" size="2">' 문장의 두 문장으로 분리 될 수 있으며 '</font><font face="굴림" size="2"><b>교수는 학과에 소속된다</b></font><font face="굴림" size="2">' 
+문장에서 명사에 해당하는 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2">와 </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2">은 이미 </font><font face="굴림" size="2"><a href="#단계2">단계 2</a></font><font face="굴림" size="2">에서 개체 집합으로 
+식별되었으며, 술어에 해당하는 '</font><font face="굴림" size="2"><b>소속된다</b></font><font face="굴림" size="2">'가 바로 이 두 개체 집합 사이의 관계성 
+집합이 된다. 마찬가지로 '</font><font face="굴림" size="2"><b>학생은 학과에 소속된다</b></font><font face="굴림" size="2">' 문장에서 '</font><font face="굴림" size="2"><b>소속된다</b></font><font face="굴림" size="2">'는 </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2"> 
+개체 집합과 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체 집합 사이의 관계성 집합이 된다. </font></p>
+<p><font face="굴림" size="2">이러한 </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2"> 개체 집합과 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체 집합 사이의 </font><font face="굴림" size="2"><b>소속</b></font><font face="굴림" size="2"> 관계성 집합과 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 개체 
+집합과 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 개체 집합 사이의 </font><font face="굴림" size="2"><b>소속</b></font><font face="굴림" size="2"> 관계성 집합을 구별하기 위해 각각 </font><font face="굴림" size="2"><b>학생소속</b></font><font face="굴림" size="2"> 
+관계성 집합과 </font><font face="굴림" size="2"><b>교수소속</b></font><font face="굴림" size="2"> 관계성 집합으로 구분되어 그림 7-4의 ER 다이어그램에 
+반영되었다.</font></p>
+<p><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">의 구분 번호 4번인 '</font><font face="굴림" size="2"><b>교수는 한 강좌 이상을 담당하여 강의해야 한다</b></font><font face="굴림" size="2">' 
+문장에서 명사인 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2">와 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2">는 각각 개체 집합으로 이미 </font><font face="굴림" size="2"><a href="#단계2">단계 2</a></font><font face="굴림" size="2">에서 ER 
+다이어그램으로 식별되고 표현되었고, 서술어인 '</font><font face="굴림" size="2"><b>담당하여 강의해야 한다</b></font><font face="굴림" size="2">' 문장은 
+</font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 개체 집합과 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 개체 집합 사이의 관계성 집합을 나타낸다. 이 관계성 집합은 
+</font><font face="굴림" size="2"><b>강의</b></font><font face="굴림" size="2">라는 명칭을 갖는 관계성 집합으로 그림 7-4의 ER 다이어그램에 반영되었다.</font></p>
+<p><font face="굴림" size="2">이와 같은 방법으로 </font><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">의 </font><font face="굴림" size="2"><b>구분번호 5, 6, 7 </b></font><font face="굴림" size="2">의 각 문장으로부터 명사와 서술어를 
+분리함으로써 관계성 집합을 쉽게 구별할 수 있으며, 이를 식별하여 다음의 그림 7-4의 
+ER 다이어그램으로 표현하였다.</font></p>
+<p>&nbsp; 
+</ul>
+</ul>
+<table border="0">
+<tr>
+<td width="545"><p align="center"><img src="img/7-4.jpg" border="0"></td>
+</tr><tr>
+<td width="545"><ul><p align="left"><font face="굴림" size="2"><b>그림 7-4. 개체집합, 속성, 관계성 집합을나타내는 ER 다이어그램</b></font> 
+</ul></td>
+</tr></table>
+<ul><p>&nbsp;</p>
+<h5 align="left"><font face="굴림" size="2">단계 6. 실세게 정의의 제약사항으로부터 관계성 집합에 관련된 개체 집합들 
+사이의 대응수(cardinality)를 식별하고 표현한다.</font></h5>
+<ul><p align="left"><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">에서 분류된 제약조건들인 구분번호 8, 4, 9, 5, 10, 11번들은 &nbsp;모두 
+대응수(cardinality)와 관련된 문장들이다. 이 문장들을 중심으로 대응수와 관련된 
+관계성 집합, 개체 집합들과 대응수를 식별하면 다음의 표 7-3과 같다.</font></p>
+<p align="left"><font face="굴림" size="2"><a name="표7-3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font><a name="표7-3"> </a>
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-3 강의시스템 정의 문장 분류</b></font></td>
+</tr></table>
+<table border cellspacing="1">
+<tr>
+<td width="133" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>관계성 집합</b></font></td>
+<td width="110" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>관련 개체 집합</b></font></td>
+<td width="147" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>대응수(cardinality)</b></font></td>
+<td width="103" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>제약조건 문장 
+구분번호</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">교수소속</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">학과 &nbsp;: &nbsp;교수</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">8</font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">학생소속</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">학과&nbsp;&nbsp;: &nbsp;학생</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">8</font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">강의</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">교수 &nbsp;: &nbsp;강좌</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">4, 9</font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>수강</b></font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>학생 &nbsp;: &nbsp;강좌</b></font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>n : m</b></font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>새로 식별됨</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">개설</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">교과목 &nbsp;: &nbsp;강좌</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">5, 10</font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">이용교재</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">강좌 &nbsp;: &nbsp;교재</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">n : m</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">11, 12</font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>배정</b></font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>강좌 &nbsp;: &nbsp;강의실</b></font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>n : m</b></font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>새로 식별됨</b></font></td>
+</tr></table>
+<p align="left"><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;</font></p>
+<p align="left"><font face="굴림" size="2">표 7-3에서 </font><font face="굴림" size="2"><b>수강</b></font><font face="굴림" size="2"> 관계성과 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 관계성에 대한 대응수 제약조건은 </font><font face="굴림" size="2"><a href="#표7-1">표 7-1</a></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><a href="#표7-2">표 
+7-2</a></font><font face="굴림" size="2">에서 &nbsp;언급되지 않았음에도 불구하고 식별되었다. </font><font face="굴림" size="2"><b>강의 시스템</b></font><font face="굴림" size="2">을 문장으로 표현할 
+때 제약조건이 완벽하게 식별되지 않음으로해서 발생한 결과이다. 이 경우에는 ER 
+다이어그램을 &nbsp;</font><font face="굴림" size="2"><a href="#표7-1">표 7-1</a></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">를 중심으로 관계성 집합에 대한 대응수를 식별하고 
+대응수가 식별되지 않은 관계성 집합에 대해서는 실세계와 비교하여 추가적으로 
+대응수를 식별하도록 한다. 표 7-3의 식별된 대응수가 다음 그림 7-5에 반영되었다.</font></p>
+<p><font face="굴림" size="2"><a name="그림7-5">&nbsp;&nbsp;&nbsp;</a></font> 
+</ul>
+</ul>
+<table border="0">
+<tr>
+<td width="545"><p align="center"><img src="img/7-5.jpg" border="0"></td>
+</tr><tr>
+<td width="545"><ul><ul><p align="left"><font face="굴림" size="2"><b>그림 7-5. 개체집합, 속성, 관계성 집합, 대응수를 나타내는 </b></font>
+</ul>
+</ul></td>
+</tr><tr>
+<td width="545"><ul><ul><p align="center"><font face="굴림" size="2"><b>ER 다이어그램 </b></font>
+</ul>
+</ul></td>
+</tr></table>
+<ul><p>&nbsp;&nbsp;&nbsp;</p>
+<h5 align="left"><font face="굴림" size="2"><a name="단계7">단계 7</a></font><font face="굴림" size="2">. 관계성 집합이 갖는 속성들을 식별하고 표현한다.</font></h5>
+<ul><p align="left"><font face="굴림" size="2"><a href="#표7-1">표 7-1</a></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">에서 관계성에 대한 속성은 언급되지 않았다. 그러나, 지금까지의 
+개념적 설계 결과인 ER 다이어그램의 관계성 집합을 중심으로 속성이 존재하는지 
+살펴보아야 한다. </font><font face="굴림" size="2"><a href="#그림7-5">그림 7-5</a></font><font face="굴림" size="2">의 </font><font face="굴림" size="2"><b>개설</b></font><font face="굴림" size="2"> 관계성 집합의 경우 교과목에 대한 강좌가 개설될 
+때 개설년도와 개설 학기가 주어지기 때문에</font><font face="굴림" size="2"><b> 개설년도</b></font><font face="굴림" size="2">와 </font><font face="굴림" size="2"><b>학기</b></font><font face="굴림" size="2"> 속성이 </font><font face="굴림" size="2"><b>개설</b></font><font face="굴림" size="2"> 관계성 
+집합에 부여되었다.</font></p>
+<p align="left"><font face="굴림" size="2">또한, 강의실 배정은 강좌의 요일과 시간에 따라 정해진다. 따라서 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 관계성 집합은 
+그림 7-5에서와 같이 </font><font face="굴림" size="2"><b>요일 </b></font><font face="굴림" size="2">속성과 </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성을 가지며, </font><font face="굴림" size="2" color="teal"><a href="#제약사항1">이 속성 값들은 </a></font><font face="굴림" size="2" color="teal"><b><a href="#제약사항1">강좌</a></b></font><font face="굴림" size="2" color="teal"><a href="#제약사항1"> 개체 
+집합의 </a></font><font face="굴림" size="2" color="teal"><b><a href="#제약사항1">요일 </a></b></font><font face="굴림" size="2" color="teal"><a href="#제약사항1">속성과 </a></font><font face="굴림" size="2" color="teal"><b><a href="#제약사항1">시간</a></b></font><font face="굴림" size="2" color="teal"><a href="#제약사항1"> 속성에 의존해야 한다. 이러한 의존 관계는 다음 단계인 
+</a></font><font face="굴림" size="2" color="teal"><b><a href="#제약사항1">단계 8</a></b></font><font face="굴림" size="2" color="teal"><a href="#제약사항1">의 </a></font><font face="굴림" size="2" color="teal"><b><a href="#제약사항1">제약사항 식별과 표현</a></b></font><font face="굴림" size="2" color="teal"><a href="#제약사항1">에 반영된다</a></font><font face="굴림" size="2"><a href="#제약사항1">.</a></font></p>
+</ul>
+<h5 align="left"><font face="굴림" size="2">단계 8. 실세계 정의로부터 제약 사항을 식별하여 ER 모델로 반영하거나 ER 
+모델로 반영할 수 없는 제약 사항은 문장으로 정리하여 나열한다.</font></h5>
+<ul><p align="left"><font face="굴림" size="2"><a href="#표7-1">표 7-1</a></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><a href="#표7-2">표 7-2</a></font><font face="굴림" size="2">의 강의 시스템 문장 정의에서 식별된 대응수에 관련한 제약 조건과 
+식별되지 못한 제약조건 등을 실세계를 기준으로 식별한다. 이와 같이 행하여 강의 
+시스템의 제약조건을 식별하면 다음의 표 7-4와 같다.</font></p>
+<p align="left"><a name="표7-4">&nbsp; </a>
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-4 문장으로 표현된 강의시스템 제약조건</b></font></td>
+</tr></table>
+<table border bgcolor="white">
+<tr>
+<td width="109" rowspan="11" bgcolor="#FF9582"><p align="center"><font face="굴림" size="2"><b>제약조건</b></font></td>
+<td width="66" bgcolor="#FF8A8A"><p align="center"><font face="굴림" size="2"><b>구분번호</b></font></td>
+<td width="322" bgcolor="#FF8A8A"><p align="center"><font face="굴림" size="2"><b>제약조건 문장</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">8</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수와 학생은 단지 한 학과에만 소속되며 둘 이상의 
+소속관계는 허용되지 않는다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">4</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수는 한 강좌 이상을 담당하여 강의해야 한다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">9</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌를 두 명이상의 교수가 강의할 수는 없다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">5</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 교과목에 대해 여러개의 강좌가 개설될 수 있다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">10</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌에 여러개의 교과목이 대응할 수는 없다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">11</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌에 대하여 여러개의 교재가 이용될 수 있다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">12</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 교재가 여러 강좌에 이용될 수도 있다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>13</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2"><b>교수의 학력은 박사 또는 석사이어야 한다</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>14</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2"><b>학생은 한학기에 7개 이상의 장좌를 들을 수 
+없다</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2"><b>15</b></font></td>
+<td width="322" bgcolor="#C1F9C5"><p><font face="굴림" size="2"><b><a name="제약사항1">강좌에 대한 강의실 배정시 요일과 시간은 
+강좌의 요일과 시간에 맞추어야 한다</a></b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font></p>
+<p><font face="굴림" size="2">표 7-4에서 구분번호 13번과 14번, 그리고 15번의 제약조건은 강의 시스템 문장 
+정의에서 식별되었어야 한다. 그러나, 처음부터 완벽하게 실세계를 정의할 수 없기 
+때문에 ER 다이어그램을 중심으로 검토하면서 제약조건들을 식별한다(그러나, 강의 
+시스템 문장 정의는 처음부터 완벽하게 작성하도록 노력해야 한다). 한편, 15번의 
+제약사항은 </font><font face="굴림" size="2"><b><a href="#단계7">단계 7</a></b></font><font face="굴림" size="2">의 관계성 속성 식별과 더불어 식별된 제약사항이다.</font></p>
+<p><font face="굴림" size="2" color="teal">개념적 설계 단계에서의 결과는 그림 7-5의 ER 다이어그램과 표 7-4의 제약조건이다.</font></p>
+</ul>
+</ul>
+<h4 align="left"><font face="굴림"><a name="3">3. 강의시스템 데이터베이스의 논리적 설계</a></font></h4>
+<ul><p align="left"><font face="굴림" size="2" color="teal"><b>강의 시스템</b></font><font face="굴림" size="2" color="teal">에 대한 관계형 데이터베이스의 논리적 설계에 대한 강의 내용을 좀 더 정확히 
+이해하기 위해서 수강생 여러분들은 </font><font face="굴림" size="2" color="teal"><a href="file:///E|/InetPub/wwwroot/lecture/DB/20501.html">제 5 회 관계형 데이터베이스 설계</a></font><font face="굴림" size="2" color="teal"> 강의 내용과 대조해 
+가면서 강의에 임해주길 바란다.</font></p>
+<h5 align="left"><font face="굴림" size="2">단계 9. ER 다이어그램을 릴레이션 스키마로 변환하고 변환된 릴레이션 
+스키마에 대한 주키이를 설정한다.</font></h5>
+<ul><h5><font face="굴림" size="2">1. 개체 집합의 변환 </font></h5>
+<p align="left"><font face="굴림" size="2"><b>규칙 1. </b></font><font face="굴림" size="2" color="teal">ER 다이어그램에서 각 </font><font face="굴림" size="2" color="teal"><b>강성 객체 집합</b></font><font face="굴림" size="2" color="teal">은 하나의 독립된 릴레이션 스키마로 
+대응시키고 ER 다이어그램에서 강성 객체 집합에 연결된 속성은 대응하는 릴레이션 
+스키마의 속성이 되도록 한다. 릴레이션 스키마의 명칭은 객체 집합 명칭을 기준으로 
+정한다. 이렇게 변환된 릴레이션 스키마로부터 주키이를 설정한다.</font></p>
+<p align="left"><font face="굴림" size="2"><b><a name="규칙2">규칙 2. </a></b></font><font face="굴림" size="2" color="teal">ER 다이어그램에서 각 </font><font face="굴림" size="2" color="teal"><b>약성 객체 집합</b></font><font face="굴림" size="2" color="teal">은 그 개체 집합을 결정하는 </font><font face="굴림" size="2" color="teal"><b>강성 
+개체 집합</b></font><font face="굴림" size="2" color="teal">에 의해 그 존재가 식별되기 때문에 단독으로 릴레이션 스키마로 변환될 수 
+없다. 따라서 약성 개체 집합을 릴레이션 스키마로 변환하기 위해서 그 개체 집합을 
+결정하는 강성 개체 집합의 주키이를 외래 키이로 하고 ER 다이어그램에서 연결된 
+속성들을 합쳐서 릴레이션 스키마로 변환한다. 약성 개체 집합에서 변환된 릴레이션 
+스키마의 주키이는 이 외래 키이를 포함하도록 설정한다. </font></p>
+<p align="left"><font face="굴림" size="2">이 </font><font face="굴림" size="2"><b>규칙 1</b></font><font face="굴림" size="2">에 따라 변환된 강성 개체 집합에 대한 릴레이션 스키마로의 변환 결과는 
+다음 </font><font face="굴림" size="2"><b>표 7-5</b></font><font face="굴림" size="2">와 같다.</font></p>
+<p align="left"><font face="굴림" size="2"><a name="표7-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font><a name="표7-5"> </a>
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-5. 개체 집합에 대한 릴레이션 스키마로의 변환 결과</b></font></td>
+</tr></table>
+<table border>
+<tr>
+<td width="394" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>릴레이션 스키마</b></font></td>
+<td width="252" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>주키이</b></font></td>
+</tr><tr>
+<td width="394" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>학과(학과번호,학과명,단대번호)</i></b></font></td>
+<td width="252" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학과번호}</b></font> </td>
+</tr><tr>
+<td width="394" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>교수(교수번호,이름,주민번호,학력,전공,주소, 
+전화번호)</i></b></font></td>
+<td width="252" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{교수번호}</b></font> </td>
+</tr><tr>
+<td width="394" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>학생(학번,이름,주민번호,주소,전화번호)</i></b></font></td>
+<td width="252" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학번}</b></font> </td>
+</tr><tr>
+<td width="394" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>교과목(과목번호,과목명,학점,시수)</i></b></font></td>
+<td width="252" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{과목번호}</b></font> </td>
+</tr><tr>
+<td width="394" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>교재(코드,교재명,저자,출판사)</i></b></font></td>
+<td width="252" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{코드}</b></font> </td>
+</tr><tr>
+<td width="394" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>강의실(강의실번호,소속건물)</i></b></font></td>
+<td width="252" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강의실번호}</b></font> </td>
+</tr><tr>
+<td width="394" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>강좌(강좌번호,요일,시간,과목번호)</i></b></font></td>
+<td width="252" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호,과목번호}</b></font></td>
+</tr></table>
+<p align="left"><font face="굴림" size="2"><b>&nbsp;&nbsp;</b></font></p>
+<h5 align="left"><font face="굴림" size="2">2. 관계성 집합의 변환</font></h5>
+<p align="left"><font face="굴림" size="2" color="#400040">이에 대한 설명을 단순화하기 위해 몇가지 기호에 대한 약속을 정하기로 하자. ER 
+다이어그램에서 E</font><font face="굴림" size="2" color="#400040"><sub>1</sub></font><font face="굴림" size="2" color="#400040">, E</font><font face="굴림" size="2" color="#400040"><sub>2</sub></font><font face="굴림" size="2" color="#400040">,..., E</font><font face="굴림" size="2" color="#400040"><sub>n</sub></font><font face="굴림" size="2" color="#400040">를 각각 개체 집합이라 하고 R을 관계성 집합이라 한다. 
+또한, </font><font face="굴림" size="2" color="#400040"><i>E</i></font><font face="굴림" size="2" color="#400040"><i><sub>1</sub></i></font><font face="굴림" size="2" color="#400040"><i>-Schema</i></font><font face="굴림" size="2" color="#400040">, </font><font face="굴림" size="2" color="#400040"><i>E</i></font><font face="굴림" size="2" color="#400040"><i><sub>2</sub></i></font><font face="굴림" size="2" color="#400040"><i>-Schema</i></font><font face="굴림" size="2" color="#400040">,..., </font><font face="굴림" size="2" color="#400040"><i>E</i></font><font face="굴림" size="2" color="#400040"><i><sub>n</sub></i></font><font face="굴림" size="2" color="#400040"><i>-Schema</i></font><font face="굴림" size="2" color="#400040">를 각각 개체 집합 E</font><font face="굴림" size="2" color="#400040"><sub>1</sub></font><font face="굴림" size="2" color="#400040">, E</font><font face="굴림" size="2" color="#400040"><sub>2</sub></font><font face="굴림" size="2" color="#400040">,..., E</font><font face="굴림" size="2" color="#400040"><sub>n</sub></font><font face="굴림" size="2" color="#400040">의 
+변환된 릴레이션 스키마라 하고 K</font><font face="굴림" size="2" color="#400040"><sub>1</sub></font><font face="굴림" size="2" color="#400040">, K</font><font face="굴림" size="2" color="#400040"><sub>2</sub></font><font face="굴림" size="2" color="#400040">,..., K</font><font face="굴림" size="2" color="#400040"><sub>n</sub></font><font face="굴림" size="2" color="#400040">를 각각 </font><font face="굴림" size="2" color="#400040"><i>E</i></font><font face="굴림" size="2" color="#400040"><i><sub>1</sub></i></font><font face="굴림" size="2" color="#400040"><i>-Schema</i></font><font face="굴림" size="2" color="#400040">, </font><font face="굴림" size="2" color="#400040"><i>E</i></font><font face="굴림" size="2" color="#400040"><i><sub>2</sub></i></font><font face="굴림" size="2" color="#400040"><i>-Schema</i></font><font face="굴림" size="2" color="#400040">,..., 
+</font><font face="굴림" size="2" color="#400040"><i>E</i></font><font face="굴림" size="2" color="#400040"><i><sub>n</sub></i></font><font face="굴림" size="2" color="#400040"><i>-Schema</i></font><font face="굴림" size="2" color="#400040">의 주키이라 한다.</font></p>
+<p align="left"><font face="굴림" size="2"><b><a name="규칙3">규칙 3</a></b></font><font face="굴림" size="2" color="teal"><a name="규칙3">. </a></font><font face="굴림" size="2" color="teal">ER 다이어그램에서 관계성 집합 R이 두 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">과 E</font><font face="굴림" size="2" color="teal"><sub>2 </sub></font><font face="굴림" size="2" color="teal">사이에 존재하면서 
+대응수(cardinality)가 1 : 1 일 때,</font></p>
+<p align="left"><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">에 </font><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>1</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">의 주키이 K</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">을 외래 키이로 포함시킴과 동시에 R의 
+속성을 포함시키거나,</font></p>
+<p align="left"><font face="굴림" size="2" color="teal">혹은 역으로 </font><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>1</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">에 </font><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">의 주키이 K</font><font face="굴림" size="2" color="teal"><sub>2</sub></font><font face="굴림" size="2" color="teal">을 외래 키이로 포함시킴과 
+동시에 R의 속성을 포함시킴으로써 </font></p>
+<p align="left"><font face="굴림" size="2" color="teal">두 릴레이션 스키마 중의 한 스키마를 변환시킨다.</font></p>
+<p align="left"><font face="굴림" size="2" color="teal">즉, 다음 둘 중의 한 변환만을 수행한다.</font></p>
+<p align="left"><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema = E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema </i></font><font face="굴림" size="2" color="teal">∪ K</font><font face="굴림" size="2" color="teal"><sub>1 </sub></font><font face="굴림" size="2" color="teal">∪ R의 속성집합, </font></p>
+<p align="left"><font face="굴림" size="2" color="teal">혹은,</font></p>
+<p align="left"><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>1</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema = E</i></font><font face="굴림" size="2" color="teal"><i><sub>1</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema </i></font><font face="굴림" size="2" color="teal">∪ K</font><font face="굴림" size="2" color="teal"><sub>2 </sub></font><font face="굴림" size="2" color="teal">∪ R의 속성집합</font></p>
+<p align="left">&nbsp;</p>
+<p align="left"><font face="굴림" size="2"><b><a name="규칙4">규칙 4</a></b></font><font face="굴림" size="2" color="teal"><a name="규칙4">.</a></font><font face="굴림" size="2" color="teal"> ER 다이어그램에서 관계성 집합 R이 두 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">과 E</font><font face="굴림" size="2" color="teal"><sub>2 </sub></font><font face="굴림" size="2" color="teal">사이에 존재하면서 
+대응수(cardinality)가 1 : n 일 때 즉, 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">의 한 개체에 대해 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>2 </sub></font><font face="굴림" size="2" color="teal">에서 
+한 개이상의 개체가 대응될 때, </font></p>
+<p align="left"><font face="굴림" size="2" color="teal">개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>2</sub></font><font face="굴림" size="2" color="teal">에 대응되는 </font><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">에 E</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">에 대응되는 </font><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>1</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">의 주키이 K</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">을 
+외래 키이로 포함시킴과 동시에 관계성 집합 R의 속성들도 포함시킴으로써 
+</font><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">를 변환시킨다. </font></p>
+<p align="left"><font face="굴림" size="2" color="teal">즉, 다음 변환을 수행한다.</font></p>
+<p align="left"><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema = E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema </i></font><font face="굴림" size="2" color="teal">∪ K</font><font face="굴림" size="2" color="teal"><sub>1 </sub></font><font face="굴림" size="2" color="teal">∪ R의 속성집합</font></p>
+<p align="left"><font face="굴림" size="2"><b><a name="규칙5">규칙 5</a></b></font><font face="굴림" size="2" color="teal"><a name="규칙5">.</a></font><font face="굴림" size="2" color="teal"> ER 다이어그램에서 관계성 집합 R이 두 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">과 E</font><font face="굴림" size="2" color="teal"><sub>2 </sub></font><font face="굴림" size="2" color="teal">사이에 존재하면서 
+대응수(cardinality)가 n : m 일 때 즉, 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">의 한 개체에 대해 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>2 </sub></font><font face="굴림" size="2" color="teal">에서 
+한 개이상의 개체가 대응되고 역으로 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>2</sub></font><font face="굴림" size="2" color="teal">의 한 개체에 대해 개체 집합 E</font><font face="굴림" size="2" color="teal"><sub>1 </sub></font><font face="굴림" size="2" color="teal">에서 
+한 개이상의 개체가 대응될 수 있을 때,</font></p>
+<p align="left"><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>1</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">의 주키이 K</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">과 </font><font face="굴림" size="2" color="teal"><i>E</i></font><font face="굴림" size="2" color="teal"><i><sub>2</sub></i></font><font face="굴림" size="2" color="teal"><i>-Schema</i></font><font face="굴림" size="2" color="teal">의 주키이 K</font><font face="굴림" size="2" color="teal"><sub>2</sub></font><font face="굴림" size="2" color="teal">, 그리고 R의 속성집합의 
+속성들로 이루어진 새로운 릴레이션 스키마 </font><font face="굴림" size="2" color="teal"><i>R-Schema</i></font><font face="굴림" size="2" color="teal">를 생성한다. 또한, 
+</font><font face="굴림" size="2" color="teal"><i>R-Schema</i></font><font face="굴림" size="2" color="teal">의 주키이는 K</font><font face="굴림" size="2" color="teal"><sub>1 </sub></font><font face="굴림" size="2" color="teal">∪</font><font face="굴림" size="2" color="teal"><sub> </sub></font><font face="굴림" size="2" color="teal">K</font><font face="굴림" size="2" color="teal"><sub>2</sub></font><font face="굴림" size="2" color="teal"> 이 되며, K</font><font face="굴림" size="2" color="teal"><sub>1</sub></font><font face="굴림" size="2" color="teal">과 K</font><font face="굴림" size="2" color="teal"><sub>2</sub></font><font face="굴림" size="2" color="teal">는 각각 </font><font face="굴림" size="2" color="teal"><i>R-Schema</i></font><font face="굴림" size="2" color="teal">의 외래 
+키이들이 된다.</font></p>
+<p align="left"><font face="굴림" size="2" color="teal">즉,</font></p>
+<p align="left"><font face="굴림" size="2" color="teal"><i>R-Schema</i></font><font face="굴림" size="2" color="teal"> = K</font><font face="굴림" size="2" color="teal"><sub>1 </sub></font><font face="굴림" size="2" color="teal">∪</font><font face="굴림" size="2" color="teal"><sub> </sub></font><font face="굴림" size="2" color="teal">K</font><font face="굴림" size="2" color="teal"><sub>2 </sub></font><font face="굴림" size="2" color="teal">∪</font><font face="굴림" size="2" color="teal"><sub> </sub></font><font face="굴림" size="2" color="teal">R의 속성집합,</font></p>
+<p align="left"><font face="굴림" size="2" color="teal"><i>R-Schema</i></font><font face="굴림" size="2" color="teal">의 외래 키이는 K</font><font face="굴림" size="2" color="teal"><sub>1 </sub></font><font face="굴림" size="2" color="teal">과</font><font face="굴림" size="2" color="teal"><sub> </sub></font><font face="굴림" size="2" color="teal">K</font><font face="굴림" size="2" color="teal"><sub>2,</sub></font></p>
+<p align="left"><font face="굴림" size="2">&nbsp;그림 7-5의 ER 다이어그램의 각 관계성 집합에 대하여 대응수를 기준으로 적용할 
+규칙을 대응시키면 다음 표 7-6과 같다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-6 관계성 집합에 적용할 규칙 </b></font></td>
+</tr></table>
+<table border cellspacing="1">
+<tr>
+<td width="133" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>관계성 집합</b></font></td>
+<td width="110" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>관련 개체 집합</b></font></td>
+<td width="147" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>대응수(cardinality)</b></font></td>
+<td width="103" bgcolor="#FF8D84"><p align="center"><font face="굴림" size="2"><b>적용해야 할 
+규칙</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">교수소속</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">학과 &nbsp;: &nbsp;교수</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>규칙 4</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">학생소속</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">학과&nbsp;&nbsp;: &nbsp;학생</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>규칙 4</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">강의</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">교수 &nbsp;: &nbsp;강좌</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>규칙 4</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">수강</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">학생 &nbsp;: &nbsp;강좌</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">n : m</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>규칙 5</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">개설</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">교과목 &nbsp;: &nbsp;강좌</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">1 : n</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>규칙 4</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">이용교재</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">강좌 &nbsp;: &nbsp;교재</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">n : m</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>규칙 5</b></font></td>
+</tr><tr>
+<td width="133" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">배정</font></td>
+<td width="110" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">강좌 &nbsp;: &nbsp;강의실</font></td>
+<td width="147" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2">n : m</font></td>
+<td width="103" bgcolor="#AAF7B1"><p align="center"><font face="굴림" size="2"><b>규칙 5</b></font></td>
+</tr></table>
+<p align="left"><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+<p align="left"><font face="굴림" size="2">표 7-6에서 각 관계성 집합에 적용할 규칙을 각각 설명하면 다음과 같다.</font></p>
+<p align="left"><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> 
+<ul type="disc">
+<li><div align="left"><font face="굴림" size="2"><b>교수소속 관계성 집합의 변환</b></font></div>
+<p align="left"><font face="굴림" size="2"><b>교수소속</b></font><font face="굴림" size="2"> 관계성 집합의 대응수는 1 : n이므로</font><font face="굴림" size="2"><b> 규칙 4</b></font><font face="굴림" size="2">를 적용해야 한다. 
+따라서 대응수 1에 해당하는 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이 </font><font face="굴림" size="2"><b>{학과번호}</b></font><font face="굴림" size="2">를 
+대응수 n에 해당하는 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 릴레이션 스키마에 외래 키이로서 포함시켜야 한다. 
+이 규칙을 반영한 후의 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 릴레이션 스키마가 </font><font face="굴림" size="2"><a href="#표7-7">표 7-7</a></font><font face="굴림" size="2">에서와 같이 확장된다.</font></p>
+<p align="left"><font face="굴림" size="2"><b>&nbsp;&nbsp;</b></font> 
+<li><div align="left"><font face="굴림" size="2"><b>학생소속 관계성 집합의 변환</b></font></div>
+<p align="left"><font face="굴림" size="2"><b>학생소속</b></font><font face="굴림" size="2"> 관계성 집합의 대응수는 1 : n이므로</font><font face="굴림" size="2"><b> 규칙 4</b></font><font face="굴림" size="2">를 적용해야 한다. 
+따라서 대응수 1에 해당하는 </font><font face="굴림" size="2"><b>학과</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이 </font><font face="굴림" size="2"><b>{학과번호}</b></font><font face="굴림" size="2">를 
+대응수 n에 해당하는 </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2"> 릴레이션 스키마에 외래 키이로서 포함시켜야 한다. 
+이 규칙을 반영한 후의 </font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2"> 릴레이션 스키마가 </font><font face="굴림" size="2"><a href="#표7-7">표 7-7</a></font><font face="굴림" size="2">에서와 같이 확장된다. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+<p align="left"><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<li><div align="left"><font face="굴림" size="2">&nbsp;</font><font face="굴림" size="2"><b>강의 관계성 집합의 변환</b></font></div>
+<p align="left"><font face="굴림" size="2"><b>강의</b></font><font face="굴림" size="2"> 관계성 집합의 대응수는 1 : n이므로</font><font face="굴림" size="2"><b> 규칙 4</b></font><font face="굴림" size="2">를 적용해야 한다. 따라서 
+대응수 1에 해당하는 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이 </font><font face="굴림" size="2"><b>{교수번호}</b></font><font face="굴림" size="2">를 대응수 
+n에 해당하는 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마에 외래 키이로서 포함시킴으로써 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 
+릴레이션 스키마가 확장된다.</font></p>
+<p align="left"><font face="굴림" size="2">&nbsp;</font> 
+<li><div align="left"><font face="굴림" size="2"><b>수강 관계성 집합의 변환</b></font></div>
+<p align="left"><font face="굴림" size="2"><b>수강</b></font><font face="굴림" size="2"> 관계성 집합의 대응수는 n : m이므로</font><font face="굴림" size="2"><b> 규칙 5</b></font><font face="굴림" size="2">를 적용해야 한다. 따라서, 
+</font><font face="굴림" size="2"><b>학생</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이인 </font><font face="굴림" size="2"><b>{학번}</b></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이 
+</font><font face="굴림" size="2"><b>{강좌번호}</b></font><font face="굴림" size="2">를 외래 키이로 하는 릴레이션 스키마인 </font><font face="굴림" size="2"><b>수강(학번,강좌번호)</b></font><font face="굴림" size="2">이 
+새로운 릴레이션 스키마로 생성된다. 또한, </font><font face="굴림" size="2"><b>수강</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이는 
+</font><font face="굴림" size="2"><b>규칙 5</b></font><font face="굴림" size="2">에 의해 </font><font face="굴림" size="2"><b>{학번, 강좌번호}</b></font><font face="굴림" size="2">가 된다. </font><font face="굴림" size="2"><b>규칙 5</b></font><font face="굴림" size="2">의 적용 후의 </font><font face="굴림" size="2"><b>수강</b></font><font face="굴림" size="2"> 
+릴레이션 스키마 생성 결과가 </font><font face="굴림" size="2"><a href="#표7-7">표 7-7</a></font><font face="굴림" size="2">에 제시된다. &nbsp;</font></p>
+<p align="left">&nbsp; 
+</ul>
+<ul type="disc">
+<li><div align="left"><font face="굴림" size="2"><b>개설 관계성 집합의 변환</b></font></div>
+<p align="left"><font face="굴림" size="2"><b>개설</b></font><font face="굴림" size="2"> 관계성 집합의 대응수는 1 : n이므로</font><font face="굴림" size="2"><b> 규칙 4</b></font><font face="굴림" size="2">를 적용해야 한다. 따라서 
+대응수 1에 해당하는 </font><font face="굴림" size="2"><b>교과목</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이 </font><font face="굴림" size="2"><b>{과목번호}</b></font><font face="굴림" size="2">를 대응수 
+n에 해당하는 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마에 외래 키이로서 포함시켜야 한다. 한편, 
+</font><font face="굴림" size="2"><b>개설</b></font><font face="굴림" size="2"> 관계성 집합이 갖고 있는 </font><font face="굴림" size="2"><b>개설년도</b></font><font face="굴림" size="2"> 속성과 </font><font face="굴림" size="2"><b>학기</b></font><font face="굴림" size="2"> 속성도</font><font face="굴림" size="2"><b> 규칙 4</b></font><font face="굴림" size="2">에 따라 
+</font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마에 포함시키다. </font></p>
+<p align="left"><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 개체집합은 </font><font face="굴림" size="2"><b>강의</b></font><font face="굴림" size="2"> 관계성 집합, </font><font face="굴림" size="2"><b>개설</b></font><font face="굴림" size="2"> 관계성 집합들이 각각 변환됨에 따라 
+</font><font face="굴림" size="2"><b>교수번호</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>과목번호</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>개설년도</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>학기</b></font><font face="굴림" size="2"> 속성들이 </font><font face="굴림" size="2"><a href="#표7-5">표 7-5</a></font><font face="굴림" size="2">의 </font><font face="굴림" size="2"><b>강의</b></font><font face="굴림" size="2"> 릴레이션 
+스키마에 첨가됨으로써 </font><font face="굴림" size="2"><a href="#표7-7">표 7-7</a></font><font face="굴림" size="2">의 에서와 같이 </font><font face="굴림" size="2"><b>강의</b></font><font face="굴림" size="2"> 릴레이션 스키마가 
+확장된다. 한편, </font><font face="굴림" size="2"><b>교수번호</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>과목번호</b></font><font face="굴림" size="2"> 속성들은 각각 근원이 </font><font face="굴림" size="2"><b>교수</b></font><font face="굴림" size="2"> 릴레이션 
+스키마, </font><font face="굴림" size="2"><b>교과목</b></font><font face="굴림" size="2"> 릴레이션 스키마이므로 외래 키이인 반면, </font><font face="굴림" size="2"><b>개설년도</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>학기</b></font><font face="굴림" size="2"> 
+속성들은 </font><font face="굴림" size="2"><b>개설</b></font><font face="굴림" size="2"> 관계성 집합에 부여된 속성들이므로 외래 키이가 될 수 없다.</font></p>
+<p align="left">&nbsp; 
+<li><div align="left"><font face="굴림" size="2"><b>이용교재 관계성 집합의 변환</b></font></div>
+<p align="left"><font face="굴림" size="2"><b>이용교재</b></font><font face="굴림" size="2"> 관계성 집합의 대응수는 n : m이므로</font><font face="굴림" size="2"><b> 규칙 5</b></font><font face="굴림" size="2">를 적용해야 한다. 
+따라서, </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이인 </font><font face="굴림" size="2"><b>{강좌번호}</b></font><font face="굴림" size="2">와 </font><font face="굴림" size="2"><b>교재</b></font><font face="굴림" size="2"> 릴레이션 
+스키마의 주키이 </font><font face="굴림" size="2"><b>{코드}</b></font><font face="굴림" size="2">를 외래 키이로 하는 릴레이션 스키마인 
+</font><font face="굴림" size="2"><b>이용교재(강좌번호, 코드)</b></font><font face="굴림" size="2">가 새로운 릴레이션 스키마로 생성된다. 또한, 
+</font><font face="굴림" size="2"><b>이용교재</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이는 </font><font face="굴림" size="2"><b>규칙 5</b></font><font face="굴림" size="2">에 의해 </font><font face="굴림" size="2"><b>{강좌번호, 코드}</b></font><font face="굴림" size="2">가 
+된다. </font><font face="굴림" size="2"><b>규칙 5</b></font><font face="굴림" size="2">의 적용 후의 </font><font face="굴림" size="2"><b>이용교재</b></font><font face="굴림" size="2"> 릴레이션 스키마 생성 결과가 </font><font face="굴림" size="2"><a href="#표7-7">표 7-7</a></font><font face="굴림" size="2">에 
+제시된다. &nbsp;</font></p>
+<p align="left">&nbsp; 
+<li><div align="left"><font face="굴림" size="2"><b>배정 관계성 집합의 변환</b></font></div>
+<p align="left"><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 관계성 집합의 대응수는 n : m이므로</font><font face="굴림" size="2"><b> 규칙 5</b></font><font face="굴림" size="2">를 적용해야 한다. 따라서, 
+</font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 관계성 집합이 갖는 </font><font face="굴림" size="2"><b>요일</b></font><font face="굴림" size="2">, </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성과 함께 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마의 
+주키이인 </font><font face="굴림" size="2"><b>{강좌번호}</b></font><font face="굴림" size="2">와 </font><font face="굴림" size="2"><b>강의실</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이 </font><font face="굴림" size="2"><b>{강의실번호}</b></font><font face="굴림" size="2">를 
+외래 키이로 하는 릴레이션 스키마인 </font><font face="굴림" size="2"><b>배정(강좌번호,강의실번호,요일, 
+시간)</b></font><font face="굴림" size="2">이 새로운 릴레이션 스키마로 생성된다. </font><font face="굴림" size="2"><b>규칙 5</b></font><font face="굴림" size="2">의 적용 후의 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 
+릴레이션 스키마 생성 결과가 </font><font face="굴림" size="2"><a href="#표7-7">표 7-7</a></font><font face="굴림" size="2">에 제시된다. </font><font face="굴림" size="2"><a href="#표7-4">표 7-4</a></font><font face="굴림" size="2">의 </font><font face="굴림" size="2"><a href="#제약사항1">&nbsp;15번 제약조건</a></font><font face="굴림" size="2">에 
+따르면 </font><font face="굴림" size="2" color="teal">강좌에 대한 강의실 배정시 요일과 시간은 강좌의 요일과 시간에 
+맞추어야 하기 때문에</font><font face="굴림" size="2"><b> 배정 </b></font><font face="굴림" size="2">릴레이션 스키마의 </font><font face="굴림" size="2"><b>요일</b></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성은 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 
+릴레이션 스키마의 </font><font face="굴림" size="2"><b>요일</b></font><font face="굴림" size="2">과 </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성과 일치해야 하므로 사실상 외래 키이가 
+된다. </font></p>
+</ul>
+<p align="left"><font face="굴림" size="2">위의 관계성 집합을 변환한 결과의 릴레이션 스키마가 다음의 표 7-7에 제시된다. 표 
+7-7의 </font><font face="굴림" size="2"><b>릴레이션 스키마</b></font><font face="굴림" size="2"> 난에서 밑줄로 표시된 속성은 외래 키이이거나 혹은 ER 
+다이어그램의 관계성 집합의 속성으로부터 유래된 속성들이다. 또한, </font><font face="굴림" size="2"><b>외래키이</b></font><font face="굴림" size="2"> 난은 
+</font><font face="굴림" size="2"><b>R:A </b></font><font face="굴림" size="2">형태로 표현되어 있는데 </font><font face="굴림" size="2" color="teal"><b>R</b></font><font face="굴림" size="2" color="teal">은 속성 </font><font face="굴림" size="2" color="teal"><b>A</b></font><font face="굴림" size="2" color="teal">의 근원 릴레이션 스키마를 의미</font><font face="굴림" size="2">한다.</font></p>
+<p align="left">&nbsp;<a name="표7-6">&nbsp;&nbsp;&nbsp; </a>&nbsp; 
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-7. 개체 집합에 대한 릴레이션 스키마로의 변환 결과</b></font></td>
+</tr></table>
+<table border>
+<tr>
+<td width="302" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>릴레이션 스키마</b></font></td>
+<td width="92" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>주키이</b></font></td>
+<td width="136" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>외래키이</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>교수(교수번호,이름,주민번호,학력, 
+전공,주소,전화번호, </i></b></font><font face="굴림" size="2"><b><i><u>학과번호</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="92" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{교수번호}</b></font> </td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2"><b>{학과:학과번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>학생(학번,이름,주민번호,주소, 
+전화번호,</i></b></font><font face="굴림" size="2"><b><i><u>학과번호</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="92" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학번}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2"><b>{학과:학과번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>강좌(강좌번호,요일,시간, 
+</i></b></font><font face="굴림" size="2"><b><i><u>과목번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>교수번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>개설년도</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>학기)</u></i></b></font></td>
+<td width="92" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2"><b>{교과목:과목번호, 
+교수:교수번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>수강(</i></b></font><font face="굴림" size="2"><b><i><u>학번</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>강좌번호</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="92" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학번, 
+강좌번호}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학생:학번, 
+강좌:강좌번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>이용교재(</i></b></font><font face="굴림" size="2"><b><i><u>강좌번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>코드</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="92" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호, 
+코드}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌:강좌번호, 
+교재:코드}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>배정(</i></b></font><font face="굴림" size="2"><b><i><u>강좌번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>강의실번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>요일</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>시간</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="92" bgcolor="#AFFCBE"><p>&nbsp;</td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌:강좌번호, 
+강의실:상의실번호, 
+강좌:요일, 
+강좌:시간}</b></font></td>
+</tr></table>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p align="left"><font face="굴림" size="2">표 7-7의 내용을 </font><font face="굴림" size="2"><a href="#표7-5">표 7-5</a></font><font face="굴림" size="2">에 반영하면 </font><font face="굴림" size="2"><b>강의시스템</b></font><font face="굴림" size="2">에 대한 ER 다이어그램을 변환한 최종 
+결과의 릴레이션 스키마들이 다음의 표 7-8에 반영된다. 표 7-8에서 진하게 표시된 
+부분이 바로 반영된 부분이다.</font></p>
+<p align="left"><font face="굴림" size="2"><a name="표7-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font> 
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-8. 개체 집합에 대한 릴레이션 스키마로의 변환 결과</b></font></td>
+</tr></table>
+<table border>
+<tr>
+<td width="302" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>강의시스템 데이터베이스 스키마</b></font></td>
+<td width="89" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>주키이</b></font></td>
+<td width="136" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>외래키이</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>학과(학과번호,학과명,단대번호)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{학과번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center">&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>교수(교수번호,이름,주민번호,학력, 
+전공,주소,전화번호, </i></b></font><font face="굴림" size="2"><b><i><u>학과번호</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{교수번호}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2"><b>{학과:학과번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>학생(학번,이름,주민번호,주소, 
+전화번호,</i></b></font><font face="굴림" size="2"><b><i><u>학과번호</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학번}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2"><b>{학과:학과번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>교과목(과목번호,과목명,학점,시수)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{과목번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p>&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>교재(코드,교재명,저자,출판사)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{코드}</font> </td>
+<td width="136" bgcolor="#AFFCBE"><p>&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>강의실(강의실번호,소속건물)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{강의실번호}</font> </td>
+<td width="136" bgcolor="#AFFCBE"><p>&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>강좌(강좌번호,요일,시간, 
+</i></b></font><font face="굴림" size="2"><b><i><u>과목번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>교수번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>개설년도</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>학기)</u></i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2"><b>{교과목:과목번호, 
+교수:교수번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>수강(</i></b></font><font face="굴림" size="2"><b><i><u>학번</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>강좌번호</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학번, 
+강좌번호}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{학생:학번, 
+강좌:강좌번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>이용교재(</i></b></font><font face="굴림" size="2"><b><i><u>강좌번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>코드</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호, 
+코드}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌:강좌번호, 
+교재:코드}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>배정(</i></b></font><font face="굴림" size="2"><b><i><u>강좌번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>강의실번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>요일</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>시간</u></i></b></font><font face="굴림" size="2"><b><i>)</i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호, 
+강의실번호, 
+요일,시간}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><a name="외래키이1">{강좌:강좌번호, 
+강의실:강의실번호, 
+강좌:요일,강좌:시간}</a></b></font></td>
+</tr></table>
+<p align="left">&nbsp;</p>
+</ul>
+<h5 align="left"><font face="굴림" size="2"><a name="정규화">단계 10. ER 다이어그램으로부터 변환된 각 릴레이션 스키마에 대하여 
+정규화를 행한다</a></font><font face="굴림" size="2">.</font></h5>
+<ul><p align="left"><font face="굴림" size="2">본 강의에서는 </font><font face="굴림" size="2"><a href="#표7-8">표 7-8</a></font><font face="굴림" size="2">의 강의 시스템 데이터베이스 릴레이션 스키마들이 제 3 차 
+정규형에 존재하도록 정규화를 행하도록 한다.</font></p>
+<p align="left"><font face="굴림" size="2"><b>제 </b></font><font face="굴림" size="2"><b><a name="절차1">1</a></b></font><font face="굴림" size="2"><b> 정규형 검사 및 정규화</b></font></p>
+<ul><p align="left"><font face="굴림" size="2"><a href="20401.html">'제 4 회 데이터이상과 정규화'</a></font><font face="굴림" size="2">에서 제 1 정규화의 조건을 다시 살펴보면 다음과 
+같다.</font></p>
+<p><font face="굴림" size="2"><b>제 1 정규형의 조건</b></font></p>
+<ul><p><font face="굴림" size="2" color="teal">릴레이션 스키마의 모든 속성의 도메인이 원자성(atomicity)(도메인에 
+속하는 모든 값들이 더 이상 분리될 수 없는 성질)을 가질 때 그 릴레이션 
+스키마는 제 1 정규형에 존재한다고 한다.</font></p>
+</ul>
+<p align="left"><font face="굴림" size="2"><a href="#표7-8">표 7-8</a></font><font face="굴림" size="2">의 데이터베이스 스키마에서 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마를 제외한 모든 
+릴레이션 스키마들이 이 조건을 만족한다. </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마의 경우 강좌의 
+요일과 시간은 한 강좌에 대하여 반복될 수 있다. 즉, 강좌번호가 CS99018인 한 
+강좌에 대하여 강좌 요일과 시간이 화요일 3교시, 목요일 6 교시, 토요일 2 교시 
+등 요일과 시간에 대해 각각 3 가지씩 대응될 수 있으므로 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 
+스키마는 </font><font face="굴림" size="2"><b>요일</b></font><font face="굴림" size="2"> 속성과 </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성으로 이루어진 반복 그룹(repeating group)을 
+형성한다.</font></p>
+<p align="left"><font face="굴림" size="2">따라서, 강의 릴레이션 스키마는 반복 그룹을 제거하기 위해 다음과 같이 무손실 
+분해(lossless decomposition) 해야 한다.</font></p>
+<p><font face="굴림" size="2"><b><i>강좌(강좌번호,</i></b></font><font face="굴림" size="2"><b><i><u>과목번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>교수번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>개설년도</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>학기)</u></i></b></font></p>
+<p><font face="굴림" size="2"><b><i><u>강좌요일시간(</u></i></b></font><font face="굴림" size="2"><b><i>강좌번호,요일,시간)</i></b></font></p>
+<p><font face="굴림" size="2">사실 상 이 무손실 분해는 외래키이 설정에 영향을 준다. </font><font face="굴림" size="2"><a href="#표7-4">표 7-4</a></font><font face="굴림" size="2">의 제약조건들 
+중에서 </font><font face="굴림" size="2"><a href="#제약조건1">15 번 제약조건</a></font><font face="굴림" size="2">인 '</font><font face="굴림" size="2"><b>강좌에 대한 강의실 배정시 요일과 시간은 
+강좌의 요일과 시간에 맞추어야 한다</b></font><font face="굴림" size="2">' 에&nbsp;따라 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 릴레이션 스키마의 
+</font><font face="굴림" size="2"><b>요일</b></font><font face="굴림" size="2"> 속성과 </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성을 무손실 분해 이전의 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마로부터 온 
+외래 키이로 </font><font face="굴림" size="2"><a href="#표7-8">표 7-8</a></font><font face="굴림" size="2">에 이미 반영되었다. 그러나, </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마가 문손실 
+분해됨에 따라 </font><font face="굴림" size="2"><b>요일</b></font><font face="굴림" size="2"> 속성과 </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성이 </font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 릴레이션 스키마로 
+옮겨짐에 따라 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 릴레이션 스키마의 </font><font face="굴림" size="2"><b>요일</b></font><font face="굴림" size="2"> 속성과 </font><font face="굴림" size="2"><b>시간</b></font><font face="굴림" size="2"> 속성은 
+</font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 릴레이션 스키마로부터 온 외래 키이가 된다.</font></p>
+<p><font face="굴림" size="2">사실 상 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 릴레이션 스키마는 </font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 릴레이션 스키마와 </font><font face="굴림" size="2"><b>강의실</b></font><font face="굴림" size="2"> 
+릴레이션 스키마간의 관계성을 형성한다. </font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 릴레이션 스키마를 
+</font><font face="굴림" size="2"><b>강좌요일</b></font><font face="굴림" size="2"> 개체 집합으로 고려하고 </font><font face="굴림" size="2"><b>강의실</b></font><font face="굴림" size="2"> 릴레이션 스키마를 </font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 
+개체 집합으로 고려한다면</font><font face="굴림" size="2"><a href="#그림7-5"> 그림 7-5</a></font><font face="굴림" size="2">의 ER 다이어그램에서 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 관계성 집합은 
+</font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 개체 집합과 </font><font face="굴림" size="2"><b>강의실</b></font><font face="굴림" size="2"> 개체 집합 사이의 관계성 집합이 된다. 
+</font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 개체 집합과 </font><font face="굴림" size="2"><b>강의실</b></font><font face="굴림" size="2"> 개체 집합 사이의 대응수는 1:n 이 되므로 
+따라서 </font><font face="굴림" size="2"><b><a href="#규칙4">규칙 4</a></b></font><font face="굴림" size="2">에 따라 </font><font face="굴림" size="2"><b>강의실</b></font><font face="굴림" size="2"> 릴레이션 스키마의 주키이인 </font><font face="굴림" size="2"><b>{강의실번호}</b></font><font face="굴림" size="2">를 
+</font><font face="굴림" size="2"><b>강좌요일시간</b></font><font face="굴림" size="2"> 릴레이션 스키마의 속성들에 외래 키이로 포함시킴으로써 </font><font face="굴림" size="2"><b>배정</b></font><font face="굴림" size="2"> 
+릴레이션 스키마를 제거할 수 있다</font><font face="굴림" size="2" color="teal">(현재 논리적 설계 단계에서 개념적 설계 
+단계로 잠시 피드백 되었음을 주시하자)</font><font face="굴림" size="2">.</font></p>
+<p><font face="굴림" size="2">이에 대한 내용을 반영하여 </font><font face="굴림" size="2"><a href="#표7-8">표 7-8</a></font><font face="굴림" size="2">을 다음의 표 7-9로 변경하였다.</font></p>
+<p><font face="굴림" size="2"><a name="표7-9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></font> 
+</ul>
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-9. 개체 집합에 대한 릴레이션 스키마로의 변환 결과</b></font></td>
+</tr></table>
+<table border>
+<tr>
+<td width="302" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>강의시스템 데이터베이스 스키마</b></font></td>
+<td width="89" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>주키이</b></font></td>
+<td width="136" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>외래키이</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>학과(학과번호,학과명,단대번호)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{학과번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center">&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>교수(교수번호,이름,주민번호,학력, 
+전공,주소,전화번호, </i></font><font face="굴림" size="2"><i><u>학과번호</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{교수번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2">{학과:학과번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>학생(학번,이름,주민번호,주소, 
+전화번호,</i></font><font face="굴림" size="2"><i><u>학과번호</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{학번}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2">{학과:학과번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>교과목(과목번호,과목명,학점,시수)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{과목번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p>&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>교재(코드,교재명,저자,출판사)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{코드}</font> </td>
+<td width="136" bgcolor="#AFFCBE"><p>&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>강의실(강의실번호,소속건물)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{강의실번호}</font> </td>
+<td width="136" bgcolor="#AFFCBE"><p>&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>강좌(강좌번호,</i></b></font><font face="굴림" size="2"><b><i><u>과목번호</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>교수번호</u></i></b></font><font face="굴림" size="2"><b><i>, 
+</i></b></font><font face="굴림" size="2"><b><i><u>개설년도</u></i></b></font><font face="굴림" size="2"><b><i>,</i></b></font><font face="굴림" size="2"><b><i><u>학기)</u></i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="center"><font face="굴림" size="2"><b>{교과목:과목번호, 
+교수:교수번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b><i>강좌요일시간(</i></b></font><font face="굴림" size="2"><b><i><u>강좌번호</u></i></b></font><font face="굴림" size="2"><b><i>,요일,시간, 
+</i></b></font><font face="굴림" size="2"><b><i><u>강의실번호</u></i></b></font><font face="굴림" size="2"><b><i> )</i></b></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강좌번호, 
+요일,시간}</b></font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><b>{강의실:강의실번호}</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>수강(</i></font><font face="굴림" size="2"><i><u>학번</u></i></font><font face="굴림" size="2"><i>,</i></font><font face="굴림" size="2"><i><u>강좌번호</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{학번, 
+강좌번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{학생:학번, 
+강좌:강좌번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p><font face="굴림" size="2"><i>이용교재(</i></font><font face="굴림" size="2"><i><u>강좌번호</u></i></font><font face="굴림" size="2"><i>,</i></font><font face="굴림" size="2"><i><u>코드</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{강좌번호, 
+코드}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p><font face="굴림" size="2">{강좌:강좌번호, 
+교재:코드}</font></td>
+</tr></table>
+<ul><p>&nbsp;</p>
+</ul>
+<p align="left"><font face="굴림" size="2"><b>제 2 정규형 검사 및 정규화</b></font></p>
+<ul><p><font face="굴림" size="2"><b>제 2 정규형의 조건</b></font></p>
+<ul><p><font face="굴림" size="2" color="teal">릴레이션 스키마가 제 1 정규형이고 주키이가 아닌 모든 속성이 주키이에 
+완전 함수적 종속이면 이 릴레이션 스키마는 제 2 정규형에 존재한다고 
+한다.</font></p>
+</ul>
+<p><font face="굴림" size="2"><a href="#표7-9">표 7-9</a></font><font face="굴림" size="2">의 각 릴레이션 스키마를 대상으로 제 2 정규형에 존재하는지의 여부를 
+판단해야 한다.</font></p>
+<p><font face="굴림" size="2">한 예로 </font><font face="굴림" size="2"><b>강좌</b></font><font face="굴림" size="2"> 릴레이션 스키마를 대상으로 다음과 같이 &nbsp;함수적 종속성을 찾고 
+제 2 정규형 검사를 행할 수 있다.</font></p>
+</ul>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;</font> 
+<ul><table border>
+<tr>
+<td width="425" bgcolor="#FFBDBB"><h5 align="center"><font face="굴림" size="2">강좌 릴레이션 스키마에 대한 함수적 종속성</font></h5></td>
+</tr><tr>
+<td width="425" bgcolor="#C4FAB8"><ul><ul><ul><p align="left"><font face="굴림" size="2"><b><i>강좌번호→</i></b></font><font face="굴림" size="2"><b><i><u>과목번호 </u></i></b></font>
+</ul>
+</ul>
+</ul></td>
+</tr><tr>
+<td width="425" bgcolor="#C4FAB8"><ul><ul><ul><p align="left"><font face="굴림" size="2"><b><i>강좌번호→</i></b></font><font face="굴림" size="2"><b><i><u>교수번호 </u></i></b></font>
+</ul>
+</ul>
+</ul></td>
+</tr><tr>
+<td width="425" bgcolor="#C4FAB8"><ul><ul><ul><p align="left"><font face="굴림" size="2"><b><i>강좌번호→</i></b></font><font face="굴림" size="2"><b><i><u>개설년도 </u></i></b></font>
+</ul>
+</ul>
+</ul></td>
+</tr><tr>
+<td width="425" bgcolor="#C4FAB8"><ul><ul><ul><p align="left"><font face="굴림" size="2"><b><i>강좌번호→</i></b></font><font face="굴림" size="2"><b><i><u>학기</u></i></b></font> 
+</ul>
+</ul>
+</ul></td>
+</tr></table>
+<h5><font face="굴림" size="2">&nbsp;&nbsp;</font></h5>
+<p><font face="굴림" size="2">위의 함수적 종속성에서 주키이가 아닌 모든 속성들(</font><font face="굴림" size="2"><b>과목번호</b></font><font face="굴림" size="2"> 속성, </font><font face="굴림" size="2"><b>교수번호</b></font><font face="굴림" size="2"> 
+속성, </font><font face="굴림" size="2"><b>개설년도</b></font><font face="굴림" size="2"> 속성, </font><font face="굴림" size="2"><b>학기</b></font><font face="굴림" size="2"> 속성)이 주키이인 </font><font face="굴림" size="2"><b>강좌번호 </b></font><font face="굴림" size="2">속성에 완전 함수적 
+종속 관계가 성립하므로 </font><font face="굴림" size="2" color="teal"><b>강좌</b></font><font face="굴림" size="2" color="teal"> 릴레이션 스키마는 제 2 정규형에 존재</font><font face="굴림" size="2">한다.</font></p>
+<p><font face="굴림" size="2">이와 같이 하여 </font><font face="굴림" size="2"><a href="#표7-9">표 7-9</a></font><font face="굴림" size="2">의 각 릴레이션 스키마를 대상으로 함수적 종속성을 
+식별하고 완전 함수적 고려한다면 주키이가 아닌 모든 속성이 주키이에 완전 
+종속임을 알 수 있다</font><font face="굴림" size="2" color="blue"><u>(수강생 여러분들은 각 릴레이션 스키마를 대상으로 함수적 
+종속성을 찾아서 제 2 정규형에 존재하는지를 일일이 검사하길 바란다)</u></font><font face="굴림" size="2">.</font></p>
+<p><font face="굴림" size="2">따라서, </font><font face="굴림" size="2"><a href="#표7-9">표 7-9</a></font><font face="굴림" size="2">의 각 릴레이션 스키마들은 모두 제 2 정규형에 존재함을 알 수 
+있다.</font></p>
+</ul>
+<p align="left"><font face="굴림" size="2"><b>제 3 정규형 검사 및 정규화</b></font></p>
+<ul><p><font face="굴림" size="2"><b>제 3 정규형의 조건</b></font></p>
+<ul><p><font face="굴림" size="2" color="teal">릴레이션 스키마가 제 2정규형이고 주키이가 아닌 모든 속성이 주키이에 
+전이종속 이지 않으면 이 릴레이션은 제 3 정규형에 존재한다고 한다.</font></p>
+</ul>
+<p><font face="굴림" size="2"><a href="#표7-9">표 7-9</a></font><font face="굴림" size="2">에서 각 릴레이션 스키마는 </font><font face="굴림" size="2" color="teal">제 2 정규형에 존재하면서 주키이가 아닌 모든 
+속성이 주키이에 전이종속 이지 않으므로</font><font face="굴림" size="2"> 제 3 정규형에도 존재한다. </font><font face="굴림" size="2" color="blue"><u>수강생 
+여러분들은 각 릴레이션 스키마의 함수적 종속성들을 대상으로 제 3 정규형에 
+존재하는지를 일일이 검사하길 바란다.</u></font></p>
+</ul>
+</ul>
+</ul>
+<h4 align="left"><font face="굴림"><a name="4">4. 강의시스템 데이터베이스 설계의 최종 결과</a></font></h4>
+<ul><p align="left"><font face="굴림" size="2"><b>강의 시스템</b></font><font face="굴림" size="2">에 대한 논리적 데이터베이스 설계의 최종 결과는 정규형 검사와 무손실 분해를 
+모두 마친(본 강의에서는 제 3 정규형까지 정규화를 행하였음을 주시하자) 릴레이션 
+스키마들로 이루어진 </font><font face="굴림" size="2" color="teal">데이터베이스 스키마</font><font face="굴림" size="2">와 지금까지 식별되어 온</font><font face="굴림" size="2"><b> </b></font><font face="굴림" size="2" color="teal">제약조건</font><font face="굴림" size="2">들이다. </font></p>
+<p align="left"><font face="굴림" size="2">따라서 논리적 설계의 최종 결과로 생성된 데이터베이스 스키마와 제약조건들은 각각 </font><font face="굴림" size="2"><a href="#표7-9">표 
+7-9</a></font><font face="굴림" size="2">와 </font><font face="굴림" size="2"><a href="#표7-4">표 7-4</a></font><font face="굴림" size="2">에 제시된 데이터베이스 스키마와 제약조건 들이며 이를 다시 종합하여 제시하면 
+다음 표 7-10과 같다.</font></p>
+<ul><ul><p align="left"><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;&nbsp; </font><font face="굴림" size="2"><a name="표7-9">&nbsp;</a></font> 
+</ul>
+</ul>
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" height="29" bgcolor="#FCFDC1"><p align="center"><font face="굴림" size="2"><b>표 7-10. 강의시스템에 대한 논리적 데이터베이스 설계의 최종 결과</b></font></td>
+</tr></table>
+<ul><ul><p align="center"><font face="굴림" size="2">&nbsp;</font> 
+</ul>
+</ul>
+<table border bgcolor="white">
+<tr>
+<td width="545"><p align="center"><font face="굴림" size="2"><a name="표7-9">&nbsp;</a></font> 
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" height="19" bgcolor="white"><p align="center"><font face="굴림" size="2"><b>최종 데이터베이스 스키마</b></font></td>
+</tr></table>
+<p align="center">&nbsp; 
+<table border>
+<tr>
+<td width="302" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>강의시스템 데이터베이스 스키마</b></font></td>
+<td width="89" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>주키이</b></font></td>
+<td width="136" bgcolor="#FF8080"><p align="center"><font face="굴림" size="2"><b>외래키이</b></font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>학과(학과번호,학과명,단대번호)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{학과번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>교수(교수번호,이름,주민번호,학력, 
+전공,주소,전화번호, </i></font><font face="굴림" size="2"><i><u>학과번호</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{교수번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{학과:학과번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>학생(학번,이름,주민번호,주소, 
+전화번호,</i></font><font face="굴림" size="2"><i><u>학과번호</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{학번}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{학과:학과번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>교과목(과목번호,과목명,학점,시수)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{과목번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>교재(코드,교재명,저자,출판사)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{코드}</font> </td>
+<td width="136" bgcolor="#AFFCBE"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>강의실(강의실번호,소속건물)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{강의실번호}</font> </td>
+<td width="136" bgcolor="#AFFCBE"><p align="left">&nbsp;</td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>강좌(강좌번호,</i></font><font face="굴림" size="2"><i><u>과목번호</u></i></font><font face="굴림" size="2"><i>,</i></font><font face="굴림" size="2"><i><u>교수번호</u></i></font><font face="굴림" size="2"><i>, </i></font><font face="굴림" size="2"><i><u>개설년도</u></i></font><font face="굴림" size="2"><i>,</i></font><font face="굴림" size="2"><i><u>학기)</u></i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{강좌번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{교과목:과목번호, 
+교수:교수번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>강좌요일시간(</i></font><font face="굴림" size="2"><i><u>강좌번호</u></i></font><font face="굴림" size="2"><i>,요일,시간, </i></font><font face="굴림" size="2"><i><u>강의실번호</u></i></font><font face="굴림" size="2"><i> )</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{강좌번호, 
+요일,시간}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{강의실:강의실번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>수강(</i></font><font face="굴림" size="2"><i><u>학번</u></i></font><font face="굴림" size="2"><i>,</i></font><font face="굴림" size="2"><i><u>강좌번호</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{학번, 
+강좌번호}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{학생:학번, 
+강좌:강좌번호}</font></td>
+</tr><tr>
+<td width="302" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2"><i>이용교재(</i></font><font face="굴림" size="2"><i><u>강좌번호</u></i></font><font face="굴림" size="2"><i>,</i></font><font face="굴림" size="2"><i><u>코드</u></i></font><font face="굴림" size="2"><i>)</i></font></td>
+<td width="89" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{강좌번호, 
+코드}</font></td>
+<td width="136" bgcolor="#AFFCBE"><p align="left"><font face="굴림" size="2">{강좌:강좌번호, 
+교재:코드}</font></td>
+</tr></table>
+<p align="center">&nbsp; 
+<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFAAAA">
+<tr>
+<td width="505" height="26" bgcolor="white"><p align="center"><font face="굴림" size="2"><b>강의시스템 제약조건</b></font></td>
+</tr></table>
+<p align="center">&nbsp; 
+<table border bgcolor="white">
+<tr>
+<td width="109" rowspan="11" bgcolor="#FF9582"><p align="center"><font face="굴림" size="2"><b>제약조건</b></font></td>
+<td width="66" bgcolor="#FF8A8A"><p align="center"><font face="굴림" size="2"><b>구분번호</b></font></td>
+<td width="322" bgcolor="#FF8A8A"><p align="center"><font face="굴림" size="2"><b>제약조건 문장</b></font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">8</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수와 학생은 단지 한 학과에만 소속되며 둘 이상의 
+소속관계는 허용되지 않는다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">4</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수는 한 강좌 이상을 담당하여 강의해야 한다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">9</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌를 두 명이상의 교수가 강의할 수는 없다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">5</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 교과목에 대해 여러개의 강좌가 개설될 수 있다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">10</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌에 여러개의 교과목이 대응할 수는 없다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">11</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 강좌에 대하여 여러개의 교재가 이용될 수 있다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">12</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">한 교재가 여러 강좌에 이용될 수도 있다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">13</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">교수의 학력은 박사 또는 석사이어야 한다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">14</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2">학생은 한학기에 7개 이상의 장좌를 들을 수 없다</font></td>
+</tr><tr>
+<td width="66" bgcolor="#C1F9C5"><p align="center"><font face="굴림" size="2">15</font></td>
+<td width="322" bgcolor="#C1F9C5"><p align="left"><font face="굴림" size="2"><a name="제약사항1">강좌에 대한 강의실 배정시 요일과 시간은 강좌의 
+요일과 시간에 맞추어야 한다</a></font></td>
+</tr></table>
+<p align="center"><font face="굴림" size="2">&nbsp;&nbsp;</font></td>
+</tr></table>
+<p align="left"><font face="굴림" size="2"><a name="표7-9">&nbsp;&nbsp;&nbsp;</a></font></p>
+<p align="left"><font face="굴림" size="2">표 7-10의 </font><font face="굴림" size="2"><b>강의 시스템</b></font><font face="굴림" size="2">에 대한 데이터베이스 스키마와 제약조건 최종 결과는 &nbsp;다음 강의인 
+</font><font face="굴림" size="2" color="blue">&quot;제 8 회 ACCESS를 이용한 데이터베이스 구축 및 활용 실습&quot;</font><font face="굴림" size="2">에서 이용될 것이다. </font>
+<table border bgcolor="white">
+<tr>
+<td width="545"><ul><ul><p align="left"><font face="굴림" size="2">다음의 제 8 회 강의 내용인 </font><font face="굴림" size="2" color="blue">&quot;ACCESS를 이용한 데이터베이스 구축 및 활용 
+실습&quot;</font><font face="굴림" size="2"> 내용은 강의계획서 상에서는 본 강의에서 함께 다룰 예정이었으나 
+강의내용이 길어짐과 더불어 </font><font face="굴림" size="2" color="fuchsia">데이터베이스 설계와 데이터베이스 구축을 
+분리</font><font face="굴림" size="2">하는 의미에서 제 7 회와 제 8 회 강의로 분리하게 되었습니다. 강의 계획상 
+약간의 변경이 있음을 알립니다. </font>
+</ul>
+</ul></td>
+</tr></table>
+<p align="left">&nbsp; 
+<table border bgcolor="white">
+<tr>
+<td width="545" height="39" bgcolor="lime"><h4 align="center"><a name="레포트">본 강의 레포트</a></h4></td>
+</tr><tr>
+<td width="545" height="525"><ul><ul><p>&nbsp; 
+</ul>
+<ol>
+<li><font size="2" color="teal"><b>레포트 내용 :</b></font> 
+<p><font size="2" color="teal"><b>비디오 대여점</b></font><font size="2">과 관련된 </font><font size="2" color="blue"><b>비디오 대여/관리 시스템</b></font><font size="2">을 대상으로 본 강의 
+절차에 그대로 맞춰서 도출된 </font><font size="2" color="blue"><b>데이터베이스 스키마와 제약조건</b></font><font size="2">을 
+제출하라. </font><font size="2" color="#800040"><u>단, 데이터베이스 스키마와 제약조건의 도출과정은 본 강의에서 
+제시한 각 단계별로 ER 다이어그램과 표를 작성해가면서 꼭 보여야 한다.</u></font></p>
+<p>&nbsp; 
+<li><font size="2" color="teal"><b><u>제출 기한 :</u></b></font> 
+<p><font size="2"><u>제출 기한은 지금부터 2주 후인 1999년 4월 24 까지로 한다.</u></font></p>
+<p>&nbsp; 
+<li><font size="2" color="teal"><b><u>레포트 작성 규칙 :</u></b></font> 
+<p><font size="2"><u>레포트 작성은 다음 규칙을 따르도록 한다. </u></font></p>
+<ul><p><font size="2"><u>규칙-1. 보고서는 HWP 파일로 작성하되 작성된 HWP 파일은 E-mail에 
+attach하고 attach되는 파일명칭은 &nbsp;본인이름+'7'로 한다. 예를 들어 
+본인 이름이 '홍길동' 이라면 E-mail에 attach되는 파일명은 
+'홍길동7.HWP'가 될 것이다. (참고로 '홍길동7.HWP'에서 수자 7은 제 7 
+회 강의 레포트 임을 의미한다.)</u></font></p>
+<p><font size="2"><u>규칙-3. E-mail 작성시 Subject(제목) 명은 'OCU 데이터베이스 제 7 회 
+강의관련 레포트'로 하도록 한다.</u></font></p>
+<p><font size="2"><u>규칙-4. 완성된 레포트 메일은 OCU의 메일 기능을 이용하거나 혹은 
+다음 E-mail 주소를 이용하여 전송한다.</u></font></p>
+<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-mail 주소 : &nbsp;&nbsp;kch@knusun.kangnung.ac.kr</font></p>
+</ul>
+<p><font size="2" color="blue">자 ! 그러면 다음 사이버 강의 내용을 기대하세요 !</font><font color="blue"> </font></p>
+</ol>
+</ul>
+<p>&nbsp;</td>
+</tr></table></td>
+</tr></table></div>
+</body>
+</html>

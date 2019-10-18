@@ -1,0 +1,655 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>제 12 회 네트워크 상의 데이터베이스 구축</title>
+<meta name="GENERATOR" content="Namo WebEditor v2.00">
+</head>
+<body bgcolor="#CCFFFF" text="black" link="blue" vlink="purple" alink="red">
+
+<h5>&nbsp;</h5>
+<div align="center"><table border="0" cellpadding="10" width="650" bgcolor="white">
+<tr>
+<td height="142" colspan="2" bgcolor="white"><h1 align="center">제 12 회 네트워크상의 데이터베이스 
+이용</h1></td>
+</tr><tr>
+<td width="307" height="555" bgcolor="white"><p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="4"><b>목 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;차</b></font></p>
+<p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="2"><b><a href="#0">시작하기전에.....</a></b></font></p>
+<p align="left">&nbsp;</p>
+<p><font size="2"><a href="#1">&nbsp;</a></font><font size="2"><b><a href="#1">1. 클라이언트/서버 데이터베이스 시스템</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#1-1">1.1 클라이언트/서버 시스템 
+구성요소</a></b></font> 
+<li><font size="2"><b><a href="#1-2">1.2 클라이언트/서버 시스템의 
+소프트웨어 구성요소 구분</a></b></font> 
+<li><font size="2"><b><a href="#1-3">1.3 클라이언트/서버 통신 기법</a></b></font> 
+<li><font size="2"><b><a href="#1-4">1.4 클라이언트/서버 계층 모델</a></b></font> 
+<li><font size="2"><b><a href="#1-5">1.5 데이터베이스 미들웨어&nbsp;</a></b></font> 
+</ul>
+<p><font size="2"><b><a href="#2">2. Web과 데이터베이스의 연동</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#2-1">2.1 웹과 데이터베이스</a></b></font> 
+<li><font size="2"><b><a href="#2-2">2.2 웹과 데이터베이스의 연동 기법</a></b></font> 
+</ul></td>
+<td width="314" height="555" bgcolor="#FFD3D2"><h2><font size="5" color="#400080"><b><a name="0">시작하기전에....</a></b></font></h2>
+<h2>&nbsp;</h2>
+<p><font size="2" color="#400080"><b>&nbsp;본 강의에서는 네트워크 상에서 
+데이터베이스를 이용하는 환경과 방법에 
+대하여 다룹니다. </b></font></p>
+<p><font size="2" color="#400080"><b>&nbsp;여러분들은 다음 사항들을 유념하여 강의해 
+임해주길 바랍니다.</b></font> 
+<ul type="disc">
+<li><font size="2" color="#400080"><b>클라이언트/서버 시스템이란 무엇이며 
+이 시스템의 구성요소들은 무엇인지 
+알아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>클라이언트/서버 시스템의 각 통신 
+기법에 대하여 알아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>클라이언트/서버 시스템의 계층 모델을 
+알아보고 미들웨어의 기능을 
+알아봅시다</b></font> 
+<li><font size="2" color="#400080"><b>웹 데이터베이스 시스템의 구성 요소에 
+대하여 알아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>웹과 데이터베이스의 연동 기법에 
+대하여 자세히 조사해 봅시다.</b></font>&nbsp; 
+</ul></td>
+</tr><tr>
+<td colspan="2" bgcolor="#FFFFC4"><ul><ul><ul><p>&nbsp;</p>
+</ul>
+</ul>
+</ul>
+<h2><font face="굴림"><a name="1">1. 클라이언트/서버 데이터베이스 시스템</a></font></h2>
+<ul><ul><ul><p><font face="굴림" size="2">클라이언트/서버 데이터베이스 시스템은 하나의 응용을 클라이언트의 자료 요청과 
+서버의 자료 서비스 프로그램으로 나누어 협동 처리하는 데이터베이스 시스템이다.</font></p>
+<p><font face="굴림" size="2">클라이언트/서버 시스템은 클라이언트와 슬래시(/) 그리고 서버로 구성되는 
+시스템이다. 즉, 클라이언트는 사용자의 인터페이스를 처리하고, 서버는 요청받은 
+서비스를 제공하며, 슬래시는 클라이언트와 서버 사이의 통신 등 연결 기능을 수행한다. 
+슬래시 기능을 수행하는 미들웨어(middlewqre)는 프로그램들을 연결하는 
+소프트웨어이다. 즉, 미들웨어는 클라이언트와 서버 사이에서 &nbsp;두 프로그램이 협동 
+처리하고록 지원하는 프로그램이다. 미들웨어는 서비스를 요청하는 클라이언트 
+사이트에서 API(Applicaion Programming Interface) 형태로 제공된다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">클라이언트/서버 시스템의 장점</font></h5>
+<ul><p><font face="굴림" size="2">클라이언트/서버 시스템의 가장 큰 장점 네트워크 상의 여러 프로그램(클라이언트)들이 
+자원을 공유할 수 있다는 점이다. 여기에서 자원이란 데이터나 프로그램등의 
+소프트웨어 자원과 프린터 등의 하드웨어 자원을 의미한다. 일반적으로 서버는 
+네트워크 상에서 데이터, 프로그램 등의 소프트웨어 자원을 클라이언트 요청에 따라 
+지원한다. 클라이언트들은 사용자에게 제공할 데이터나 기능을 갖지 않더라도 서버에 
+서비스를 요청함으로써 서버의 자원을 공유할 수 있다.</font></p>
+<p><font face="굴림" size="2">데이터베이스 시스템의 큰 목적 중의 하나가 데이터 공유에 있다는 것을 명심한다면 
+네트워크 상에서 데이터베이스 시스템 서비스를 공유하는 기능을 제공한다는 것은 
+당연하다 할 수 있다. 사실 상 단일 시스템 내에서 볼 때 DBMS는 여러 응용 
+프로그램들에 대한 하나의 서버라고 할 수 있다. 그러나 네트워크 상에서 데이터 서비스 
+기능을 공유하기 위해서는 다른 환경이 요구되는데 이 환경이 바로 네트워크 상의 
+클라이언트/서버 환경이다.</font></p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="1-1">1.1 클라이언트/서버 시스템 구성요소</a></font></h4>
+<ul><ul><p><font face="굴림" size="2">클라이언트/서버 시스템의 구성요소는 클라이언트, 서버, 미들웨어, 통신 네트워크 
+등이다. 이들 각 구성요소의 기능을 살펴보면 다음과 같다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">클라이언트</font></h5>
+<ul><p><font face="굴림" size="2">클라이언트는 사용자와 접촉하면서 사용자 요청에 의한 응답을 제공하기 위해 필요한 
+데이터나 프로그램 처리 서비스를 서버에게 요청하고, 이 요청을 서버가 실행한 결과를 
+제공받아 적절히 처리하여 사용자에게 제공하는 기능을 수행한다. 클라이언트가 
+서버에게 서비스를 요청할 때 요청할 서비스 기능과 서버가 서비스 수행에 필요한 
+파라메터를 명확히 기술하여 전달해야 한다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">서버</font></h5>
+<ul><p><font face="굴림" size="2">서버는 네트워크 상의 여러 클라이언트 들의 서비스를 요청받아서 처리하고 그 결과를 
+요청한 클라이언트로 제공하는 기능을 수행한다. 서버는 많은 일을 바쁘게 처리하기 
+때문에 서버에 이용되는 시스템은 성능이 높아야 한다. 서버 시스템은 클라이언트의 
+요청 서비스를 수행하는데 소요되는 일의 양과 시간, 클라이언트의 서비스 요청 빈도수 
+등을 고려하여 그 성능을 결정해야 한다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">미들웨어</font></h5>
+<ul><p><font face="굴림" size="2">미들웨어는 클라이언트와 서버 사이 존재하면서 클라이언트나 서버가 처리해야 할 
+작업의 일부를 수행하는 기능을 갖는다. 미들웨어는 클라이언트/서버 시스템의 
+필수적인 요소는 아니다. 그러나, 미들웨어들 도입하면 클라이언트나 혹은 서버의 기능 
+부담을 경감시킬 수 있다. 클라이언트/서버 시스템에서 미들웨어가 도입될 때 
+클라이언트는 미들웨어를 통하여 서버에게 서비스를 요청하게 되며, 서버에 의한 
+서비스 처리 결과는 미들웨어를 경유하여 클라이언트엑 전달된다.</font></p>
+<p><font face="굴림" size="2">현재 API 형태로 제공되고 있는 대표적인 미들웨어가 ODBC와 JDBC이다. 이 API 형 
+미들웨어들은 클라이언트가 갖추어야할 서버 DBMS와의 통신 기능을 맡아서 처리하는 
+기능을 수행한다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">통신 테트워크</font></h5>
+<ul><p><font face="굴림" size="2">통신 네트워크는 궁극적으로 클라이언트와 서버 사이에 전송되는 자료를 전달하는 
+역할을 수행한다. 단일 시스템과는 달리 두 개 이상의 컴퓨터 사이에서 통신해야 하므로 
+온라인 실시간 처리 업무의 경우에는 사용자가 불편을 느끼지 않을 정도의 속도로 
+서비스하도록 자료를 고속으로 전송해야 한다.</font></p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="1-2">1.2 클라이언트/서버 시스템의 소프트웨어 구성요소 구분</a></font></h4>
+<ul><ul><p><font face="굴림" size="2">클라이언트, 미들웨어, 서버 등의 기능을 수행하기 위해 요구되는 소프트웨어 기능은 
+크게 표현논리, 응용논리, 자료논리, DBMS 등으로 구분된다. 이 기능들을 자세히 
+설명하면 다음과 같다.</font></p>
+<p>&nbsp; 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>표현 논리(Presentation Logic)</b></font> 
+<p><font face="굴림" size="2">이 기능은 사용자로부터 입력을 받아들이고 결과를 화면에 출력하는 기능이다. 표현 
+논리는 화면의 구성, 자료의 읽기/쓰기, 자판과 마우스 활용 등의 사용자 인터페이스 
+기능을 수행한다. 따라서 그래픽 사용자 인터페이스(GUI)는 표현 논리의 중요한 
+요소이다. </font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>응용 논리(Application Logic)</b></font> 
+<p><font face="굴림" size="2">이 기능은 특정 응용의 필요한 업무을 수행하는 기능이다. 즉, 사용자로부터 입력된 
+데이터나 혹은 데이터베이스에서 제공된 자료를 특정 업무 수행에 맞게 처리하는 
+기능이다. 이 기능을 수행하는 언어는 Java, C/C++, Pascal 등의 3 세대 언어와 Delpi, 
+Power Builder 등과 같은 4 세대 언어이다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>데이터 논리(Data Logic)</b></font> 
+<p><font face="굴림" size="2">이 기능은 응용 논리에 의해 작성된 응용 프로그램이 원하는 데이터를 접근하기 위해 
+데이터베이스의 자료를 조작 및 처리하는 기능이다. 데이터 처리는 데이터 논리 기능을 
+갖는 프로그램에서 SQL과 같은 데이터 조작 언어(DML)로 작성한다. 대화식으로 
+사용할 때에는 SQL 로 직접 데이터베이스를 조작하지만 경우에 따라서 응용 논리의 
+호스트 언어에 내장되어 실행된다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;</font> 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>DBMS</b></font> 
+<p><font face="굴림" size="2">DML로 표현된 요청에 의하여 데이터의 실제적 처리(물리적 입출력, 버퍼 관리, 병행 
+제어 등)를 DBMS가 실행한다. DBMS는 데이터베이스의 요청에 의하여 
+데이터베이스를 정의하고, 자료 검색, 삽입, 삭제, 갱신 등의 조작을 수행하고 동시성 
+제어, 무결성 관리 및 유지, 복구, 보안 등의 제어 기능을 수행한다.</font></p>
+<p><font face="굴림" size="2">다음의 그림 12-1은 표현 논리. 응용 논리, 데이터 논리, DBMS 사이의 관계를 
+나타낸다.</font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center">&nbsp;<img src="img/그림12-1.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-1. 표현 논리, 응용 논리, 데이터 논리, DBMS 사이의 관계</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">그림 12-1은 위의 네가지 기능이 서로 연계되어 수행됨을 보여주고 있다.</font></p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="1-3">1.3 클라이언트/서버 통신 기법</a></font></h4>
+<ul><ul><p><font face="굴림" size="2">클리아언트/서버 컴퓨팅은 하나의 으용을 여러대의 컴퓨터에 존재하는 프로그램들이 
+협동 처리하는 모델이다. 따라서, 다른 컴퓨터에서 실행되는 프로세서들간의 
+통신기법(IPC:Inter Process Communication)이 매우 중요하다. 이것은 다중 
+시스템에서 많이 사용되는 프로세스간 통신 기법을 요구한다. 프로세스간 통신 기법을 
+기반으로 클라이언트/서버 컴퓨팅과 데이터베이스 시스템이 가능하므로 구체적인 
+기법들을 살펴보면 다음과 같다.</font></p>
+<p>&nbsp; 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>메시지 전달 기법(Message Passing)</b></font> 
+<p><font face="굴림" size="2">메시지 전달은 두 프로그램이 같이 실행되면서 메시지를 직접 주고 받는다. 
+클라이언트에서는 요청 사항을 메시지로 서버에게 전송하고 결과가 올 때까지 
+대기하므로 동기 통신(synchronized communication) 방식이다. 서버는 메시지를 
+수신하여 처리하고 그 결과를 클라이언트에게 다시 메시지로 전송한다. 중앙 집중식 
+컴퓨터에서도 실행 중인 두 프로세스간에 메시지 전달이 있을 수 있으며, 서로 다른 두 
+컴퓨터 사이에도 메시지 전달이 가능하다. 단 통신 네트워크를 이용하는 기법이 추가될 
+뿐이다. 그림 12-2는 메시지 전달 기법의 기본 구조를 나타낸다.</font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center">&nbsp;<img src="img/그림12-2.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-2. 메시지 전달 기법</b></font></td>
+</tr></table>
+<p>&nbsp; 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>원격 프로시져 호출(RPC) 기법</b></font> 
+<p><font face="굴림" size="2">단일 컴퓨터 프로그램 내에서 부 프로그램을 호출할 때 매개 변수만을 전달한다. 그 
+이유는 호출 프로그램과 피호출 프로그램이 데이터를 공유하고 있기 때문이다. 따라서 
+원격지 컴퓨터의 프로그램을 호출할 때 원격지에 클라이언트가 필요로하는 데이터가 
+존재한다면 프로시져 호출 기법을 사용할 수 있다. 이와 같이 원격 프로시져 호출 
+기법에서는 서버에 클라이언트가 필요로하는 데이터를 저장해두고 파라메터만을 
+전달하는 방법을 사용한다.</font></p>
+<p><font face="굴림" size="2">이 기법에서 클라이언트는 서버에게 프로그램의 이름과 인수들만을 전송한다. 
+서버에서는 프로그램의 이름과 인수들만을 수신하면 이미 준비되어 있는 프로그램을 
+실행하여 결과를 산출한 다음 클라이언트에게 그 결과를 전송한다. 이 때 서버의 피호출 
+프로시져는 데이터베이스를 이용하게 된다. 클라이언트와 서버에 있는 스터브(stub) 
+프로그램은 데이터 전송을 위해서 다양한 형태의 데이터 타입들 전소에 적합한 문자 
+위주의 자료를 서로 변환하는 기능을 수행한다. 이 기법의 장점은 클라이언트의 응용이 
+서버와 강한 결합력을 가지며, 대역폭이 높은 네트워크에서 최상의 성능을 가진다. 
+단점은 서버의 응담을 기다려야 하는 동기 통신 방식이며, 전송 상태 정보가 미약하다는 
+점이다. 그림 12-3은 원격 프로시져 호출 기법의 기본 구조를 나타낸다.</font></p>
+<p>&nbsp; 
+</ul>
+<table border>
+<tr>
+<td width="505"><p align="center">&nbsp;<img src="img/그림12-3.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-3. 원격 프로시져 호출 기법</b></font></td>
+</tr></table>
+<ul><p>&nbsp; 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>메시지 큐(Message Queuing) 기법</b></font> 
+<p><font face="굴림" size="2">앞의 두 통신 기법은 모두 동기 통신(synchronized communication)이므로 
+클라이언트와 서버 양쪽 프로그램들이 같이 실행되면서 클라이언트 프로그램은 
+메시지를 전송하고 서버에서 결과가 올 때까지 대기해야 한다. 클라이언트의 대기 
+시간을 제거하고 자신의 작업을 계속 실행하기 위해 비동기 통신(asynchronized 
+communication) 기법이 요구되었기 때문에 메시지 큐 기법이 소개되었다. 메시지 큐 
+기법은 클라이언트와 서버 양쪽에 메시지 큐를 마련하고 클라이언트는 메시지를 지역 
+큐에 전송한 후에 자신의 작업을 계속 수행한다. 클라이언트와 서버의 연결은 지역 큐와 
+원격 큐 사이에 send와 receive 명령을 서로 교환함으로써 구축된다. 서버는 큐에서 
+메시지를 받아서 처리한 후에 결과를 지역 큐에 저장하고 자신의 작업을 계속 처리한다. 
+따라서 클라이언트와 서버는 모두 비동기적으로 프로그램을 수행하여 처리 효율을 
+향상할 수 있다. 장점은 RPC처럼 응담을 기다릴 필요가 없으며 고급 API를 사용하므로 
+효율이 좋다는 점이다. 그림 12-4는 메시지 큐 기법의 기본 구조를 나타낸다.</font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center">&nbsp;<img src="img/그림12-4.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-4. 메시지 큐 기법</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="1-4">1.4 클라이언트/서버 계층 모델</a></font></h4>
+<ul><ul><p><font face="굴림" size="2">&nbsp;계층 모델은 하드웨어를 물리적으로 분리하여 처리하는 개념과 소프트웨어 기능을 
+클라이언트와 서버에 논리적으로 분리하여 처리하는 것으로 구분된다. 본 강의에서는 
+소프트웨어(프로세스) 기능을 분리하여 클라이언트/서버 환경에서 처리하는 것을 
+소개하기로 한다.</font></p>
+<p>&nbsp; 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>2 계층 모델(2-tier model)</b></font> 
+<p><font face="굴림" size="2">2 계층 모델은 표현 논리 기능과 응용 논리 기능이 front-end 계층이 되고 데이터 
+논리와 DBMS가 back-end 계충이 되는 클라이언트/서버 모델이다. 2 계층 모델은 
+파일 서버에서 발전한 것으로 클라이언트에 있는 응용 프로그램이 원격지 서버에게 
+SQL과 같은 데이터베이스 질의어를 통하여 서비스를 요청하고 이에 대한 결과를 
+제공받아 가공하여 사용자에게 표현하는 모델이다. 이 계층 모델은 단순한 것이 
+특징이다. 클라이언트 요청에 대해 서버로부터 대규모 자료이동이 부라피하므로 소규모 
+비정형화된 업무에 적합하다. 예를 들어 하나의 SQL 결과가 수십만개의 튜플이라면 
+통신상의 병목현상이 나타날 수 있다.</font></p>
+<p><font face="굴림" size="2">2 계층 모델의 문제점은 데이터베이스 구성이 변경되거나 새로운 데이터베이스를 
+추가할 경우 기존의 응용 프로그램 모두를 모두 재작성해야 한다는 점이다. 응용 
+프로그램이 서버의 구조에 의존하기 때문에 시스템 확장시 문제가 발생한다. </font></p>
+<p><font face="굴림" size="2">그림 12-5와 같이 표현 논리 기능과 응용 논리 기능이 클라이언트에 데이터 논리 기능을 
+DBMS를 서버에 두는 2 계층 모델을 나타낸다.</font></p>
+<p>&nbsp; 
+</ul>
+<table border>
+<tr>
+<td width="505"><p align="center">&nbsp;<img src="img/그림12-5.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-5. 2 계층 모델</b></font></td>
+</tr></table>
+<ul><p>&nbsp; 
+</ul>
+<ul type="disc">
+<li><font face="굴림" size="2"><b>3 계층 모델(3-tier model)</b></font> 
+<p><font face="굴림" size="2">3 계층 모델은 표현 논리 기능을 front-end 계층으로하고 응용 논리 기능을 독립시키고 
+데이터 논리 기능과 DBMS를 back-end 계층으로 구성한 클라이언트/서버 모델이다. 
+이 게층 모델은 모든 기능이 명확히 정의되기 때문에 확장성이 좋고 융통성이 뛰어난 
+장점이 있다. 이 계층 모델은 응용 논리 기능의 대부분이 서버 쪽에 있기 때문에 이것이 
+변경되면 서버에만 변경되고 클라이언트는 이를 공유하기 때문에 유지보수가 수월하다. 
+서버의 응용 프로그램을 클라이언트가 공유하므로 클라이언트마다 응용 프로그램을 
+수정하고 유지보수할 필요는 없지만 데이터베이스가 변경되면 응용 프로그램도 
+변경해야 한다. </font></p>
+<p><font face="굴림" size="2">3 계층 모델은</font><font face="굴림" size="2" color="teal"> 순수 3 계층 모델</font><font face="굴림" size="2">과</font><font face="굴림" size="2" color="teal"> 중재형 3 계층 모델</font><font face="굴림" size="2">로 구분된다.</font></p>
+<p><font face="굴림" size="2">순수 3 계층 모델은 다음 그림 12-6과 같이 서버의 수에 따라 서로 다른 응용 논리들을 
+작성해야 하는 단점을 갖는다.</font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림12-6.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-6. 순수 3 계층 모델</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">한편, 중재 형 3 계층 모델은 다음 그림 12-7과 같이 미들웨어를 도입한다. 미들웨어는 
+클라이언트가 이질적인 서버에 일관된 방법으로 접근할 수 있도록 중재하는 역할을 
+수행한다. 따라서 각 틀라이언트는 데이터베이스의 종류에 관계없이 동일한 응용 
+논리를 작성하여 미들웨어에게 서비스를 요청한다.</font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림12-7.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-7. 중재형 3 계층 모델</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;</font></p>
+<p><font face="굴림" size="2">초기의 클라이언트/서버 시스템은 주로 표현 논리와 응용 논리는 클라이언트에 
+존재하고 데이터 논리와 DBMS는 서버에 존재하는 2 계층 모델을 취하였다. 그러나 
+클라이언트/서버 시스템의 규모가 커지면서 성능이 약한 클라이언트에 처리기능을 
+전담하는 것에 한계가 있기 때문에 클라이언트가 담당하는 응용 논리 기능을 서버쪽에 
+분담시키는 3 계층 모델로 확장하게 되었다.</font></p>
+<p><font face="굴림" size="2">2 계층 모델은 클라이언트가 여러 서버들의 데이터베이스를 접근하려면 DBMS별로 
+응용 논리를 개발해야 하므로 이질 데이터베이스의 지원이 어렵다. 그러나, 중재형 3 
+계층 모델은 미들웨어를 경유하여 DBMS에 접근하므로 클라이언트는 이질 
+데이터베이스(DBMS가 서로 다른 두 개 이상의 데이터베이스를 말함) 접근에 용이하다. 
+다음 조건들 중에서 하나라도 적용되면 3 계층 모델을 선정하는 것이 바람직하다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;&nbsp;</font> 
+<ul type="disc">
+<li><font face="굴림" size="2">전체 조직의 핵심 업무로서 응용 분야가 다양한 경우</font> 
+<li><font face="굴림" size="2">상이한 언어 또는 상이한 조직이 프로그래밍한 응용 분야</font> 
+<li><font face="굴림" size="2">이질적 데이터 소스를 이용하는 경우(두 개의 상이한 DBMS)</font> 
+<li><font face="굴림" size="2">처리할 데이터 양이 많은 경우</font> 
+</ul>
+<p><font face="굴림" size="2">한편 2 계층 모델을 선정하는 경우는 다음과 같다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<ul type="disc">
+<li><font face="굴림" size="2">부서 단위의 업무로서 응용 분야가 단순할 때</font> 
+<li><font face="굴림" size="2">동일한 언어로 동일한 조직이 개발할 때</font> 
+<li><font face="굴림" size="2">동일한 데이터 소스를 사용할 때</font> 
+<li><font face="굴림" size="2">데이터 처리 양이 적을 때</font> 
+</ul>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="1-5">1.5 데이터베이스 미들웨어</a></font></h4>
+<ul><ul><p><font face="굴림" size="2">ODBC와 같은 데이터베이스 미들웨어 목적은 사용자들이 다양한 데이터베이스들을 
+일관된 방식으로 접근하게 하는 것이다. 즉, 하나의 응용 프로그램이 여러 종류의 
+데이터베이스 서버드를 접근할 수 있으므로 클라이언트 프로그램의 생산성을 향상하고 
+유지보수 비용을 절감한다. 미들웨어의 설치는 클라이언트와 서버 사이에 중간층을 
+설치한는 것이기 때문에 클라이언트는 미들웨어에 의해 서버에 간접적으로 접근한다. </font></p>
+<p><font face="굴림" size="2">이와 같은 간접 접근 방식은 다음과 같은 두 가지 단점을 갖는다. </font></p>
+<p><font face="굴림" size="2">첫째, 중간층은 클라이언트와 서버 사이를 가로막는 통신 경로로서 과부하로 작용한다. 
+즉, 미들웨어는 데이터를 접수하면 다음 단계의 자료로 변환하여 다시 전송해야 하므로 
+통신 시간을 지연시킨다. </font></p>
+<p><font face="굴림" size="2">둘째, 미들웨어는 여러 DBMS들을 표준화하여 접근해야 하므로 각 DBMS들의 특별한 
+기능을 무시해야 한다. 표준화하여 이식성을 높이려면 특성을 포기해야 하고, 특성을 
+유지하려면 이식성을 포기해야하는 모순이 존재한다.</font></p>
+<p><font face="굴림" size="2">데이터베이스 미들웨어의 대표적인 제품으로 MS사의 ODBC(Open Database 
+Connectivity)가 있다. 본 강의에서는 ODBC를 설명함으로써 데이터베이스 미들웨어에 
+대한 이해와 활용 능력을 높이고자 한다.</font></p>
+<p><font face="굴림" size="2">ODBC는 데이터베이스를 접근하는 표준 인터페이스로 사용되는 라이브러리이다. 
+ODBC의 제약 사항은 관계형 데이터베이스만을 접근한다는 점과 IBM 개인용 컴퓨터 
+호환 기종에서 Window 98 또는 Window NT 하에서 사용된다는 점이다.</font></p>
+<p><font face="굴림" size="2">ODBC는 DBMS 별로 이들을 구동할 수 있는 드라이버(driver)를 제공함으로써 
+클라이언트를 데이터베이스 서버로부터 독립시켜주는 기능을 제공한다. 예를 들어 
+Informix 데이터베이스를 다루기 위해 클라이언트는 Informaix ODBC 드라이버가 
+필요하지만 클라이언트 프로그램은 ODBC만을 접근하므로 구체적인 DBMS로부터 
+독립할 수 있다. 응용 프로그램은 ODBC 드라이버 관리자에게 연결되며, 드라이버 
+관리자는 ODBC.DLL에 포함되어 있다. 드라이버 관리자는 필요한 드라이버를 적재하고 
+응용 프로그램의 DLL 함수와 ODBC 함수를 호출하는 기능을 수행한다.</font></p>
+<p><font face="굴림" size="2">클라이언트/서버 데이터베이스 시스템에서 통신은 매우 중요한 역할을 수행한다. 
+클라이언트/서버 시스템에서 응용 프로그램은 데이터베이스 엔진과 직접 통신하지 
+않고 그림 12-8과 같이 클라이언트에서 실행되는 데이터베이스 통신 API 또는 
+데이터베이스 라이브러리를 이용한다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림12-8.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-8. 클라이언트/서버 DB 시스템 통신 절차</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;</font></p>
+<p><font face="굴림" size="2">데이터베이스 통신 API는 그림 12-8과 같이 서버인 데이터베이스 엔진에게 명령을 
+송신한다. 데이터베이스 엔진은 데이터베이스를 접근하며 자료를 다시 클라이언트의 
+데이터베이스 통신 API로 전송한다. 응용 프로그램은 API에서 결과를 받아서 
+사용자에게 출력한다.</font></p>
+<p><font face="굴림" size="2">다음 그림 12-9는 클라이언트/서버 데이터베이스 시스템에서 ODBC를 이용하여 
+데이터베이스 프로그램을 실행하는 절차를 보여준다. </font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림12-9.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-9. ODBC 통신 절차</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font></p>
+<p><font face="굴림" size="2">그림 12-8과 비교해볼 때 ODBC는 ODBC 드라이버 관리자와 ODBC 드라이버를 
+클라이언트에 추가한 것만 다르다. ODBC는 데이터베이스 통신 인터페이스를 통하여 
+데이터베이스 엔진 명령을 서버에게 보내고 데이터를 수신하여 다시 응용 프로그램에게 
+돌려준다. ODBC 드라이버는 서버의 DBMS에 해당하는 특정한 DBMS 용으로 
+제공된다. 응용 프로그램은 표준화된 ODBC API를 호출하며 ODBC 드라이버 관리자는 
+특정한 DBMS의 ODBC 드라이버를 호출하여 응용 프로그램과 DBMS 사이를 연결한다.</font></p>
+<p><font face="굴림" size="2">다음 그림 12-10은 서로 다른 DBMS가 서버가 있는 환경에서 클라이언트가 두 개의 
+서버를 모두 접근하는 실례를 보여 준다. </font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1210.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-10. 데이터베이스 미들웨어(ODBC) 구성도</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">클라이언트에는 세 서버의 DBMS를 접근하기 위해 세 가지의 ODBC 드라이버를 
+설치하였다. 클라이언트는 DBMS의 종류에 관계 없이 ODBC에게 자료를 요청하고 
+수힌하는 하나의 응용 프로그램만을 운영하고 있다. 새로운 DBMS의 서버가 추가되면 
+클라이언트는 새로운 DBMS를 위한 ODBC 드라이버를 설치하면 동일한 프로그램으로 
+접근할 수 있다.</font></p>
+</ul>
+</ul>
+</ul>
+<h2><font face="굴림"><a name="2">2. Web과 데이터베이스의 연동</a></font></h2>
+<ul><ul><ul><p><font face="굴림" size="2">Web 데이터베이스 기술이란 Web이라는 새로운 기술과 데이터베이스 기술을 통합한 
+기술이다. 웹 데이터베이스 응용은 웹 통신 수단을 이용하여 계층형 관계형 데이터 
+베이스, 객체지향형 데이터베이스 등 다양한 데이터베이스들을 접근한다. &nbsp;웹 서버는 
+HTTP 프로토콜을 통해 텍스트, 이미지, 동영상, 음성 등 매우 다양한 정보를 제공한다. 
+따라서 이 정보를 처리하기 위해 다양한 DBMS를 접근하는 것이 필수적이다. </font></p>
+<p><font face="굴림" size="2">웹 데이터베이스의 장점은 웹 시스템이 다양한 매체와 데이터 모델, 그리고 DBMS들을 
+접근하는데도 불구하고 사용자는 복잡한 정보 처리에 대해 전혀 모르고도 사용할 수 
+있는 단순성에 있다.</font></p>
+<p><font face="굴림" size="2">클라이언트/서버 모델에서 DBMS를 통하여 자료를 조회하기 위해서는 클라이언트 
+프로그램이 필요하다. 클라이언트 수가 많고 이질 운영체제에서 가동할 경우 다양한 
+클라이언트 프로그램을 개발해야 하는 문제점이 있다. 그러나, 웹 환경에서는 
+데이터베이스를 조작하는 프로그램 부분을 웹 서버와 웹 클라이언트(Nescape와 
+Explorer가 웹 클라이언트이며 웹 브라우저라고도 한다) 사이에 연결하면 사용자는 웹 
+브라우저(웹 클라이언트)를 통하여 데이터베이스 서비스를 받을 수 있다. 결국 웹과 
+데이터베이스를 연동하는 것은 데이터베이스 서비스를 웹 브라우저를 사용하는 
+사용자에게 제공하기 위해서 이다.</font></p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="2-1">2.1 웹과 데이터베이스</a></font></h4>
+<ul><ul><p><font face="굴림" size="2">그림 12-11은 웹과 데이터베이스 시스템을 연동한 웹 데이터베이스 시스템의 
+아키텍처이다.</font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1211.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-11. 웹 데이터베이스 시스템 구성도</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font></p>
+<p><font face="굴림" size="2">&nbsp;위의 그림 12-11에서 사용자는 웹 브라우저를 통하여 데이터베이스 접근(데이터 검색, 
+삽입, 삭제, 갱신 등) 서비스를 요청하면 웹 서버는 그 요청을 받아 데이터베이스 
+인터페이스 소프트웨어를 구종시킨다. 데이터베이스 인터페이스 소프트웨어는 
+DBMS와 연계하여 데이터베이스를 접근하고 접근된 데이터는 데이터베이스 
+인터페이스 소프트웨어에게 전달되며 이 소프트웨어는 접근된 결과 데이터를 처리하여 
+웹 서버에게 HTML 문서 형태로 전달한다. 웹 서버는 이 결과를 웹브라우저에게 
+전송하여 데이터 접근 결과가 담긴 HTML 문서를 사용자에게 화면 출력한다.</font></p>
+<p><font face="굴림" size="2">이와 같이 웹과 데이터베이스를 연결하기 위해서는 다음과 같이 4 가지 요소가 
+요구된다. </font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> 
+<ul type="disc">
+<li><font face="굴림" size="2">웹 브라우저와 웹 서버</font> 
+<li><font face="굴림" size="2">응용 프로그램(데이터베이스 인터페이스 소프트웨어)</font> 
+<li><font face="굴림" size="2">DBMS와 데이터베이스</font> 
+<li><font face="굴림" size="2">인터넷</font> 
+</ul>
+<p><font face="굴림" size="2">웹 데이터베이스는 하드웨어와 운영체제 등의 플랫폼에 독립적이기 때문에 웹 브라우저 
+외의 클라이언트 설치가 불필요하고, 사용자 인터페이스가 친숙하며, 기존 응용과 
+통합하기 쉽고, 멀티미디어를 사용하기 쉬운 장범을 갖는다. </font></p>
+<p><font face="굴림" size="2">그러나, 인터프리터로 인하여 클라이언트 프로그램의 실행속도가 느리고, 데이터베이스 
+연결이 비지속적인 단점이 있다.</font></p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="2-2">2.2 웹과 데이터베이스의 연동 기법</a></font></h4>
+<ul><ul><p><font face="굴림" size="2">웹과 데이터베이스의 연동 기법은 데이터 접근 서비스가 데이터베이스 서버와 
+직접적으로 이루어지는지 혹은 웹을 경유하면서 이루어지는지의 여부에 따라 직접 연동 
+기법과 간접 연동 기법으로 분류된다.</font></p>
+</ul>
+<h5><font face="굴림" size="2">직접 연동 기법</font></h5>
+<ul><p><font face="굴림" size="2">직접 연동 기법은 다음 그림 12-12와 같이 데이터베이스 서비스가 웹을 거치지 않고 웹 
+브라우저와 데이터베이스 서버 사이에서 직접적으로 이루어지는 기법으로 일반적인 
+처리 단계들은 다음과 같다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;</font> 
+</ul>
+</ul>
+<table border>
+<tr>
+<td width="505"><p><img src="img/그림1212.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-12. 웹 브라우저와 데이터베이스 시스템간의 직접 연동</b></font></td>
+</tr></table>
+<ul><ul><p><font face="굴림" size="2">&nbsp;</font></p>
+<p><font face="굴림" size="2">그림 12-12에서 서비스 수행 단계들은 다음과 같다.</font></p>
+<p><font face="굴림" size="2">&nbsp;</font> 
+<ol>
+<li><font face="굴림" size="2">웹 브라우저가 웹 서버에게 서비스를 요청한다.</font> 
+<li><font face="굴림" size="2">웹 서버는 HTML 문서와 응용 프로그램을 웹 브라우저에게 전송한다.</font> 
+<li><font face="굴림" size="2">웹 브라우저로 전송된 응용 프로그램은 JDBC나 ADO(ActiveX Data Object) 등을 
+이용하여 데이터베이스 클라이언트에게 데이터를 요청한다.</font> 
+<li><font face="굴림" size="2">데이터베이스 클라이언트는 데이터베이스 서버에게 데이터베이스 명령을 
+전송한다.</font> 
+<li><font face="굴림" size="2">데이터베이스 서버는 데이터베이스 명령을 실행하여 결과를 클라이언트에게 
+전송한다.</font> 
+<li><font face="굴림" size="2">데이터베이스 클라이언트는 데이터를 응용 프로그램에게 넘겨준다.</font> 
+</ol>
+<h5><font face="굴림" size="2">ActiveX를 이용한 직법 연동</font></h5>
+<p><font face="굴림" size="2">직접 연동 기법의 하나로 마이크로 소프트사의 웹 서버인 IIS(Internet Information 
+Server)를 이용하는 방법이 있다. IIS를 도입하면 API는 ISAPI를 사용하고, 
+데이터베이스는 SQL Server를 사용하며 웹브라우저는 Netscape나 Internet Explorer 
+등을 사용한다. HTML은 홈 페이지 작성을 위해 필요하다. ODBC(Open DataBase 
+Connectivity)는 서버에 있는 다양한 DBMS를 구동하기 위한 미들웨어로 필요하다.</font></p>
+<p><font face="굴림" size="2">IIS 서버가 설치되어 있으면 SQL Server 데이터베이스를 구축하고, HTML로 홈 
+페이지를 만들며, ActiveX 컨트롤은 웹 브라우저와 데이터베이스를 연결한다. 웹 
+사용자의 요구를 처리하기 위해서는 VBScript 등의 언어가 사용되기도 하지만 간단하게 
+작성하려면 HTML 만 이용할 수도 있다. 이들이 작동되는 과정을 더 자세히 설명하기 
+우해 다음 그림 12-13에서 MS IIS를 실례로 ADO로 연결되는 웹 데이터베이스의 
+구성요소들을 나타내었다.</font></p>
+<p><font face="굴림" size="2">&nbsp;</font> 
+</ul>
+<table border>
+<tr>
+<td width="505"><p><img src="img/그림1213.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-13. ActiveX 컨트롤에 의한 직접 연동</b></font></td>
+</tr></table>
+<ul><p><font face="굴림" size="2">&nbsp;</font></p>
+<p><font face="굴림" size="2">&nbsp;그림 12-13에서와 같이 ActiveX 컨트롤은 웹 브라우저와 데이터베이스를 직접 
+연결하기 위한 서버측 소프트웨어이다. 웹 브라우저가 ①에서 웹 서버에게 URL로 
+서비스를 요청하면 ②에서 웹 서버는 HTML과 ActiveX 컨트롤 정보를 웹 브라우저에게 
+제공한다. ③에서 웹 브라우저는 ActiveX 컨트롤의 ADO(ActiveX Data Object)를 
+이용하여 OLE DB와 연결된다. ④에서 OLE DB는 ODBC를 통하여 데이터베이스를 
+접근한다.</font></p>
+<p><font face="굴림" size="2">OLE DB는 다양한 소스의 데이터를 접근하기 위한 미들웨어이다. 즉, OLE DB는 문서, 
+전자우편, 파일 시스템, 스프레드시트, COM 컴퓨넌트, ODBC 드라이버 등을 사용하여 
+다른 데이터를 접근한다. </font></p>
+<p><font face="굴림" size="2">ODBC와 JDBC가 관계형 데이터베이스만을 접근하는 것과는 달리 OLE DB는 모든 
+형태의 데이터를 접근한다. 웹에 연동되는 데이터베이스는 여러 데이터베이스들을 
+처리해야 하기 때문에 OLE DB가 요구된다.</font></p>
+<p><font face="굴림" size="2">ActivrX 컨트롤은 사용자가 동적으로 대화할 수 있는 서버측의 웹 데이터베이스 응용을 
+개발하기 위해 ADO를 결합할 수 있다. ADO는 ActiveX 환경에서 OLE DB를 쉽게 사용할 
+수 있는 인터페이스를 제공하는 서버측 소프트웨어이다.&nbsp;ActiveX 컨트롤은 
+데이터베이스 서버와 연결되어 사용된다. ActiveX란 COM을 기반으로 하여 소프트웨어 
+공유 기능을 인터넷까지 확장한 기술이며, ActiveX 컨트롤은 이 기술을 이용한 
+소프트웨어 모듈이다. 웹 페이지나 데이터베이스의 동적 연결을 제공하는데는 
+VBScript나 Visual J++로 ADO를 사용할 수 있다. OLE DB는 다양한 데이터 소스를 
+접근할 수 있으나 데이터베이스를 접근하기 위해서는 ODBC가 필요하다.</font></p>
+<p><font face="굴림" size="2">다음의 그림 12-14는 전형적인 ADO 객체 구조를 표현한 것이다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1214.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-14. ADO 구조</b></font></td>
+</tr></table>
+<h5>&nbsp;</h5>
+<h5><font face="굴림" size="2">Java Applet을 이용한 직접 연동</font></h5>
+<p><font face="굴림" size="2">Sun Microsoft 사에서는 Java applet, JavaBeans, JDBC 등을 이용하여 웹 
+브라우저와 데이터베이스를 직접 연결하는 기능을 제공하고 있다. 그림 12-15는 웹 
+브라우저에게 웹 페이지를 전달하고 브라우저에서 다운로드 받은 applet이 직접 JDBC 
+미들웨어를 접근하여 데이터베이스를 연결하는 과정을 나타낸다. </font></p>
+<p><font face="굴림" size="2">&nbsp;</font> 
+</ul>
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1215.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-15. Java Applet의 연동 과정</b></font></td>
+</tr></table>
+<ul><p>&nbsp;</p>
+<p><font face="굴림" size="2">Applet은 웹 서버에서 인터넷을 통하여 클라이언트에게 보낸 Java 코드이다. 웹 
+브라우저가 서버에게 서비스를 요청하면 웹 서버는 웹 페이지와 함께 Java 코드와 
+JDBC 주소를 클라이언트에게 전송한다. 클라이언트는 직접 JDBC를 접근하며 JDBC는 
+데이터베이스를 접근한다.</font></p>
+<p><font face="굴림" size="2">JDBC는 Java 분산 환경에서 Java를 이용한 데이터베이스 접속, SQL 문장의 실행, 
+자료처리 방법과 절차에 대한 규약이다. JDBC는 ODBC와 마찬가지로 클라이언트의 
+데이터베이스 응용 프로그램을 독립시키기 위해 만들었다. 즉, 하나의 응용 프로그램이 
+데이터베이스에 상관없이 단일한 인터페이스 API를 통해 데이터를 이용할 수 있게 
+한다.</font></p>
+<p><font face="굴림" size="2">기존 시스템이 ODBC를 사용하는 틀라이언트들을 서비스 하는 경우에 Java를 이용하여 
+시스템을 확장한다면 Java 클라이언트도 ODBC를 지원해야 한다. JDBC/ODBC 
+브리지는 Java 클라이언트가 기존 시스템을 이용할 수 있도록 다음 그림 12-16과 같이 
+JDBC 함수 호출을 ODBC 함수 호출로 변환하는 모듈이다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;</font> 
+</ul>
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1216.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-16. JDBC/ODBC 브리지</b></font></td>
+</tr></table>
+<ul><p>&nbsp;</p>
+</ul>
+<h4><font face="굴림">간접 연동 기법</font></h4>
+<ul><p><font face="굴림" size="2">웹 브라우저와 데이터베이스가 웹을 경유하여 연동하는 방법으로는 ASP, CGI, 
+servlet을 이용하는 방법이 있다. 이 방법은 HTTP 프로토콜이 비연결지향이기 때문에 
+데이터베이스 접근 상태에서 네트워크 연결을 지속하지 못하는 단점이 있다. 즉, 한 웹 
+페이지에서 다른 웹 페이지로 이동할 때 이전의 상태 정보를 잃어 버리므로 다시 
+데이터베이스를 연결해야 한다. 데이터베이스 시스템과 WWW의 가장 단순한 통합 
+방법은 기존의 URL, HTTP, HTML 및 웹 브라우저를 변경하지 않고 그대로 사용하는 
+방식으로 다음 그림 12-17과 같은 구조를 같는다. </font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1217.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-17. 간접 연동 방식의 일반적 구조</b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p><font face="굴림" size="2">다음 그림 12-18에서 ASP(Active Server Page)는 웹 서버에서 동적인 웹 페이지를 
+생성하는 소프트웨어이다. ASP는 웹 서버의 요청에 따라 ADO를 통하여 
+데이터베이스를 접근하고, 자료를 처리하며, 처리 결과를 웹 서버에게 돌려 준다. </font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;&nbsp;</font> 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1218.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-18. ASP에 의한 간접 연동</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;</font></p>
+<p><font face="굴림" size="2">그림 12-18에서 데이터베이스 서버는 ASP 응용 프로그램을 통하여 파라메터를 받고 
+데이터베이스 엔진을 통하여 원하는 자료를 검색하고 웹 서버는 이것을 HTML 문서 
+형태로 변환하여 &nbsp;웹 브라우저에게 전송한다.</font></p>
+<p><font face="굴림" size="2">&nbsp;다음 그림 12-19는 CGI를 이용한 간접 연동 방식의 일반적 구조를 나타낸다.</font></p>
+<p>&nbsp; 
+<table border>
+<tr>
+<td width="505"><p align="center"><img src="img/그림1219.jpg" border="0"></td>
+</tr><tr>
+<td width="505"><p align="center"><font face="굴림" size="2"><b>그림 12-19. CGI에 의한 데이터베이스 연동</b></font></td>
+</tr></table>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font></p>
+<p><font face="굴림" size="2">그림 12-19와 같이 웹 클라이언트에서 CGI(Common Gateway Interface)를 이용하기 
+위한 요청을 하면(HTML에서 form의 action 태그 이용) 웹 서버는 CGI를 이용하여 
+back-end 프로그램으로 매개변수와 함께 실행 요청을 보낸다. back-end 프로그램은 
+요청된 프로그램을 실행하고 처리 결과를 웹 서버로 HTML 형태로 보낸다.</font></p>
+<p><font face="굴림" size="2">웹 서버는 이것을 보통 문서로 간주하고 클라이언트에게 전송한다. 웹 서버는 단순히 
+클라이언트와 back-end 프로그램 사이에서 통로와 같은 역할을 수행한다.</font></p>
+<p><font face="굴림" size="2">CGI의 실행과정을 살펴보면 다음과 같다.</font></p>
+<p><font face="굴림" size="2">&nbsp;&nbsp;</font> 
+<ol>
+<li><font face="굴림" size="2">웹 브라우저가 서버에게 CGI 실행을 요청한다.</font> 
+<li><font face="굴림" size="2">웹 서버는 CGI 프로그램을 실행하고 매개변수를 전달한다.</font> 
+<li><font face="굴림" size="2">실행된 CGI 응용 프로그램은 외부 파일이나 데이터베이스를 접근하면서 작업을 
+실행한 후 실행 결과를 HTML 문서로 만들어 웹 서버로 전송한다.</font> 
+<li><font face="굴림" size="2">CGI 응용 프로그램으로부터 데이터를 전송받은 웹 서버는 그 데이터를 웹 
+브라우저로 전송한다.</font> 
+<li><font face="굴림" size="2">웹 즈라우저는 서버로부터 받은 자료를 화면에 출력한다.</font> 
+</ol>
+<p><font face="굴림" size="2">동적 페이지를 구성하기 위해 초기의 CGI 프로그램만이 유일한 방법이었으나 CGI는 
+클라이언트가 실행을 요구할 때마다 새로운 프로세스가 생성되어 성능이 저하되는 
+문제가 존재하므로 장기적인 해결책이 되지 못했다. 이와는 달리 ASP는 새로운 
+프로세스를 계속 생성하지 않는다.</font> 
+</ul>
+</ul>
+</ul></td>
+</tr></table></div>
+<p>&nbsp;</p>
+</body>
+</html>

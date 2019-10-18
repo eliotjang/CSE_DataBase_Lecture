@@ -1,0 +1,750 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>제 3 회 관계형 데이터베이스와 무결성 제약조건</title>
+<meta name="GENERATOR" content="Namo WebEditor v2.00">
+</head>
+<body bgcolor="#CCFFFF" text="black" link="blue" vlink="purple" alink="red">
+
+<h5>&nbsp;</h5>
+<div align="center"><table border="0" cellpadding="10" width="650" bgcolor="white">
+<tr>
+<td height="142" colspan="2" bgcolor="white"><h1 align="center"><img src="./img/3-0.jpg" border="0"></h1></td>
+</tr><tr>
+<td width="307" height="555" bgcolor="white"><p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="4"><b>목 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;차</b></font></p>
+<p align="left"><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></font><font size="2"><b><a href="#0">시작하기전에.....</a></b></font></p>
+<p align="left">&nbsp;</p>
+<p><font size="2"><a href="#1">&nbsp;</a></font><font size="2"><b><a href="#1">1. 관계형 데이터베이스의 구조</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#1-1">관계형 데이터베이스 기본구조와 
+개념</a></b></font> 
+<li><font size="2"><b><a href="#1-2">데이터베이스 스키마와 릴레이션 
+스키마</a></b></font> 
+<li><font size="2"><b><a href="#1-3">키이</a></b></font> 
+<li><font size="2"><b><a href="#1-4">SQL을 이용한 릴레이션 생성 예</a></b></font><a href="#1-4"> </a>
+</ul>
+<p><font size="2"><b><a href="#2">2. 질의어</a></b></font></p>
+<p><font size="2"><b><a href="#3">3. 무결성 제약조건</a></b></font> 
+<ul type="disc">
+<li><font size="2"><b><a href="#3-1">데이터 무경성과 무결성 위반의 예</a></b></font> 
+<li><font size="2"><b><a href="#3-2">도메인 제약조건</a></b></font> 
+<li><font size="2"><b><a href="#3-3">참조무결성</a></b></font> 
+<li><font size="2"><b><a href="#3-4">SQL의 무결성</a></b></font> 
+</ul>
+<p>&nbsp; 
+<table border="0" bgcolor="silver">
+<tr>
+<td width="297" bgcolor="silver"><p><font size="5" color="purple"><b>☞</b></font><font size="5"><b><blink><a href="#레포트">제출해야 할 레포트</a></blink></b></font></td>
+</tr></table>
+<p>&nbsp;</p>
+<p>&nbsp;</td>
+<td width="314" height="555" bgcolor="#FFD3D2"><h2><font size="5" color="#400080"><b><a name="0">시작하기전에....</a></b></font></h2>
+<h2>&nbsp;</h2>
+<p><font size="2" color="#400080"><b>제 3 회 &quot;관계형 데이터베이스와 무결성 
+제약조건&quot; 강의는 관계형 데이터베이스의 
+기본구조와 기초 개념을 포함하는 매우 
+중요한 내용을 다룹니다. 본 강의에서 다루는 
+내용은 후속 강의를 이해하는데 매우 
+중요하므로 다음 사항을 염두에 두면서 
+강의에 임하길 바람니다.</b></font> 
+<ul type="disc">
+<li><font size="2" color="#400080"><b>관계형 데이터베이스는 어떠한 구조를 
+가지는지 생각해 보고 관련된 용어의 
+정의와 개념을 이해합시다..</b></font> 
+<li><font size="2" color="#400080"><b>데이터베이스 스키마, 데이터베이스 
+인스턴스, 릴레이션 스키마, 릴레이션 
+개념을 이해합시다.</b></font> 
+<li><font size="2" color="#400080"><b>키이는 데이터베이스에서 어떤 역할을 
+하며 어떻게 구분되는지 알아봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>관계형 데이터베이스 질의어는 어떠한 
+종류들이 있으며 각각은 어떤 특성을 
+갖는지 알아 봅시다.</b></font> 
+<li><font size="2" color="#400080"><b>무결성 제약조건이란 무엇인지 
+알아보고 어떠한 종류들이 있으며 
+SQL에서는 무결성 보호을 위해 어떠한 
+메커니즘들을 제공하고 있는지 
+알아봅시다.</b></font> 
+<li><font size="2" color="#489F55"><b><blink>레포트가 있습니다. 레포트를 작성하고 
+메일을 이용하여 반드시 제출하도록 
+합시다.</blink></b></font><font color="#489F55"> </font>
+</ul>
+<p>&nbsp;</td>
+</tr><tr>
+<td colspan="2" bgcolor="#FFFFC4"><h2><font face="굴림"><a name="1">1. 관계형 데이터베이스의 구조</a></font></h2>
+<h4><font face="굴림체"><a name="1-1">데이터베이스 기본 구조와 개념</a></font></h4>
+<ul><p><font size="2">&nbsp;&nbsp;<img src="img/3-1.jpg" border="0"></font></p>
+<h5><font size="2">릴레이션(relation)과 속성(attribute)</font></h5>
+<ul><p><font size="2">&nbsp;&nbsp;관계형 데이터베이스는 &nbsp;위 그림의 릴레이션 구조와 같이 행렬 형태를 갖는 테이블들의 
+모임으로 구성된다. 이러한 형태의 테이블을 </font><font size="2"><b>릴레이션(relation)</b></font><font size="2">이라 부른다. 위의 그림 중 
+</font><font size="2"><u>릴레이션 구조</u></font><font size="2">에서 A1, A2, A3, A4, A5 각각은 해당 릴레이션의 </font><font size="2"><b>속성(attribute)</b></font><font size="2">을 
+나타낸다. 위 그림의 릴레이션 예에서 속성의 수는 '학번' 등을 포함하여 8개의 속성들로 
+구성된다. 한 릴레이션이 갖는 속성의 수를 그 릴레이션의 </font><font size="2"><b>arity</b></font><font size="2">라 부른다. 그림의 '학생' 
+릴레이션의 예에서 모두 8개의 속성을 가지므로 이 릴레이션의 arity는 8이 된다.</font></p>
+</ul>
+<h5><font size="2">속성 도메인(attribute domain)</font></h5>
+<ul><p><font size="2">&nbsp;&nbsp;위의 그림의 '릴레이션 구조'에서 vij는 속성 Aij에 대응하는 값을 나타내며 속성이 가질 수 
+있는 값의 범위를 그 속성의 도메인(attribute domain)이라 부른다. '학생' 릴레이션의 예에서 
+'학번' 속성의 도메인은 4자리 정수형이, '이름' 속성의 도메인은 6자리의문자 스트링이, '학년' 
+속성의 도메인은 1자리 정수가 될 수 있다. </font></p>
+<p><font size="2">&nbsp;&nbsp;릴레이션에서 릴에이션을 이루는 속성의 순서에 따라 각 속성에 부여된 값으로 이루어진 
+하나의 행(row)인 (v</font><font size="2"><sub>11</sub></font><font size="2">, v</font><font size="2"><sub>12</sub></font><font size="2">, v</font><font size="2"><sub>13</sub></font><font size="2">, v</font><font size="2"><sub>14</sub></font><font size="2">, v</font><font size="2"><sub>15</sub></font><font size="2">)을 그 릴레이션에 속한 하나의 </font><font size="2"><b>튜플(tuple)</b></font><font size="2">이라 
+부른다. 위 그림의 '학생' 릴레이션의 예에서 (1001, '김소망', '컴퓨터', 3, '인천시', 
+'360-2424', 032, '남')는 '학생' 릴레이션의 한 튜플이며 이 릴레이션은</font><font size="2" color="fuchsia"> '학번', '이름', 
+'소속학과', '학년', '주소', '전화번호', '지역번호', '성별'</font><font size="2"> 순서로 속성을 갖기 때문에 이 속성 
+순서에 따라 </font><font size="2" color="fuchsia">학번</font><font size="2">은 1001, </font><font size="2" color="fuchsia">이름</font><font size="2">은 '김소망', </font><font size="2" color="fuchsia">소속학과</font><font size="2">는 컴퓨터, </font><font size="2" color="fuchsia">학년</font><font size="2">은 3학년, </font><font size="2" color="fuchsia">주소</font><font size="2">는 '인천시',</font><font size="2" color="fuchsia"> 
+전화번호</font><font size="2">는 '360-2424', </font><font size="2" color="fuchsia">지역번호</font><font size="2">는 032, </font><font size="2" color="fuchsia">성별</font><font size="2">은 남자 등의 정보를 나타내고 있음을 알 수 
+있다. 이 '학생' 릴레이션은 총 4개의 튜플을 가지고 있는데 이와 같이 한 릴레리션 R에 속한 
+튜플의 수를 그 릴레이션의 </font><font size="2"><b>cardinality</b></font><font size="2">라 부르며 표기 상으로는 </font><font size="2"><b>|R|</b></font><font size="2">로 나타낸다. 
+그러므로 위 그림 예에서 '학생' 릴레이션의 cardinality는 4, 즉, |'학생'|=4임을 알 수 있다.</font></p>
+</ul>
+<h5><font size="2">카테젼 곱(Cartesian Product)</font></h5>
+<ul><p><font size="2">집합 D</font><font size="2"><sub>1</sub></font><font size="2">, D</font><font size="2"><sub>2</sub></font><font size="2">, ..., D</font><font size="2"><sub>n</sub></font><font size="2">을 주어질 때 카테젼 곱은 </font><font size="2"><b>D</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>×D</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>×...×D</b></font><font size="2"><b><sub>n</sub></b></font><font size="2">으로 표기하며 이에 대한 
+수학적 정의를 형식적(formal)하게 표현하면 다음과 같다.</font></p>
+<p><font size="2"><b>D</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>×D</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>×...×D</b></font><font size="2"><b><sub>n</sub></b></font><font size="2"><b> </b></font></p>
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {(d</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,d</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,...,d</b></font><font size="2"><b><sub>n</sub></b></font><font size="2"><b>)|d</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>∈D</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b> and d</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>∈D</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b> and ...and d</b></font><font size="2"><b><sub>n</sub></b></font><font size="2"><b>∈D</b></font><font size="2"><b><sub>n</sub></b></font><font size="2"><b>}</b></font></p>
+<p><font size="2">위의 카테젼 곱 정의에서 </font><font size="2"><b>(d</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,d</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,...,d</b></font><font size="2"><b><sub>n</sub></b></font><font size="2"><b>)</b></font><font size="2">은 집합 D1, D2, ..., Dn 각각에서 한 원소씩 
+대응하여 순서화 시킨 하나의 튜플로서 이러한 방식으로 만들 수 있는 모든 튜플들을 모은 
+집합이 바로 D1, D2, ..., Dn의 카테젼 곱 </font><font size="2"><b>D</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>×D</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>×...×D</b></font><font size="2"><b><sub>n</sub></b></font><font size="2">임을 알 수 있다. </font></p>
+</ul>
+<p>&nbsp; 
+<ul type="disc">
+<li><font size="2"><b>카텐젼 곱의 예</b></font> 
+<p><font size="2">A={a</font><font size="2"><sub>1</sub></font><font size="2">,a</font><font size="2"><sub>2</sub></font><font size="2">,a</font><font size="2"><sub>3</sub></font><font size="2">}, B={b</font><font size="2"><sub>1</sub></font><font size="2">,b</font><font size="2"><sub>2</sub></font><font size="2">}, C={c</font><font size="2"><sub>1</sub></font><font size="2">,c</font><font size="2"><sub>2</sub></font><font size="2">,c</font><font size="2"><sub>3</sub></font><font size="2">,c</font><font size="2"><sub>4</sub></font><font size="2">} 등의 3개의 집합이 주어질 때 이 3개 집합에 대한 
+카테젼 곱 </font><font size="2"><b>A×B×C</b></font><font size="2">는 각 집합의 원소를 하나씩 집합 순서 별로 나열하여 만든 모든 튜플들을 
+집합화하여 이루어진다.</font></p>
+<p><font size="2">&nbsp;&nbsp;그러므로, &nbsp;</font><font size="2"><b>A×B×C=</b></font></p>
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>4</sub></b></font><font size="2"><b>),</b></font></p>
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>4</sub></b></font><font size="2"><b>),</b></font></p>
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>4</sub></b></font><font size="2"><b>),</b></font></p>
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>4</sub></b></font><font size="2"><b>),</b></font></p>
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>4</sub></b></font><font size="2"><b>),</b></font></p>
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>3</sub></b></font><font size="2"><b>),(a</b></font><font size="2"><b><sub>1</sub></b></font><font size="2"><b>,b</b></font><font size="2"><b><sub>2</sub></b></font><font size="2"><b>,c</b></font><font size="2"><b><sub>4</sub></b></font><font size="2"><b>)}</b></font></p>
+<p><font size="2">임을 알 수 있다.</font></p>
+</ul>
+<h5><font size="2">릴레이션과 집합(set)</font></h5>
+<ul><p><font size="2" color="#800040">&nbsp;&nbsp;수학적 의미에서 카테젼 곱의 부분 집합을 릴레이션이라 부른다</font><font size="2" color="#408080">.</font><font size="2"> 테이블 구조로 앞에서 
+정의한 관계형 데이터베이스 릴레이션이 수학적 의미에서의 릴레이션인지를 알아보도록 하자.</font></p>
+<p><font size="2">&nbsp;&nbsp;관계형 데이터베이스에서 속성으로 A</font><font size="2"><sub>1</sub></font><font size="2">, A</font><font size="2"><sub>2</sub></font><font size="2">, ..., A</font><font size="2"><sub>n</sub></font><font size="2">을 갖는 릴레이션을 고려하자. 속성으로 
+A</font><font size="2"><sub>1</sub></font><font size="2">, A</font><font size="2"><sub>2</sub></font><font size="2">, ..., A</font><font size="2"><sub>n</sub></font><font size="2">의 도메인이 각각 D</font><font size="2"><sub>1</sub></font><font size="2">, D</font><font size="2"><sub>2</sub></font><font size="2">, ..., D</font><font size="2"><sub>n</sub></font><font size="2">이라 할 때. 속성 도메인들의 카테젼 곱 
+D</font><font size="2"><sub>1</sub></font><font size="2">×D</font><font size="2"><sub>2</sub></font><font size="2">×...×D</font><font size="2"><sub>n</sub></font><font size="2">을 생성할 수 있다. (t</font><font size="2"><sub>1</sub></font><font size="2">,t</font><font size="2"><sub>2</sub></font><font size="2">,...,t</font><font size="2"><sub>n</sub></font><font size="2">)이 릴레이션 R의 임의의 튜플이라면 이 튜플의 
+각 t</font><font size="2"><sub>1</sub></font><font size="2">(I=1,2,...,n)는 속성 A</font><font size="2"><sub>i</sub></font><font size="2">의 값이기 때문에 A</font><font size="2"><sub>i</sub></font><font size="2">의 도메인 D</font><font size="2"><sub>i</sub></font><font size="2">의 원소가 된다. 그러므로 튜플 
+(t</font><font size="2"><sub>1</sub></font><font size="2">,t</font><font size="2"><sub>2</sub></font><font size="2">,...,t</font><font size="2"><sub>n</sub></font><font size="2">)는 D</font><font size="2"><sub>1</sub></font><font size="2">×D</font><font size="2"><sub>2</sub></font><font size="2">×...×D</font><font size="2"><sub>n</sub></font><font size="2">의 원소가 되며 결국 릴레이션 R의 모든 원소가 
+D</font><font size="2"><sub>1</sub></font><font size="2">×D</font><font size="2"><sub>2</sub></font><font size="2">×...×D</font><font size="2"><sub>n</sub></font><font size="2">의 원소가 되므로 R은 D</font><font size="2"><sub>1</sub></font><font size="2">×D</font><font size="2"><sub>2</sub></font><font size="2">×...×D</font><font size="2"><sub>n</sub></font><font size="2">의 부분 집합이 된다. 따라서 관계형 
+데이터베이스에서 정의된 릴레이션은 속성 도메인들의 카테젼 곱의 부분 집합이므로 수학적 
+정의에서의 릴레이션과 일치한다.</font></p>
+<p><font size="2">&nbsp;&nbsp;사실 상 관계형 데이터베이스에서의 릴레이션이라는 용어는 수학적 집합론에서부터 
+비롯되었다. 릴레이션의 튜플은 한 개이상의 속성 값들의 순서화로 이루어질지라도 
+릴레이션은 이러한 형태를 갖는 튜플들을 원소로하는 일종의 집합으로 고려될 수 있다. 두 
+개의 튜플 (t</font><font size="2"><sub>1</sub></font><font size="2">,t</font><font size="2"><sub>2</sub></font><font size="2">,...,t</font><font size="2"><sub>n</sub></font><font size="2">)과 (s</font><font size="2"><sub>1</sub></font><font size="2">,s</font><font size="2"><sub>2</sub></font><font size="2">,...,s</font><font size="2"><sub>n</sub></font><font size="2">)이 주어질 때 대응하는 속성의 값이 같을 때 즉 모든 
+i=1,2,...,n에 대하여 s</font><font size="2"><sub>i</sub></font><font size="2">=t</font><font size="2"><sub>i</sub></font><font size="2">일 때 두 튜플은 같다고 한다. 집합은 동일한 두 개이상의 원소를 
+하나로 취급하기 때문에 릴레이션에서 동일한 두 개 이상의 튜플들도 하나로 취급된다. 따라서 
+앞으로는 하나의 릴레이션에서 각 튜플은 유일한 것으로 다루어질 것이다.</font></p>
+</ul>
+<h5><font size="2">릴레이션과 파일</font></h5>
+<ul><p><font size="2">&nbsp;&nbsp;릴레이션 테이블은 하나의 파일로 고려할 수 있는데 릴에이션의 속성은 파일을 구성하는 
+레코드 타입의 필드에 해당하며 각 튜플들은 파일을 구성하는 하나의 레코드와 대응된다. 사실 
+상 릴레이션은 물리적 레벨에서 파일 형태로 저장된다. 즉, 관계형 데이터베이스에서 하나의 
+릴레이션은 하나의 파일로 구현되며 본 강의 맨 앞에서 '관계형 데이터베이스가 
+테이블(릴레이션)들의 모임'이라는 정의를 상기한다면 관계형 데이터베이스란 파일들의 
+모임임을 알 수 있다.</font></p>
+</ul>
+</ul>
+<h4><font face="굴림체"><a name="1-2">데이터베이스 스키마와 릴레이션 스키마</a></font></h4>
+<ul><h5><font size="2">데이터베이스 스키마와 데이터베이스 인스턴스</font></h5>
+<ul><p><font size="2">&nbsp;&nbsp;우리가 데이터베잇에 대하여 논할 때 </font><font size="2" color="teal"><b>데이터베이스 스키마</b></font><font size="2">와 </font><font size="2" color="teal"><b>데이터베이스 
+인스턴스</b></font><font size="2">를 구분해야 한다.</font></p>
+<p><font size="2"><b>&nbsp;&nbsp;</b></font><font size="2" color="teal"><b>데이터베이스 스키마(database schema)</b></font><font size="2">란 데이터베이스의 논리적 설계에의해 
+생성된 데이터베이스 구조와 데이터베이스에 저장될 데이터의 조건을 기술한다. 반면, 
+</font><font size="2" color="teal"><b>데이터베이스 인스턴스(database instance)</b></font><font size="2">는 주어진 시점에서 데이터베이스에 
+있는 데이터의 스냅 샷(snapshot)이다</font></p>
+</ul>
+<h5><font size="2">릴레이션과 릴레이션 스키마.</font></h5>
+<ul><p><font size="2">&nbsp;릴레이션과 릴레이션 스키마에 대한 용어 개념 차이를 쉽게 이해하도록 하기 위해 프로그래밍 
+언어를 중심으로 비유해서 설명해보도록 하자. </font></p>
+<p><font size="2">&nbsp;</font><font size="2" color="teal"><b>릴레이션 스키마(relation schema)</b></font><font size="2">는 프로그래밍 언어 개념으로 치자면 </font><font size="2" color="teal"><b>타입 
+정의(type definition)</b></font><font size="2">개념에 비유될 수 있고 릴레이션은 준어진 타입으로 생성한 
+변수(variable)로 비유하여 설명할 수 있다. 프로그래밍 언어에서 타입은 데이터의 구조와 
+성격을 규정하듯이 릴레이션 스키마는 릴레이션의 구조와 릴레이션 데이터의 성격만 규정할 
+뿐 구체적인 테이터 값을 포함하지는 않는다. 한편 프로그래밍 언어에서 변수는 물리적 
+기억창치에 할당된 영역에 값을 포함할 수 있는 것처럼 릴레이션이란 일반적이로 물리적 
+보조기억 장치에 그 영역이 할당되어 튜플과 같은 레코드 형태의 테이터를 포함할 수 있다. </font></p>
+<p align="left"><font size="2">&nbsp;&nbsp;&nbsp;프로그래밍 언어에서 정의된 타입에 명칭을 부여하듯이 릴레이션 스키마에 명칭을 부여하는 
+것이 편리하다.</font></p>
+<p align="left"><font size="2"><img src="img/3-2.jpg" border="0"></font></p>
+<p><font size="2">&nbsp;&nbsp;위의 그림 '릴레이션 스키마와 릴레이션 예'에서 릴레이션 스키마와 이 스키마로부터 생성된 
+'학생' 릴레이션의 예를 나타낸다. 이 그림에서 릴레이션 스키마는 '학번', '이름', '소속학과', 
+'학년', '주소', '전화번호', '지역번호', '성별' 등의 속성들로 이루어진 구조를 가지며 각 속성은 
+그 속성 아래에 표현된 타입을 갖는다. 그림에서 릴레이션 스키마의 </font><font size="2" color="purple">'소속학과' 속성은 
+14자리의 문자타입(그림에서 </font><font size="2" color="purple"><b>C(14)</b></font><font size="2" color="purple">가 이를 의미한다)</font><font size="2">을 가지며 </font><font size="2" color="purple">'지역번호' 속성은 4자리의 
+정수 타입(그림에서 </font><font size="2" color="purple"><b>I(4)</b></font><font size="2" color="purple">가 이를 의미한다)</font><font size="2">을 갖는다. 여기에서 속성 타입은 속성 도메인을 
+말한다. </font></p>
+<p><font size="2" color="#004000">&nbsp;&nbsp;</font><font size="2" color="#004000"><b>강의 진행 상 여러분들의 이해를 돕기 위해 여러분이 꼭 알아야 할 몇가지 
+사항들을 다음과 같이 약속하기로 한다. 이 약속에서 위의 그림이 예로서 
+이용되었다.</b></font></p>
+</ul>
+<p>&nbsp; 
+<ul><ol>
+<li><font size="2" color="#004000">앞으로 단순성을 위해 속성 도메인(속성 타입)이 이미 결정되었다고 가정하고 속성 
+도메인은 당분간 고려하지 않고 속성만 고려하기로 한다.</font> 
+<p>&nbsp;&nbsp;&nbsp; 
+<li><font size="2" color="#004000">또한 우리는 'Student-schema'라는 명칭이 부여된 릴레이션 스키마를 다음 형식으로 
+선언하도록 한다.</font> 
+<p><font size="2"><b><i>Student-schema</i></b></font><font size="2"><b> = (학번, 이름, 소속학과, 학년, 주소, 전화번호, 
+지역번호, 성별)</b></font></p>
+<p>&nbsp; 
+<li><font size="2" color="#004000">이와 같이 선언된 </font><font size="2" color="#004000"><b><i>Student-schema</i></b></font><font size="2" color="#004000">는 '학생' 릴레이션을 생성하는데 이용될 수 
+있으며 이를 위한 구문적 표기 방법을 다음과 같이 표기하기로 한다.</font> 
+<p><font size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;학생(</b></font><font size="2"><b><i>Student-schema</i></b></font><font size="2"><b>)</b></font></p>
+<p><font size="2" color="#004000">&nbsp;&nbsp;위 구문은 </font><font size="2" color="#004000"><b>Student-schema</b></font><font size="2" color="#004000"> 상에서 '학생' 릴레이션을 생성함을 의미하는 것으로 
+릴레이션 생성시에는 어떠한 튜플도 존재하지 않게된다. 튜플은 관계형 데이터 언어의 
+삽입 연산을 통하여 해당 릴레이션에 삽입되어 존재하게 된다.</font></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<li><font size="2" color="#004000">릴레이션 스키마 R을 갖는 릴레이션 r의 한 튜플 t를 고려하자. R의 부분 집합인 
+속성들의 집합 α가 주어질 때 t[α]는 튜플 t에서 α의 속성값들로 만이루어진 
+튜플이다. 예를 들어 앞의 '</font><font size="2" color="#004000"><b>학생</b></font><font size="2" color="#004000">' 릴레이션에서 튜플 t=(1002, '나민수', '컴퓨터', 3, 
+'강릉시', '640-2424', '0391', '남')이라할 때 t[학번, 이름, 주소]는 튜플 t에서 학번, 
+이름, 주소 속성값들로 이루어진 튜플인 (1002, '나민수', '강릉시')이다. 즉,</font> 
+<p><font size="2" color="#004000"><b>&nbsp;t[학번, 이름, 주소] </b></font></p>
+<p><font size="2" color="#004000">=(1002, '나민수', '컴퓨터', 3, '강릉시', '640-2424', '0391', '남')[학번, 이름, 주소] &nbsp;</font></p>
+<p><font size="2" color="#004000">=</font><font size="2" color="#004000"><b>(1002, '나민수', '강릉시')</b></font></p>
+<p>&nbsp;<font size="2">한편, 릴레이션 r에 대한 r</font><font size="2" color="#004000">[α]는 릴레이션 r에서 속성들 α로만 이루어진 튜플들의 
+집합을 의미한다. 이를 수학적으로 다음과 같이 표현할 수 있다.</font></p>
+<ul><ul><p><font size="2"><b>r</b></font><font size="2" color="#004000"><b>[α] = {</b></font><font size="2"><b> t[</b></font><font size="2" color="#004000"><b>α] | t∈r} </b></font></p>
+</ul>
+</ul>
+<p><font size="2" color="#004000">한 예로 </font><font size="2" color="#004000"><b>'학생' </b></font><font size="2" color="#004000">릴레이션에서</font><font size="2" color="#004000"><b> 학생[학번, 이름, 주소]</b></font><font size="2" color="#004000">는 다믐과 같다.</font></p>
+<p><font size="2" color="#004000"><b>r[학번, 이름, 주소] = </b></font></p>
+<ul><p><font size="2" color="#004000"><b>{ (1001, '김소망', '인천시'), (1002, '나민수', '강릉시'),(1003, 
+&nbsp;&nbsp;'오현주', '서울시'), (1004, '문혜주', '부산시') }</b></font></p>
+</ul>
+</ol>
+</ul>
+<h5><font size="2">릴레이션 스키마 선언과 릴레이션 생성 예</font></h5>
+<ul><p><font size="2">&nbsp;&nbsp;앞에서 정한 규약에 따라 아래 그림의 '교수' 릴레이션과 '교과목' 릴레이션을 릴레이션 
+스키마 선언을 통하여 생성하는 예를 들어 보자</font></p>
+<p align="center"><font size="2"><img src="./img/3-3.jpg" border="0"></font></p>
+<p><font size="2">&nbsp;&nbsp;위 그림의 두 릴레이션을 생성하기에 앞서 먼저 '교수' 릴레이션 구조에 대한 스키마와 
+'교과목' 릴레이션 스키마를 선언해야 하는데 다음의 릴레이션 스키마 선언부에서 
+</font><font size="2"><b><i>Professor-schema</i></b></font><font size="2">와 </font><font size="2"><b><i>Course-schema</i></b></font><font size="2">는 각각 '교수' 릴레이션 구조와 '교과목' 
+릴레이션 구조에 대응하는 릴레이션 스키마이고 릴레이션 생성부에 의해서 이 스키마들을 
+중심으로 각각 '교수' 릴레이션과 '교과목' 릴레이션이 생성된다. 맨 처음 생성된 릴레이션 
+스키마는 어떠한 튜플도 갖지 않은 상태이다.</font></p>
+<ul><ul><p align="left"><font size="2"><a name="릴레이션선언예"><img src="./img/3-4.jpg" border="0">&nbsp;</a></font></p>
+</ul>
+</ul>
+</ul>
+</ul>
+<h4><a name="1-3">키이(Key)</a></h4>
+<ul><ul><p><font size="2">&nbsp;&nbsp;키이란 한 릴레이션에서 튜플들을 구별시켜주는 역할을 하며 그 릴레이션에 속한 몇몇 
+속성들의 모임에 의해 형성된다. 키이는 그 키이가 갖는 조건에 따라 </font><font size="2" color="teal">수퍼키이(superkey)</font><font size="2">, 
+</font><font size="2" color="teal">후보키이(candidate key)</font><font size="2">, </font><font size="2" color="teal">주키이(primary key), 외래키이(foreign key)</font><font size="2">등으로 구분되며 
+각각에 대한 정의는 다음과 같다</font></p>
+</ul>
+<p>&nbsp; 
+<ul><ul type="disc">
+<li><font size="2"><b>수퍼키이(superkey)</b></font> 
+<p><font size="2">수퍼키이란 릴레이션의 튜플들을 유일하게 구분시켜주는 하나 이상의 속성들의 
+집합이다. 릴레이션의 튜플들은 수퍼 키이를 이루는 속성들의 값들에 의해 유일하게 
+구분된다.</font></p>
+<p><font size="2">&nbsp;앞의 </font><font size="2"><b><i>Professor-schema</i></b></font><font size="2"> 를 같는 '</font><font size="2"><b>교수</b></font><font size="2">' 릴레이션 예에서 속성들의 집합 
+</font><font size="2"><b>{교수ID, 이름, 소속학과, 전공}</b></font><font size="2">은 이 속성들의 값이 모두 같은 두 개이상의 
+튜플은 존재할 수 없기 때문에 즉, 이 속성들의 값은 '교수' 릴레이션의 튜플들을 
+유일하게 구분켜주기 때문에 수퍼키이가 된다. 한 릴레이션에서 수퍼 키이는 하나 이상 
+존재할 수 있다. 예들 들어 </font><font size="2"><b>{교수ID}</b></font><font size="2">, </font><font size="2"><b>{교수ID, 이름}</b></font><font size="2">, </font><font size="2"><b>{교수ID, 이름, 
+소속학과}</b></font><font size="2">, </font><font size="2"><b>{교수ID, 소속학과, 전공}</b></font><font size="2">, </font><font size="2"><b>{교수ID, 전공}</b></font><font size="2"> 등은 각각이 모두 
+수퍼키이가 될 수 있다. </font><font size="2"><b>{이름}</b></font><font size="2">은 같은 이름의 소유자가 2명 이상 있을 수 있기 때문에 
+일반적으로 수퍼키이가 될 수 없다. 그러나, 만일 같은 이름의 소유자가 2인 이상 
+존재하지 않고 유일하다면 </font><font size="2"><b>{이름}</b></font><font size="2">도 수퍼키이가 될 수 있으며 따라서 </font><font size="2"><b>'이름'</b></font><font size="2"> 속성을 
+포함하는 모든 키이는 수퍼키이가 될 수 있다.</font></p>
+<p>&nbsp; 
+<li><font size="2"><b>후보키이(candidate key)</b></font> 
+<p><font size="2">속성의 수를 가장 적게 갖는 수퍼키이가 바로 후보키이가 된다. 후보키이는 다음에 
+설명될 주키의 후보자가 된다.</font></p>
+<p><font size="2">앞의 '</font><font size="2"><b>교수</b></font><font size="2">' 릴레이션 예에서 같은 이름의 소유자가 2인 이상 존재하지 않는다면 앞의 
+수퍼키이들 중에서 </font><font size="2"><b>{교수ID}</b></font><font size="2"> 수퍼키이와 </font><font size="2"><b>{이름}</b></font><font size="2"> 수퍼키이가 후보키이가 된다. 그 
+이유는 이들 수퍼키이의 속성의 개수가 한 개로서 가장 적기 때문이다. </font><font size="2"><b>{교수ID, 
+이름}</b></font><font size="2">은 후보키이가 될 수 없다. 그 이유는 이 수퍼키이는 2개의 속성을 갖기 때문에 
+이보다 속성의 수가 더 적은</font><font size="2"><b> {교수ID} </b></font><font size="2">또는 </font><font size="2"><b>{이름}</b></font><font size="2"> 수퍼키이가 존재하기 때문이다.</font></p>
+<p>&nbsp; 
+<li><font size="2"><b>주키이(primary key)</b></font> 
+<p><font size="2">사실 상 후보키이들은 모두 주키이가 될 수 있는 자격이 있다. 그러나, 후보키이들 
+중에서 대표적으로 오직 하나만 선택하여 주키이로 선정한다. 그러므로 주키이 값은 
+튜플들을 유일하게 구분시켜준다. 또한 주키이는 오직 하나만 존재한다.</font></p>
+<p><font size="2">앞의 '</font><font size="2"><b>교수</b></font><font size="2">' 릴레이션 예에서 같은 이름의 소유자가 2인 이상 존재하지 않는다면 
+후보키이들인 </font><font size="2"><b>{교수ID}</b></font><font size="2">와 </font><font size="2"><b>{이름}</b></font><font size="2"> 중에서 하나를 선택하여 주키이로 설정할 수 있다.</font></p>
+<p><font size="2">&nbsp;</font> 
+<li><font size="2"><b>외래키이(foreign key)</b></font> 
+<p><font size="2"><b>외래키이</b></font><font size="2">란 &nbsp;한 릴레이션의 키이로서 외부 릴레이션에 속한 키이로부터 가져온 것을 
+말한다. 외래키이는 그 키이값을 이용하여 다른 릴레이션의 튜플을 참조하기 위해 
+사용된다. </font></p>
+<p>&nbsp;</p>
+</ul>
+</ul>
+</ul>
+<h4><a name="1-4">SQL을 이용한 릴레이션 생성 예</a></h4>
+<ul><ul><p><font size="2"><b>SQL</b></font><font size="2">은 관계형 데이터베이스 시스템에서 사용으로 가장 널리 이용되고 있는 데이터 언어이다. 
+관계형 질의어와 SQL의 자세한 내용에 관해서는 </font><font size="2" color="#8000FF">제 6 회 관계형 데이터베이스 실용언어</font><font size="2">에서 
+다루도록 하겠지만 여기에서는 SQL의 DDL(데이터 정의어)중 릴레이션 생성과 관련한 
+</font><font size="2"><b>create table</b></font><font size="2">문만 잠시 소개하도록 한다.</font></p>
+<p><font size="2">앞의 </font><font size="2"><a href="#릴레이션선언예">'</a></font><font size="2"><b><a href="#릴레이션선언예">교수</a></b></font><font size="2"><a href="#릴레이션선언예">' 릴레이션과 '</a></font><font size="2"><b><a href="#릴레이션선언예">교과목</a></b></font><font size="2"><a href="#릴레이션선언예">' 릴레이션 선언 예</a></font><font size="2">에서 릴레이션 스키마인 
+</font><font size="2"><b><i>Professor-schema</i></b></font><font size="2">와</font><font size="2"><b><i> Course-schema</i></b></font><font size="2">를 먼저 선언하고 이를 바탕으로 '</font><font size="2"><b>교수</b></font><font size="2">' 
+릴레이션과 '</font><font size="2"><b>교과목</b></font><font size="2">' 릴레이션을 생성하는 단계를 거쳤지만 SQL의 </font><font size="2"><b>create table</b></font><font size="2">문을 
+이용하면 두 릴레이션을 간단하게 다음과 같이 선언할 수 있다.</font></p>
+<ul><ul><p align="left"><font size="2"><img src="./img/3-5.jpg" border="0"></font></p>
+</ul>
+</ul>
+<p align="left"><font size="2">위의 </font><font size="2"><b>create table</b></font><font size="2">문에 의해 언떠한 튜플도 가지지 않는 '</font><font size="2"><b>교수</b></font><font size="2">' 릴레이션과 '</font><font size="2"><b>교과목</b></font><font size="2">' 
+릴레이션이 생성된다. 위의 예에서 </font><font size="2"><b>char(n)</b></font><font size="2">은 해당 속성의 도메인을 나타내며 속성값은 
+n개의 문자열로 구성됨을 의미하며, </font><font size="2"><b>not null</b></font><font size="2">은 튜플이 릴레이션에 존재할 때는 이 </font><font size="2"><b>not 
+null</b></font><font size="2">과 관련한 속성값이 반드시 부여되어야 함을 의미한다. 따라서 '</font><font size="2"><b>교수</b></font><font size="2">' 릴레이션에서 
+튜플이 삽입되거나 변경될 때 </font><font size="2"><b>not null</b></font><font size="2">과 관련된 </font><font size="2"><b>교수ID</b></font><font size="2">와 </font><font size="2"><b>이름</b></font><font size="2"> 속성값은 반드시 
+결정되어야 한다. 한편 </font><font size="2"><b>{교수ID}</b></font><font size="2">와 </font><font size="2"><b>{교과목ID}</b></font><font size="2">는 </font><font size="2"><b>primary key</b></font><font size="2"> 선언에 의해 각각 
+'</font><font size="2"><b>교수</b></font><font size="2">' 릴레이션과 '</font><font size="2"><b>교과목</b></font><font size="2">' 릴레이션에서 주키이임을 알 수 있다.</font></p>
+</ul>
+</ul>
+<h2>&nbsp;</h2>
+<h2><font face="굴림"><a name="2">2. 질의어(Query Language)</a></font></h2>
+<ul><h4><font size="2">질의어(query language)란 ?</font></h4>
+<ul><p><font size="2"><b>질의어</b></font><font size="2">란 </font><font size="2" color="teal">사용자가 데이터베이스로부터 정보를 요청하는데 이용되는 언어</font><font size="2">를 말한다. 이 
+부류의 언어들은 대개 표준 프로그래밍 언어보다 더 높은 수준의 언어 표현력을 갖는다. </font></p>
+</ul>
+<h5><font size="2">절차적 언어 대 비절차적 언어</font></h5>
+<ul><p><font size="2">질의어는 연산을 표현하느데 있어 절차성을 갖는지의 여부에 따라 절차적 언어(또는 절차성 
+언어)와 비절차적 언어(또는 비절차성 언어)로 분류된다. </font></p>
+<p><font size="2"><b>절차적 언어(procedural language)</b></font><font size="2">란 </font><font size="2" color="teal">데이터베이스로부터 원하는 결과를 얻기 위해 
+사용자가 데이터베이스를 대상으로 수행되어야 할 연산들의 절차적 순서를 기술해야 하는 
+언어</font><font size="2">를 말한다.</font></p>
+<p><font size="2"><b>비절차적 언어(nonprocedural language)</b></font><font size="2">란 데이터베이스로부터 원하는 결과를 
+업기 위해 절차적 언어처럼 연산의 절차적 순서를 기술하는 것이 아니라 </font><font size="2" color="teal">절차와는 무관하게 
+얻고자하는 데이터의 대상과 조건만 기술하는 언어</font><font size="2">로서 이른 바 4GL(4세대 언어)로 분류된다.</font></p>
+</ul>
+<h5><font size="2">질의어 종류</font></h5>
+<ul><p><font size="2">관계형 데이터베이스 시스템에서 질의어는 질의어 자체에 대한 순수한 이론적 접근을 위해 
+고안된 일종의 형식어(formal language)인 </font><font size="2" color="teal">'순수' 질의어</font><font size="2">와 상용으로 판매되고 있는 관계형 
+데이터베이스 시스템에 포함되어 제공되고 있는 </font><font size="2" color="teal">'상용' 질의어</font><font size="2">로 구분되는데 일반적으로 순수 
+질의어에 대한 이론적 접근과 연구는 상용 질의어의 표현력과 </font><font size="2" color="teal">질의 최적화(query 
+optimization)</font><font size="2">등과 관련된 처리능력을 확장하는데 직접적인 기초로서 활용된다. 따라서 순수 
+질의어에 대한 이론적 확장이 바로 상용 질의어로의 반영으로 이어지는 예를 종종 볼 수 있다.</font></p>
+<p><font size="2">순수질의어로서 대표적인 언어에는 </font><font size="2" color="teal">관계 대수</font><font size="2">, </font><font size="2" color="teal">튜플 관계 해석</font><font size="2">, </font><font size="2" color="teal">도메인 관계 해석 </font><font size="2">등이 
+존재한다.</font></p>
+<p><font size="2"><b>관계 대수(relational algebra)</b></font><font size="2">는 </font><font size="2" color="teal">잘 정형화된 형식(well-formed formula)을 갖는 
+절차적 질의어</font><font size="2">이다. 관계 대수는 5개 또는 6개의 기본 연산과 이 기본 연산을 이용하여 정의한 
+부가 연산, 그리고 이들 연산이 정의된 이후에 새롭게 첨가된 확장된 연산들로 구성된다.</font></p>
+<p><font size="2"><b>튜플 관계 해석(tuple relational algebra)</b></font><font size="2">과</font><font size="2"><b> 도메인 관계 해석(domain 
+relational calculus)은</b></font><font size="2"> </font><font size="2" color="teal">잘 정형화된 형식(well-formed formula)을 갖는 비절차적 
+질의어</font><font size="2">이다. 따라서, 튜플 관계 해석과 도메인 관계 해석은 데이터베이스로부터 정보를 얻기 
+위한 절차를 사용자에게 요구하지 않는다. 사용자는 단지 얻고자하는 정보의 대상과 조건만 
+제시할 뿐이다.</font></p>
+<p><font size="2">한편, 상용으로 대표적인 언어에는</font><font size="2" color="teal"> SQL</font><font size="2">, </font><font size="2" color="teal">QBE</font><font size="2">,</font><font size="2" color="teal"> Quel</font><font size="2"> 등이 존재한다.</font></p>
+<p><font size="2"><b>SQL</b></font><font size="2">은 </font><font size="2" color="teal">관계 대수와 관계 해석(튜플 관계 해석과 도메인 관계 해석을 총칭한 용어임)에 이론적 
+기반을 두고 있는 질의어</font><font size="2">로서 현재 국제 표준으로 제정되어 있는 상태다. SQL은 관계형 
+데이터베이스의 스키마 정의, 데이터베이스 데이터의 변경, 보안 제약조건 기술 등의 기능을 
+포함한 여러 가지 특성을 갖는다.</font></p>
+<p><font size="2"><b>QBE</b></font><font size="2">는 </font><font size="2" color="teal">도메인 관계 해석에 이론적 기반을 둔 언어</font><font size="2">로서 질의는 릴레이션 스키마 형태를 
+나타내는 테이블상에 사용자가 조건을 제시함으로써 이루어진다. </font></p>
+<p><font size="2"><b>Quel</b></font><font size="2">은 </font><font size="2" color="teal">튜플 관계 해석에 이론적 기반을 둔 언어</font><font size="2">로서 베클리 대학에서 개발한 Ingres 
+데이터베이스 시스템을 위한 질의어로 소개되었다.</font></p>
+<p><font size="2">순수질의어인 관계 대수, 튜플 관계 해석, 도메인 관계 해석에 대하여 본 강의에서 모두 
+소개하고 싶지만 이들 각각이 너무 이론적인 면에 치우쳐 있기 때문에 본 강의의 목적 상 이들 
+중 관계 대수 하나만 소개하도록 한다. 특히 관계 대수에서 소개된 이론과 연산은 상용으로 
+가장 널리 이용되는 SQL에도 밀접하게 반영되어있기 때문에 이론적으로 다소 치우진 감이 
+있다하더라도 학생 여러분들은 차분하게 본 강의에 끝까지 임해주길 바란다.</font></p>
+<p><font size="2">나머지 관계 해석에 특히 관심있는 학생들은 데이터베이스 관련 서적들을 참고하길 바란다.</font></p>
+<p><font size="2">대부분의 상용 관계형 데이터베이스 시스템들은 절차성과 비절차성을 모두 취하는 질의어를 
+제공한다. 대표적인 상용 질의어인 SQL과 QBE가 데이터베이스 강의의 </font><font size="2" color="#8000FF">제 6 회 관계형 
+데이터베이스 실용언어</font><font size="2">에서 다루어질 예정이다.</font></p>
+</ul>
+</ul>
+<h2>&nbsp;</h2>
+<h2><font face="굴림"><a name="3">3. 무결성 제약조건(Integrity Constraints)</a></font></h2>
+<h4><font face="굴림"><a name="3-1">데이터 무결성과 무결성 위반의 예</a></font></h4>
+<ul><ul><p><font size="2"><b>데이터 무결성(data integrity)</b></font><font size="2">이란 </font><font size="2" color="teal">데이터 베이스에 </font><font size="2" color="teal"><a name="무결성손상">논리적 또는 물리적 결함</a></font><font size="2" color="teal">이 없는 
+성질</font><font size="2">을 의미한다. 이 정의는 너무 추상적이기 때문에 바로 이해가 되지 않을 것이다. 따라서 
+예를 들어 무결성에 대하여 자세히 설명해보기로 하자.</font></p>
+</ul>
+<h5><font size="2"><a name="무결성손상예그림">데이터 무결성 손상의 예</a></font></h5>
+<ul><p><font size="2"><img src="./img/3-6.jpg" border="0"></font></p>
+<p><font size="2">위의 그림은 '대학' 릴레이션과 '학과' 릴에이션의 두 릴레이션을 포함한다. 여러분들은 위 두 
+릴레이션에 대한 주키이를 설정해보라</font><font size="2" color="#8000FF"><u>(각 릴레이션의 주키이를 설정하고 설정하게된 타당한 
+이유를 포함한 레포트</u></font><font size="2" color="blue"><u>를 강의 담당교수인 김창화 교수에게 메일로 </u></font><font size="2" color="#8000FF"><u>보내기 바랍니다 : 
+레포트-1)</u></font><font size="2" color="#800040">.</font><font size="2"> '학과' 릴레이션에서 '컴퓨터학과'는 그 학과가 속한 소속 대학교가 다르기 때문에 
+중복해서 나타날 수 있다. 그러므로 '학과' 릴레이션에서 대학코드 001과 002에 대응하는 두 
+컴퓨터학과는 각각 'OCU'와 '한국대학교'에 소속된 다른 학과임을 알 수 있다.</font></p>
+<p><font size="2" color="#004080">사실 상 이 두 릴레이션 사이에는 종속관계가 존재한다.</font><font size="2"> 그 이유는 위의 두 릴레이션에서 
+'학과'란 '대학'에 소속되어 있기 때문에 존재하지 않는 대학에 소속된 학과란 있을 수 없기 
+떄문이다. 이러한 종속관계를 중심으로 무결성이 손상된 예를 설명해보자.</font></p>
+<h5><font size="2"><a name="무결성손상예-1">무결성 손상 예-1</a></font></h5>
+<ul><p><font size="2">'학과' 릴레이션에서 맨 마지막 튜플을 살펴보자. 이 튜플의 '컴퓨터학과'의 대학코드 
+속성 값은 005인데 이 학과가 존재하기 위해서는 종속관계에 의해 대학코드 005에 
+해당하는 대학교가 '대학' 릴레이션에 존재해야 한다. 그러나 '대학' 릴레이션에서 
+대학코드 005에 해당하는 튜플은 존재하지 않는다. 이러한 상황은 논리적인 관점에서 
+볼 때 이치에 맞지 않으며 이 점이 바로 </font><font size="2"><a href="#무결성손상">논리적 결함에 의한 무결성 손상</a></font><font size="2">인 것이다.</font></p>
+</ul>
+<h5><font size="2">무결성 손상 예-2</font></h5>
+<ul><p><font size="2">이번에는 '한국대학교'가 폐교가 되었다고 가정하자. 이 때 폐교에 따라 이 대학에 
+종속관계를 갖는 '컴퓨터학과', '수학과', '전자공학과'도 함께 폐과 되어야 한다. 만일 
+'한국대학교'의 폐교에 따라 '대학' 릴레이션에서 이 대학에 해당하는 튜플만을 
+삭제했다고 가정한다면 '학과' 릴레이션은 대학의 폐교와 함께 폐과되어야 할 학과들에 
+대하여 튜플을 삭제하지 않음으로 해서 데이터베이스 내에서는 소속 대학교가 없는 
+학과들이 폐과되지 않은 채로 남게 된다. 결국 데이터베이스는 실세계를 정확히 
+반영하지 못하는 결과를 초래한다. 이것이 바로 </font><font size="2" color="blue">실세계와 데이터베이스 사이의 
+불일치에 오는 데이터베이스 상의 무결성 손상</font><font size="2">이다.</font></p>
+</ul>
+<h5><font size="2">무결성 손상 예-3</font></h5>
+<ul><p><font size="2">'학과' 릴레이션에서 </font><font size="2"><b>학과코드</b></font><font size="2"> 속성값은 소속대학과는 무관하게 </font><font size="2"><b>학과명</b></font><font size="2"> 속성값을 
+결정해 준다. 다시말하면, 소속대학과는 무관하게 학과코드 001은 컴퓨터학과를, 
+학과코드 002는 수학과를, 학과코드 003은 전자공학과를 의미한다. 이때 만일 
+무궁대학교에 속하는 컴퓨터학과 튜플에서 학과코드 속성값을 변경하지 않은 채 
+수학과로만 변경한다면 동일 튜플 내에서 컴퓨터학과를 의미하는 학과코드 속성값 
+001과 학과명 수학과와 공존하게 되어 의미상의 불일치가 발생하게 된다. 이 때 만일 
+학과코드 속성값만 가지고 학과명을 결정한다면 무궁대학교의 학과코드 값 001은 
+컴퓨터학과로 결정될 것이다. 이러한 상황은 </font><font size="2" color="blue">속성들간의 종속관계에 의해 발생되는 
+무결성 손상</font><font size="2">인 것이다.</font></p>
+</ul>
+<p><font size="2">앞에서 제시한 무결성 손상 예외에도 데이터의 삽입, 삭제, 갱신에 따른 여러 가지 무결성 손상 
+예가 무수히 존재할 수 있다.</font></p>
+<p><font size="2">무결성 손상은 개념적 설계와 논리적 설계 관점에서 볼 때 개념적 세계에 존재하는 엔티티 
+세트들 사이에 존재하는 종속 관계와 속성들 사이에 존재하는 종속 관계가 논리적 
+데이터베이스에 반영되지 못함으로인하여 주로 발생한다. 개념적 설계 및 논리적 설계 상의 
+잘못은 결국 무결성 손상으로 이어지게 된다. 무결성 손상을 갖는 데이터베이스는 실세계에 
+대한 정확한 정보를 반영하지 못한다.</font>&nbsp;</p>
+<p><font size="2"><b>무결성 제약조건(integrity constraint)은</b></font><font size="2"> 사용자에 의한 데이터베이스 변경이 
+</font><font size="2" color="teal">데이터 일관성(data consistency)</font><font size="2">에 손상을 주지 않도록 하는 수단을 제공한다. </font></p>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="3-2">도메인 제약조건(Domain Constraints)</a></font></h4>
+<ul><ul><p><font size="2">&nbsp;속성의 도메인은 속성값이 취할 수 있는 값의 범위를 제한함으로써 제한된 값 범위 이외의 
+값이나 타른 타입의 값이 데이터베이스 내부로 입력되는 것을 막는다. 도메인 제약조건은 가장 
+초보 형태의 무결성 제약조건이다. 여러 속성들이 같은 도메인을 가질 수 있다. 예를 들어 앞의 
+</font><font size="2"><a href="#무결성손상예그림">무결성 손상 예 그림</a></font><font size="2">에서 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션의 </font><font size="2"><b>대학명</b></font><font size="2"> 속성과 '</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션의 </font><font size="2"><b>학과명</b></font><font size="2"> 
+속성은 같은 도메인을 가질 수 있다. </font></p>
+<p><font size="2"><b>SQL-92</b></font><font size="2">의 </font><font size="2"><b>check</b></font><font size="2">절은 프로그래밍 언어의 타입 체계에서는 거의 보기 힘든 도메인 제한 
+기능을 제공한다. 스키마 설계자는 </font><font size="2"><b>check</b></font><font size="2"> 절을 이용하여 도메인의 값으로 값이 할당되도록 
+하는 조건을 제시할 수 있다. 다음은 </font><font size="2"><b>check</b></font><font size="2"> 절을 이용하여 </font><font size="2"><i>num-of-student</i></font><font size="2"> 도메인이 40 
+이상의 정수가 되도록 제한을 가한 예이다.</font></p>
+</ul>
+<p>&nbsp; 
+<table border="0" cellpadding="3" bgcolor="#FFA9A2">
+<tr>
+<td width="553"><ul><ul><p><font size="2"><b>create domain </b></font><font size="2"><i>number-of-student</i></font><font size="2"><b> </b></font><font size="2"><i>&nbsp;</i></font><font size="2"><b>integer</b></font></p>
+<ul><p><font size="2"><b>constraint</b></font><font size="2"> </font><font size="2"><i>&nbsp;number-of-student-test</i></font><font size="2"> &nbsp;</font><font size="2"><b>check</b></font><font size="2">(</font><font size="2"><b>value</b></font><font size="2"> &gt;= 40) </font>
+</ul>
+</ul>
+</ul></td>
+</tr></table>
+<ul><ul><ul><ul><p>&nbsp;</p>
+</ul>
+</ul>
+</ul>
+<p><font size="2">위의 예에서</font><font size="2"><b> constraint</b></font><font size="2"> </font><font size="2"><i>&nbsp;number-of-student-test</i></font><font size="2"> 는 제약조건의 명칭으로 데이터베이스 
+갱신 등으로 인하여 발생하는 위반된 제약조건들을 식별하기 위해 사용된다.</font></p>
+<p><font size="2">다음의 </font><font size="2"><b>check</b></font><font size="2"> 절은 </font><font size="2"><b>학과명</b></font><font size="2"> </font><font size="2"><i>department-name</i></font><font size="2"> 도메인이 null 값을 갖지 않도록 제약조건을 
+부여한 예이다.</font></p>
+</ul>
+<p>&nbsp; 
+<table border="0" cellpadding="3" bgcolor="#FFA9A2">
+<tr>
+<td width="585"><ul><ul><p><font size="2"><b>create domain </b></font><font size="2"><i>department-name &nbsp;</i></font><font size="2"><b>integer</b></font></p>
+<ul><p><font size="2"><b>constraint</b></font><font size="2"> </font><font size="2"><i>&nbsp;department-name-test</i></font><font size="2"> &nbsp;</font><font size="2"><b>check</b></font><font size="2">(</font><font size="2"><b>value not null</b></font><font size="2">)</font>&nbsp; 
+</ul>
+</ul>
+</ul></td>
+</tr></table>
+<ul><ul><ul><ul><p>&nbsp;</p>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="3-3">참조무결성(Referential Integrity)</a></font></h4>
+<ul><h5><font size="2">참조무결성 개념과 예</font></h5>
+<ul><p><font size="2">R을 릴레이션 스키마라고 하고 r을 릴레이션 스키마 R을 갖는 릴레이션이라고 하자(이를 
+앞으로 r(R)로 표기하기로 한다). 또한 α를 R의 부분 집합이라 하자. 즉, α는 릴레이션 r에 
+대한 릴레이션 스키마의 공통 속성들의 일부로 이루어진 속성들의 모임이다.</font></p>
+<p><font size="2">이때 </font><font size="2"><b>참조무결성(referential integrity)</b></font><font size="2">란 </font><font size="2" color="teal">릴레이션 r의 모든 튜플 t에 대해서 
+속성집합 α로만 이루어진 값인 t[α]가 다른 릴레이션의에서도 반드시 나타나야하는 조건</font><font size="2">을 
+말한다.</font></p>
+<p><font size="2">참조무결성을 설명하기 위해 다음 그림을 다시 예를 들어보기로 하자.</font></p>
+<p>&nbsp;<img src="./img/3-6.jpg" border="0"></p>
+<p><font size="2">&nbsp;앞의 </font><font size="2"><a href="#무결성손상예-1">무결성 손상 예-1</a></font><font size="2">에서 설명한 바와 같이 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션과 '</font><font size="2"><b>학생</b></font><font size="2">' 릴레이션은 
+종속관계가 존재하므로 학과에 대하여 그 학과가 속한 소속 대학이 반드시 존재해야 하기 
+때문에 '</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션의 모든 튜플의 </font><font size="2"><b>대학코드</b></font><font size="2"> 속성값에 대하여 반드시 그 값을 '</font><font size="2"><b>대학</b></font><font size="2">' 
+릴레이션의 </font><font size="2"><b>대학코드</b></font><font size="2"> 속성값으로 하는 튜플이 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션에 존재해야 한다. 이러한 
+조건이 바로 참조무결성이다. 그러나 </font><font size="2"><a href="#무결성손상예-1">무결성 손상 예-1</a></font><font size="2">에서 언급한 것처럼 '학생' 릴레이션과 
+'대학' 릴레이션은 이 조건에 위반되므로 참조무결성이 손상된 것이다.</font></p>
+<p><font size="2">사실상 '</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션의 </font><font size="2"><b>대학코드</b></font><font size="2"> 속성은 원래 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션에 속한 </font><font size="2"><b>주키이</b></font><font size="2">이다. 
+'</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션을 기준으로 볼 때 이러한 키이를 외부 릴레이션에서 비롯되었다는 의미로 
+</font><font size="2"><b>외래키이</b></font><font size="2">라고 한다. 외래키이는 그 키이값을 이용하여 다른 릴레이션을 참조하기 위해 
+도입된다. 따라서 외래키이를 갖는 릴레이션과 그 외래키이의 근본이 되는 릴레이션 사이에는 
+반드시 참조무결성이 존재한다.</font></p>
+</ul>
+<h5>참조무결성을 갖는 릴레이션 사이의 연산</h5>
+<ul><p><font size="2">참조무결성을 갖는 두 릴레이션 사이의 삽입, 삭제, 갱신 연산은 참조무결성이 손상되지 
+않도록 신중히 고려되어야 한다. </font></p>
+<p><font size="2">두 릴레이션 r(R)과 s(S) 사이에 참조무결성이 존재하고 릴레이션 r이 릴레이션 s를 
+근원으로하는 외래키이 α를 갖는다고 가정하고 삽입, 삭제, 갱신 연산 각각에 대해 어떻게 
+연산이 진행되어야 하는지를 각각 살펴보자.</font></p>
+<h5><font size="2">1. 삽입연산 </font></h5>
+<ul><p><font size="2">릴레이션 r에 튜플 t를 삽입하려고 할 때 참조무결성을 손상시키지 않기 위해서 다음 
+규칙이 지켜져야 한다.</font></p>
+<p><font size="2">&nbsp;&nbsp;&nbsp;</font> 
+</ul>
+<ul type="disc">
+<li><font size="2">튜플 t의 속성집합 α상의 값인 t[α]가 릴레이션 s에서 속성 집합 α로 이루어진 
+집합인 s[α]에 속하는 지를 검사하고 속할 경우에는 튜플 t를 릴레이션 r에 삽입하고 
+속하지 않는 경우에는 참조무결성에 위배되므로 삽입을 취소한다.</font> 
+<p><font size="2">예를 들어 위의 '</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션에서 튜플 (006, 001, 컴퓨터학과, 220) 하려고 할 때 이 
+릴레이션의 외래키이인 </font><font size="2"><b>대학코드 </b></font><font size="2">값이 이 코드의 근원 릴레이션인 </font><font size="2"><b>'대학'</b></font><font size="2"> 릴레이션의 
+</font><font size="2"><b>대학코드</b></font><font size="2"> 속성들의 집합에 속하는지를 먼저 살펴보아야 한다. 이 경우는 삽입하려는 
+튜플의 </font><font size="2"><b>대학코드</b></font><font size="2"> 값이 006이며 이 값은 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션의 </font><font size="2"><b>대학코드</b></font><font size="2"> 속성 값에 
+포함되지 않으므로 삽입이 거부되어야 한다.</font></p>
+</ul>
+<h5><font size="2">&nbsp;2. 삭제연산</font></h5>
+<ul><p><font size="2">릴레이션인 s(S)로부터 튜플 t를 삭제하고자 할 때 참조무결성을 손상시키지 
+않도록하기 위해 다음 규칙이 지켜져야 한다.</font></p>
+<p>&nbsp; 
+</ul>
+<ul type="disc">
+<li><font size="2">릴레이션 s(S)의 키이 α를 외래키이로 가지고 있는 모든 릴레이션 r에 대해 t[α]가 
+릴레이션 r의 속성 집합 α로 이루어진 집합인 r[α]에 속하는 지를 검사한다. α를 
+외래키이로하는 모든 릴레이션 r에 대해 속하지 않을 경우에는 튜플 t를 참조하는 
+릴레이션들이 존재하지 않으므로 삭제 연산을 수행하다.</font> 
+<li><font size="2">만일 α를 외래키이로 하면서 r[α]가 t[α]를 포함하는 릴레이션 r(R)이 존재한다면 이 
+튜플 t를 참조하는 릴레이션 튜플이 존재하므로 다음 중 두가지 방식 중의 하나로 
+처리한다</font> 
+<ol>
+<li><font size="2">튜플 t의 삭제는 참조무결성을 손상시키므로 삭제 연산을 거부한다.</font> 
+<li><font size="2">α를 외래키이로 갖는 모든 릴레이션들을 중에서 튜플 t를 참조하는 모든 
+튜플들을 먼저 삭제한 후 튜플 t를 삭제한다.</font> 
+</ol>
+<p><font size="2">예를 들어 위의 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션에서 튜플 (002, '한국대학교', 1920, 15000)을 
+삭제하려고 할 때 </font><font size="2"><b>대학코드</b></font><font size="2">를 외래키이로 갖는 </font><font size="2"><b>'학생'</b></font><font size="2"> 릴레이션이 이 튜플을 
+참조하고 있으므로 위의 규칙에 의해 삭제연산을 취소하거나 혹은 '</font><font size="2"><b>학생</b></font><font size="2">' 
+릴레이션으로부터 이 튜플을 참조하는 </font><font size="2"><b>대학코드</b></font><font size="2"> 속성값이 002 인 3개의 튜플을 모두 
+삭제한 후 이 튜플을 삭제한다.</font></p>
+</ul>
+<h5><font size="2">3. 갱신 연산</font></h5>
+<ul><p><font size="2">릴레이션 s(S)의 키이 α를 외래키이로 가지고 있는 하나 이상의 릴레이션이 존재할 때 
+릴레이션 s(S)로부터 튜플 t의 키이 α값을 변경하여 튜플 t′으로 바꾸는 연산을 
+고려하자. 키이 α값에 의해 튜플 t를 튜플 t′으로 변경하는 연산은 키이 α를 
+외래키이로 갖는 릴레이션들을 중심으로 볼 때 t[α]는 삭제되고 t′[α]는 삽입되는 
+결과를 초래하므로 결국 튜플 t를 s(S)로부터 삭제하고 튜플 t′을 s(S)로 삽입하는 
+연산으로 고려할 수 있다.</font></p>
+<p><font size="2" color="blue"><u>이 점을 고려하여 참조무결성을 손상시키지 않도록하기 위한 처리 방법을 학생 
+여러분들의 레포트로 남겨둔다(참조무결성이 존재하는 릴레이션들 사이에서 
+참조무결성을 보장하는 갱신연산의 수행 규칙을 레포트로 작성하여 메일로 보내기 
+바랍니다 : 레포트-2). </u></font></p>
+</ul>
+</ul>
+</ul>
+<h4><font face="굴림"><a name="3-4">SQL의 무결성</a></font></h4>
+<ul><h5><font size="2">SQL의 참조무결성</font></h5>
+<ul><p><font size="2">&nbsp;주키이, 후보키이, 외래키이가 SQL의 </font><font size="2"><b>create</b></font><font size="2"> </font><font size="2"><b>table</b></font><font size="2"> 문의 일부분으로 다음과 같이 기술될 
+수 있다.</font></p>
+<ul><p>&nbsp; 
+<table border="0" cellpadding="2" cellspacing="0" bgcolor="#FFACA6">
+<tr>
+<td width="505"><ul><p><font face="굴림" size="2"><b>create table &nbsp;대학</b></font> 
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="Times New Roman" size="2"><b>(</b></font><font face="굴림" size="2"><b>대학코드 &nbsp;&nbsp;&nbsp;char(4) &nbsp;not null,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;대학명 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char(10) not null,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;설립연도 &nbsp;&nbsp;&nbsp;integer,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;총학생인원 &nbsp;intergr,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;primary key (대학코드),</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;check (총학생인원 &gt;= 1500</b></font><font face="Times New Roman" size="2"><b>) )</b></font><font face="Times New Roman"> </font>
+</ul>
+</ul></td>
+</tr></table>
+<p>&nbsp; 
+<table border="0" cellpadding="2" cellspacing="0" bgcolor="#FFACA6">
+<tr>
+<td width="505"><ul><p><font face="굴림" size="2"><b>create table &nbsp;학과</b></font> 
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="Times New Roman" size="2"><b>(</b></font><font face="굴림" size="2"><b>대학코드 &nbsp;&nbsp;&nbsp;char(4) &nbsp;not null,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;학과코드 &nbsp;&nbsp;&nbsp;char(3) &nbsp;not null,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;학과명&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char(10) &nbsp;not null,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;학생인원 &nbsp;&nbsp;&nbsp;&nbsp;integer,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;primary key (학과코드),</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;foreign key (대학코드) references 대학,</b></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="505"><ul><ul><p><font face="굴림" size="2"><b>&nbsp;check (학생인원 &gt;= 40</b></font><font face="Times New Roman" size="2"><b>) )</b></font><font face="Times New Roman"> </font>
+</ul>
+</ul></td>
+</tr></table>
+<p>&nbsp;</p>
+</ul>
+<p><font size="2">위의 예를 보면 이해 할 수 있듯이 create table 문을 구성하는 각 키이 절들을 요약하면 
+다음과 같다.</font></p>
+<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;</font> 
+<ul type="disc">
+<li><font size="2"><b>create</b></font><font size="2"> </font><font size="2"><b>table</b></font><font size="2"> 문의 </font><font size="2"><b>primary</b></font><font size="2"> </font><font size="2"><b>key</b></font><font size="2"> 절은 주키이를 구성하는 속성들의 리스트를 
+포함한다. </font>
+<p><font size="2">'</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션에서 </font><font size="2"><b>대학코드</b></font><font size="2"> 속성이 주키이로 선언되었다. 주키이는 </font><font size="2"><b>null</b></font><font size="2"> 값을 가질 
+수 없다. 앞의 </font><font size="2"><b>create</b></font><font size="2"> </font><font size="2"><b>table</b></font><font size="2"> 문 예에서 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션의 주키이인 대학코드는 
+명시적으로 </font><font size="2"><b>not</b></font><font size="2"> </font><font size="2"><b>null</b></font><font size="2">이 선언되었다. 그러나, 명시적으로 선언되지 않더라도 </font><font size="2"><b>primary</b></font><font size="2"> 
+</font><font size="2"><b>key</b></font><font size="2"> 선언에 의해 묵시적으로 </font><font size="2"><b>not</b></font><font size="2"> </font><font size="2"><b>null</b></font><font size="2">로 선언된다.</font></p>
+<p><font size="2">&nbsp;&nbsp;</font> 
+<li><font size="2"><b>create</b></font><font size="2"> </font><font size="2"><b>table</b></font><font size="2"> 문의 </font><font size="2"><b>unique</b></font><font size="2"> 절은 후보키이를 구성하는 속성들의 리스트를 
+포함한다.</font> 
+<p><font size="2">&nbsp;&nbsp;</font> 
+<li><font size="2"><b>create</b></font><font size="2"> </font><font size="2"><b>table</b></font><font size="2"> 문의 </font><font size="2"><b>foreign</b></font><font size="2"> </font><font size="2"><b>key</b></font><font size="2"> 절은 외래키이를 구성하는 속성들의 리스트와 그 
+외래키이에 의해 참조되는 릴레이션(즉, 외래키이의 근원에 해당하는 릴레이션)이름를 
+포함한다.</font> 
+<p><font size="2">위의 '</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션의 </font><font size="2"><b>foreign</b></font><font size="2"> </font><font size="2"><b>key</b></font><font size="2"> 절에 의해 </font><font size="2"><b>대학코드</b></font><font size="2"> 속성을 외래키이로 갖게 
+되며 이 외래키이가 참조하는 릴레이션은 </font><font size="2"><b>references</b></font><font size="2"> 뒤에 위치한 '</font><font size="2"><b>대학</b></font><font size="2">' 
+릴레이션이다.</font></p>
+</ul>
+<p><font size="2">참조무결성 제약조건이 위반될 때의 정상적인 절차는 위반을 유발시킨 연산을 DBMS가 
+거절하는 것이다. 그러나, </font><font size="2"><b>SQL-92</b></font><font size="2"> </font><font size="2"><b>표준</b></font><font size="2">의 </font><font size="2"><b>foreign</b></font><font size="2"> </font><font size="2"><b>key</b></font><font size="2"> 절은 참조되는 릴레이션 상의 
+삭제 또는 갱신연산이 참조무결성과 같은 제약조건을 위반했을 때 연산을 거절하는 대신 그 
+연삭을 허락하면서 제약조건에 위반되지 않도록 외래키이를 갖는 릴레이션의 참조 튜플들을 
+삭제하거나 변경하도록 할 수 있다. 예를 들어 '</font><font size="2"><b>학생</b></font><font size="2">' 릴레이션의 </font><font size="2"><b>foreign</b></font><font size="2"> </font><font size="2"><b>key</b></font><font size="2"> 절을 
+</font><font size="2"><b>SQL-92</b></font><font size="2"> 구문에 따라 다음과 같이 다시 변경했다고 하자.</font></p>
+<ul><p>&nbsp; 
+<table border="0" cellpadding="2" bgcolor="#FFBAB3">
+<tr>
+<td width="505"><ul><p><font face="굴림" size="2"><b>create table &nbsp;학과</b></font></p>
+<ul><p><font face="Times New Roman" size="2"><b>(</b></font><font face="굴림" size="2"><b>............</b></font></p>
+<p><font face="굴림" size="2"><b>&nbsp;&nbsp;foreign key (대학코드) &nbsp;references &nbsp;대학</b></font></p>
+<ul><ul><ul><ul><ul><p><font face="굴림" size="2"><b>on delete cascade</b></font></p>
+<p><font face="굴림" size="2"><b>on update cascade</b></font></p>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul>
+<p><font face="굴림" size="2"><b>..............</b></font><font face="Times New Roman" size="2"><b>)</b></font><font face="Times New Roman"> </font>
+</ul>
+</ul></td>
+</tr></table>
+<ul><ul><p><font size="2"><b>&nbsp;</b></font></p>
+</ul>
+</ul>
+</ul>
+<p><font size="2">여기에서 </font><font size="2"><b>on</b></font><font size="2"> &nbsp;</font><font size="2"><b>delete cascade</b></font><font size="2"> 절은 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션로부터 튜플의 삭제가 참조무결성을 
+일시적으로 위반한다 하더라도 그 연산을 허락한다. 그 대신 참조무결성을 유지하기 위해 
+삭제된 튜플을 참조하는 '</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션의 튜플들을 연쇄적으로 삭제한다.</font></p>
+<p><font size="2">한편, </font><font size="2"><b>on</b></font><font size="2"> &nbsp;</font><font size="2"><b>update cascade</b></font><font size="2"> 절은 '</font><font size="2"><b>대학</b></font><font size="2">' 릴레이션에 속한 튜플의 변경이 참조무결성을 
+일시적으로 위반한다 하더라도 그 연산을 허락한다. 그 대신 참조무결성을 유지하기 위해 변경 
+이전의 튜플을 참조하는 '</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션 튜플들의 외래키이 값을 변경 후의 최신 값으로 
+연쇄적으로 갱신한다.</font></p>
+<p><font size="2">위와 같이 참조무결성이 위반될 때 참조 튜플을 연쇄적으로 삭제하거나 갱신하는 대신 null 
+값이나 기본 값 또는 새로운 값으로 변경하도록 할 수도 있다.</font></p>
+</ul>
+<h5><font size="2">Assertion</font></h5>
+<ul><p><font size="2"><b>assertion</b></font><font size="2">이란 </font><font size="2" color="teal">데이터베이가 항상 만족하도록 원하는 조건을 표현하는 일종의 
+조건식</font><font size="2">이다.도메인 제약조건과 참조무결성 제약조건들이 &nbsp;assertion의 특수형태이다.</font></p>
+<p><font size="2"><b>SQL-92</b></font><font size="2">에서 </font><font size="2"><b>assertion은</b></font><font size="2"> 다음의 형식을 취한다.</font> 
+<ul><ul><div align="left"><table border="0" cellpadding="0" bgcolor="maroon">
+<tr>
+<td width="424"><ul><p align="left"><font face="굴림" size="2" color="white"><b>create assertion</b></font><font face="굴림" size="2" color="white"> &nbsp;&lt;assertion-명칭&gt; &nbsp;</font><font face="굴림" size="2" color="white"><b>check</b></font><font face="굴림" size="2" color="white"> &nbsp;&lt;조건식&gt;</font> 
+</ul></td>
+</tr></table></div>
+
+</ul><p>&nbsp;</p>
+</ul>
+<p><font size="2">assertion이 생성될 때 시스템은 타당성을 위해 그 assertion을 검사한다. 그 assertion이 
+타당하면 데이터베이스에 대한 변경이 &nbsp;그 assertion이 위반되지 않는 범위 내에서 허락된다. 
+이러한 검사는 복잡한 assertion이 만들어졌을 때 매우 큰 오버헤드를 유발시킬 수 있다. 
+그러므로, assertion은 많은 주의를 가지고 사용해야 한다. 이러한 이유 때문에 몇몇 시스템 
+개발자들은 일반적인 assertion 기능 지원을 생략하거나 혹은 보다 검사하기 쉬운 특별한 
+형태의 assertion을 제공하기도 한다.</font></p>
+</ul>
+<h5><font size="2">Trigger</font></h5>
+<ul><p><font size="2"><b>trigger</b></font><font size="2">는 </font><font size="2" color="teal">데이터베이스의 변경에 수반되어 DBMS에 의해 자동적으로 실행되는 
+문(statement)</font><font size="2">을 말한다. trigger 메커니즘을 설계하기 위해 설계자는 다음 두가지를 고려해야 
+한다.</font></p>
+<p><font size="2" color="#800040">1. trigger가 실행될 조건을 기술해야 한다.</font></p>
+<p><font size="2" color="#800040">2. trigger 실행될 때 처리할 행위를 기술해야 한다.</font></p>
+<p><font size="2">트리거는 실행 조건이 만족되면 사용자에게 경고를 주거나 혹은 어떤 업무를 수행하는 유용한 
+메커니즘이다. </font></p>
+<p><font size="2">원래의 </font><font size="2"><b>System R SQL 표준 제안서</b></font><font size="2">에는 제한된 trigger 특성이 포함되었었지만 
+</font><font size="2"><b>SQL-92 표준</b></font><font size="2">은 trigger에 대한 명세를 포함하지 않는다. 그렇기 때문에 기존 시스템들은 
+자신의 비표준 trigger 기능들을 지원하고 있다. </font></p>
+<p><font size="2">다음은 </font><font face="굴림" size="2"><i>over-num-of-student &nbsp;</i></font><font size="2">trigger의 예이다.</font></p>
+<ul><p>&nbsp; 
+<table border="0" cellpadding="2" bgcolor="maroon">
+<tr>
+<td width="505"><ul><p><font face="Times New Roman" size="3" color="white"><b>define trigger </b></font><font face="Times New Roman" size="3" color="white"><i>over-num-of-student</i></font><font face="Times New Roman" size="3" color="white"><b> on update of</b></font><font face="Times New Roman" size="3" color="white"><i> 학과&nbsp;&nbsp;T</i></font></p>
+<p><font face="Times New Roman" size="3" color="white"><b>&nbsp;&nbsp;&nbsp;&nbsp;(if new </b></font><font face="Times New Roman" size="3" color="white"><i>T.학생</i></font><font face="Times New Roman" size="3" color="white"><b><i>인원 &lt; 40</i></b></font></p>
+<ul><p><font face="Times New Roman" size="3" color="white"><b>then&nbsp;(delete from </b></font><font face="Times New Roman" size="3" color="white"><i>T</i></font></p>
+<ul><ul><ul><p><font face="Times New Roman" size="3" color="white"><b>where </b></font><font face="Times New Roman" size="3" color="white"><i>T.학생인원 &lt; 40</i></font><font face="Times New Roman" size="3" color="white"><b> ) )</b></font><font face="Times New Roman" size="3"> </font>
+</ul>
+</ul>
+</ul>
+</ul>
+</ul></td>
+</tr></table>
+<p><font face="Times New Roman" size="2"><b>&nbsp;</b></font></p>
+</ul>
+<p><font size="2">위의 trigger 예에서 T 는 &nbsp;'</font><font size="2"><b>학과</b></font><font size="2">' 릴레이션을 나타내는 릴레이션 변수이다. 위의 예는 '</font><font size="2"><b>학과</b></font><font size="2">' 
+릴레이션이 갱신되었을 때 갱신 후의 </font><font size="2"><b>학생인원</b></font><font size="2">이 40명보다 적으면 그 해당 튜플들을 그 
+릴레이션으로부터 삭제(delete) 처리하는 trigger문이다.</font></p>
+</ul>
+<p>&nbsp; 
+<table border="0" bgcolor="purple">
+<tr>
+<td width="295"><h1><font face="굴림" color="white"><b><blink><a name="레포트">제출해야할 레포트</a></blink></b></font></h1></td>
+</tr></table>
+
+</ul><p>&nbsp; 
+<table border bgcolor="silver">
+<tr>
+<td width="625"><p><font face="굴림"><b>레포트-1.</b></font></p>
+<ul><ul><p><font size="2"><b><a href="#무결성손상예그림">'무결성 설명을 위한 릴레이션 예' 그림</a></b></font><font size="2" color="#8000FF">은 '대학' 릴레이션과 '학과' 릴에이션의 두 
+릴레이션을 포함한다. 여러분들은 이 두 릴레이션에 대한 주키이를 설정해보라</font><font size="2" color="#8000FF"><u>(각 
+릴레이션의 주키이를 설정하고 설정하게된 타당한 이유를 포함한 레포트를 강의 담당교수인 
+김창화 교수에게 메일로 보내기 바랍니다 &nbsp;: 레포트-1).</u></font> 
+</ul>
+</ul></td>
+</tr><tr>
+<td width="625"><p><font face="굴림"><b>레포트-2.</b></font></p>
+<ul><ul><p><font size="2">릴레이션 s(S)의 키이 α를 외래키이로 가지고 있는 하나 이상의 릴레이션이 존재할 때 
+릴레이션 s(S)로부터 튜플 t의 키이 α값을 변경하여 튜플 t′으로 바꾸는 연산을 고려하자. 
+키이 α값에 의해 튜플 t를 튜플 t′으로 변경하는 연산은 키이 α를 외래키이로 갖는 
+릴레이션들을 중심으로 볼 때 t[α]는 삭제되고 t′[α]는 삽입되는 결과를 초래하므로 결국 
+튜플 t를 s(S)로부터 삭제하고 튜플 t′을 s(S)로 삽입하는 연산으로 고려할 수 있다.</font></p>
+<p><font size="2" color="blue"><u>이 점을 고려하여 참조무결성을 손상시키지 않도록하기 위한 처리 방법을 레포트로 
+작성하라(즉, 참조무결성이 존재하는 릴레이션들 사이에서 참조무결성을 보장하는 
+갱신연산의 수행 규칙을 레포트로 작성하여 메일로 보내기 바랍니다 : 레포트-2). </u></font>
+</ul>
+</ul></td>
+</tr></table></td>
+</tr></table></div>
+<p>&nbsp;</p>
+</body>
+</html>

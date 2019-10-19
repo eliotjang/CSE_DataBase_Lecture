@@ -17,3 +17,27 @@ InnoDB: Foreign key constraint system tables created
 191016 10:33:50 [Note] Event Scheduler: Loaded 0 events
 191016 10:33:50 [Note] APM_MYSQL5: ready for connections.
 Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191019 10:26:58 [Note] APM_MYSQL5: Normal shutdown
+
+191019 10:26:58 [Note] Event Scheduler: Purging the queue. 0 events
+191019 10:26:58  InnoDB: Starting shutdown...
+191019 10:26:59  InnoDB: Shutdown completed; log sequence number 0 44233
+191019 10:26:59 [Note] APM_MYSQL5: Shutdown complete
+
+191019 10:27:31 [Note] Plugin 'FEDERATED' is disabled.
+191019 10:27:31  InnoDB: Started; log sequence number 0 44233
+191019 10:27:32 [Note] Event Scheduler: Loaded 0 events
+191019 10:27:32 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191019 11:53:08 [Note] APM_MYSQL5: Normal shutdown
+
+191019 11:53:08 [Note] Event Scheduler: Purging the queue. 0 events
+191019 11:53:08  InnoDB: Starting shutdown...
+191019 11:53:09  InnoDB: Shutdown completed; log sequence number 0 44233
+191019 11:53:09 [Note] APM_MYSQL5: Shutdown complete
+
+191019 11:53:36 [Note] Plugin 'FEDERATED' is disabled.
+191019 11:53:37  InnoDB: Started; log sequence number 0 44233
+191019 11:53:37 [Note] Event Scheduler: Loaded 0 events
+191019 11:53:37 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)

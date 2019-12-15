@@ -75,3 +75,70 @@ Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL
 191031 23:09:55 [Note] Event Scheduler: Loaded 0 events
 191031 23:09:55 [Note] APM_MYSQL5: ready for connections.
 Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191107  3:14:57 [Note] Plugin 'FEDERATED' is disabled.
+191107  3:14:58  InnoDB: Started; log sequence number 0 44233
+191107  3:14:58 [Note] Event Scheduler: Loaded 0 events
+191107  3:14:58 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191115 23:06:28 [Note] APM_MYSQL5: Normal shutdown
+
+191115 23:06:28 [Note] Event Scheduler: Purging the queue. 0 events
+191115 23:06:28  InnoDB: Starting shutdown...
+191115 23:06:30  InnoDB: Shutdown completed; log sequence number 0 44233
+191115 23:06:30 [Note] APM_MYSQL5: Shutdown complete
+
+191115 23:07:04 [Note] Plugin 'FEDERATED' is disabled.
+191115 23:07:04  InnoDB: Started; log sequence number 0 44233
+191115 23:07:05 [Note] Event Scheduler: Loaded 0 events
+191115 23:07:05 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191116 22:06:01 [Note] APM_MYSQL5: Normal shutdown
+
+191116 22:06:01 [Note] Event Scheduler: Purging the queue. 0 events
+191116 22:06:01  InnoDB: Starting shutdown...
+191116 22:06:02  InnoDB: Shutdown completed; log sequence number 0 44233
+191116 22:06:03 [Note] APM_MYSQL5: Shutdown complete
+
+191116 22:06:29 [Note] Plugin 'FEDERATED' is disabled.
+191116 22:06:59  InnoDB: Started; log sequence number 0 44233
+191116 22:07:00 [Note] Event Scheduler: Loaded 0 events
+191116 22:07:00 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191122 21:32:14 [Note] Plugin 'FEDERATED' is disabled.
+191122 21:32:44  InnoDB: Started; log sequence number 0 44233
+191122 21:32:45 [Note] Event Scheduler: Loaded 0 events
+191122 21:32:45 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191129 22:08:33 [Note] APM_MYSQL5: Normal shutdown
+
+191129 22:08:33 [Note] Event Scheduler: Purging the queue. 0 events
+191129 22:08:33  InnoDB: Starting shutdown...
+191129 22:08:34  InnoDB: Shutdown completed; log sequence number 0 44233
+191129 22:08:34 [Note] APM_MYSQL5: Shutdown complete
+
+191129 22:09:08 [Note] Plugin 'FEDERATED' is disabled.
+191129 22:09:09  InnoDB: Started; log sequence number 0 44233
+191129 22:09:09 [Note] Event Scheduler: Loaded 0 events
+191129 22:09:09 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191208 18:13:48 [Note] APM_MYSQL5: Normal shutdown
+
+191208 18:13:48 [Note] Event Scheduler: Purging the queue. 0 events
+191208 18:13:48  InnoDB: Starting shutdown...
+191208 18:13:50  InnoDB: Shutdown completed; log sequence number 0 44233
+191208 18:13:50 [Note] APM_MYSQL5: Shutdown complete
+
+191208 18:14:22 [Note] Plugin 'FEDERATED' is disabled.
+191208 18:14:23  InnoDB: Started; log sequence number 0 44233
+191208 18:14:23 [Note] Event Scheduler: Loaded 0 events
+191208 18:14:23 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)
+191214 20:08:30 [Note] APM_MYSQL5: Normal shutdown
+
+191214 20:08:30 [Note] Event Scheduler: Purging the queue. 0 events
+191214 20:08:30  InnoDB: Starting shutdown...
+191214 20:08:31  InnoDB: Shutdown completed; log sequence number 0 44233
+191214 20:08:31 [Note] APM_MYSQL5: Shutdown complete
+
+191215 12:52:24 [Note] Plugin 'FEDERATED' is disabled.
+191215 12:52:25  InnoDB: Started; log sequence number 0 44233

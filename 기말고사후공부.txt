@@ -1,0 +1,5 @@
+Taming Big data tidal wave
+
+Big data exceeds the reach of commonly used hardware environments and software tools to capture, manage, and process it with in a tolerable elapsed time for its user population.
+-Teradata Magazine article 2011
+Big data refers to data sets whose size is beyond the ability of typical  database software tools to capture, store, manage and analyze

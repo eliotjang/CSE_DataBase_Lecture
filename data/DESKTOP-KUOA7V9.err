@@ -142,3 +142,6 @@ Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL
 
 191215 12:52:24 [Note] Plugin 'FEDERATED' is disabled.
 191215 12:52:25  InnoDB: Started; log sequence number 0 44233
+191215 12:52:25 [Note] Event Scheduler: Loaded 0 events
+191215 12:52:25 [Note] APM_MYSQL5: ready for connections.
+Version: '5.1.41-community'  socket: ''  port: 3306  MySQL Community Server (GPL)

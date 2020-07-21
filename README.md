@@ -17,7 +17,7 @@
 
 - - -
 
-# Database_Design_Practice
+# Database Design Practice
 
 ## Tool
 

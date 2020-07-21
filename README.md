@@ -4,7 +4,7 @@
 
 ## 사용한 툴
 
-- APM(Apache + PHP + MySQL) Setup을 설치하여 웹서버를 구성하였다.
+- APM(Apache + PHP + MySQL) Setup을 설치하여 웹서버 구성
 
 ## 활용한 언어 및 데이터베이스
 
